@@ -76,20 +76,27 @@ public class RegisterActivity extends AppCompatActivity {
                             account.setPersonName(strPersonName);
 
                             // 데이터베이스에 사용자 정보 저장
-                            mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
-                            Toast.makeText(RegisterActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                            mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(RegisterActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
 
-                        }
-                        else {
-                            Toast.makeText(RegisterActivity.this, "회원 정보가 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                                                // 데이터 저장 완료 후 PersonalActivity로 이동
+                                                Intent intent = new Intent(RegisterActivity.this, PersonalActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                Toast.makeText(RegisterActivity.this, "데이터베이스 저장 실패", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "회원가입에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                         }
                     }
-
                 });
-
-                Intent intent = new Intent(RegisterActivity.this, PersonalActivity.class);
-                startActivity(intent);
-
             }
         });
     }
