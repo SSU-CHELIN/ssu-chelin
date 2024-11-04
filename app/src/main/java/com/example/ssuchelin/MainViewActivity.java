@@ -2,31 +2,31 @@ package com.example.ssuchelin;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import java.text.SimpleDateFormat;
+import com.example.ssuchelin.food.FoodAdapter;
+import com.example.ssuchelin.food.FoodItem;
+import com.example.ssuchelin.week.WeekAdapter;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class MainViewActivity extends AppCompatActivity {
 
-    private RecyclerView weekRecyclerView;
+    private RecyclerView weekRecyclerView,foodRecyclerView;
     private WeekAdapter weekAdapter;
+    private FoodAdapter foodAdapter;
     private List<Date> weekDates = new ArrayList<>();
     private TextView monthYearTextView;
+
 
 
     @SuppressLint("DefaultLocale")
@@ -59,5 +59,17 @@ public class MainViewActivity extends AppCompatActivity {
         weekAdapter = new WeekAdapter(weekDates, this);
         weekRecyclerView.setAdapter(weekAdapter);
 
+
+        foodRecyclerView = findViewById(R.id.food_view);
+        foodRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // 미리 저장된 음식 데이터 생성
+        List<FoodItem> foodItems = new ArrayList<>();
+        foodItems.add(new FoodItem("김치찌개", "한국의 전통 김치찌개", R.drawable.star, 3.0f));
+        foodItems.add(new FoodItem("비빔밥", "다양한 재료를 섞은 비빔밥", R.drawable.star, 2.3f));
+        // 더 많은 음식 아이템 추가...
+
+        foodAdapter = new FoodAdapter(foodItems);
+        foodRecyclerView.setAdapter(foodAdapter);
     }
 }

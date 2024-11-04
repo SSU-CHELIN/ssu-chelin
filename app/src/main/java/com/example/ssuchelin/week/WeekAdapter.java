@@ -1,4 +1,4 @@
-package com.example.ssuchelin;
+package com.example.ssuchelin.week;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,7 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.BreakIterator;
+import com.example.ssuchelin.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

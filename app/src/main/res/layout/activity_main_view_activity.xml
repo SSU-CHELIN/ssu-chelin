@@ -42,6 +42,20 @@
         </HorizontalScrollView>
 
     </LinearLayout>
+    <ImageView
+        android:layout_width="380dp"
+        android:layout_height="10dp"
+        android:src="@drawable/line"
+        android:layout_gravity="center"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/food_view"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
 
     
 
