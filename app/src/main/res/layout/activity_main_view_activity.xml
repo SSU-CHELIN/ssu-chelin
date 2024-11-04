@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main_view">
+    
+    <FrameLayout
+        android:layout_width="252dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="25dp">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/the_ssu_schelin_guide">
+        </ImageView>
+    </FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+            <Button
+                android:id="@+id/dateButton"
+                android:layout_width="150dp"
+                android:layout_gravity="center"
+                android:layout_height="match_parent"
+                android:text="today date">
+            </Button>
+
+
+        </FrameLayout>
+
+
+    </FrameLayout>
+
+    
+
+</LinearLayout>
