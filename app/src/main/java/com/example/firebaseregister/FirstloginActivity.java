@@ -24,7 +24,6 @@ public class FirstloginActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
                 Intent intent = new Intent(FirstloginActivity.this,LoginActivity.class);
                 startActivity(intent);
             }
