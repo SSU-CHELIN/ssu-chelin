@@ -13,6 +13,27 @@
         android:theme="@style/Theme.Ssuchelin"
         tools:targetApi="31">
         <activity
+            android:name=".activity_first_setting"
+            android:exported="false" />
+        <activity
+            android:name=".activity_change_profile_picture"
+            android:exported="false" />
+        <activity
+            android:name=".activity_change_contact"
+            android:exported="false" />
+        <activity
+            android:name=".activity_change_nickname"
+            android:exported="false" />
+        <activity
+            android:name=".activity_initial_setting"
+            android:exported="false" />
+        <activity
+            android:name=".activity_pro"
+            android:exported="false" />
+        <activity
+            android:name=".activity_ranking"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

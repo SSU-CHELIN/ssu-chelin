@@ -7,4 +7,53 @@
     android:layout_height="match_parent"
     tools:context=".activity_initial_setting">
 
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:contentInsetStartWithNavigation="0dp"
+            tools:ignore="MissingConstraints" />
+
+        <!-- Toolbar와 나머지 요소 사이에 여백 추가 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            tools:ignore="MissingConstraints" />
+
+
+        <Button
+            android:id="@+id/change_profile_picture_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="프로필 사진 변경"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/change_nickname_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="닉네임 변경"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/change_contact_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="연락처 변경"
+            android:backgroundTint="#E0E0E0" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

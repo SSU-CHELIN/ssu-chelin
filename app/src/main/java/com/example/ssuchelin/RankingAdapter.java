@@ -1,3 +1,5 @@
+package com.example.ssuchelin;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
+
+//랭킹 4-10위 동적할당?
 
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder> {
 
