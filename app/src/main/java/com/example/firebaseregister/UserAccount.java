@@ -1,45 +1,43 @@
 package com.example.firebaseregister;
 
-import android.os.Bundle;
+public class UserAccount {
+    private String idToken;
+    private String emailId;
+    private String password;
+    private String personName;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+    // Firebase에서 필요로 하는 기본 생성자
+    public UserAccount() {}
 
-public class UserAccount extends AppCompatActivity {
-
-    public UserAccount(){
-    }
-
-    public String getIdToken(){
+    public String getIdToken() {
         return idToken;
     }
 
-    public void setIdToken(String idToken){
+    public void setIdToken(String idToken) {
         this.idToken = idToken;
     }
-    private String idToken;
 
-    public String getEmailId(){
+    public String getEmailId() {
         return emailId;
     }
 
-    public void setEmailId(String emailId){
+    public void setEmailId(String emailId) {
         this.emailId = emailId;
     }
 
-    private String emailId;
-
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password){
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    private String password;
+    public String getPersonName() {
+        return personName;
+    }
 
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
 }

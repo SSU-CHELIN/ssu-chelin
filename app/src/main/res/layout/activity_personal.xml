@@ -1,0 +1,190 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- 상단에 배너를 위한 공간 150dp -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <!-- 평소에 간을 어느정도로 먹나요? -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="평소에 간을 어느정도로 먹나요?"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+
+        <!-- 간에 대한 RadioGroup -->
+        <RadioGroup
+            android:id="@+id/saltRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:id="@+id/salt_1" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:id="@+id/salt_2" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:id="@+id/salt_3" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:id="@+id/salt_4" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:id="@+id/salt_5" />
+        </RadioGroup>
+
+        <!-- 평소에 얼마나 맵게 먹나요? -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="평소에 얼마나 맵게 먹나요?"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- 매운맛에 대한 RadioGroup -->
+        <RadioGroup
+            android:id="@+id/spicyRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:id="@+id/spicy_1" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:id="@+id/spicy_2" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:id="@+id/spicy_3" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:id="@+id/spicy_4" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5"
+                android:id="@+id/spicy_5" />
+        </RadioGroup>
+
+        <!-- 해당하는 알레르기가 있나요? -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="해당하는 알레르기가 있나요?"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- 알레르기 목록 TableLayout -->
+        <TableLayout
+            android:id="@+id/allergyTable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0,1,2">
+
+            <TableRow>
+                <CheckBox android:text="새우" android:id="@+id/allergy_shrimp" />
+                <CheckBox android:text="돈육" android:id="@+id/allergy_pork" />
+                <CheckBox android:text="대두" android:id="@+id/allergy_soybean" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="우유" android:id="@+id/allergy_milk" />
+                <CheckBox android:text="쌀" android:id="@+id/allergy_rice" />
+                <CheckBox android:text="밀" android:id="@+id/allergy_wheat" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="계육" android:id="@+id/allergy_chicken" />
+                <CheckBox android:text="땅콩" android:id="@+id/allergy_peanut" />
+                <CheckBox android:text="계란" android:id="@+id/allergy_egg" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="조개류" android:id="@+id/allergy_shellfish" />
+                <CheckBox android:text="토마토" android:id="@+id/allergy_tomato" />
+                <CheckBox android:text="낙지" android:id="@+id/allergy_octopus" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="게" android:id="@+id/allergy_crab" />
+                <CheckBox android:text="고등어" android:id="@+id/allergy_mackerel" />
+                <CheckBox android:text="복어" android:id="@+id/allergy_pufferfish" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="굴비" android:id="@+id/allergy_yellowfish" />
+                <CheckBox android:text="아보카도" android:id="@+id/allergy_avocado" />
+                <CheckBox android:text="명란" android:id="@+id/allergy_codroe" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="오징어" android:id="@+id/allergy_squid" />
+                <CheckBox android:text="미소 된장" android:id="@+id/allergy_miso" />
+                <CheckBox android:text="홍합" android:id="@+id/allergy_mussel" />
+            </TableRow>
+
+            <TableRow>
+                <CheckBox android:text="알류" android:id="@+id/allergy_roe" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- 회원가입 완료 버튼 -->
+        <Button
+            android:id="@+id/btn_complete_registration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원가입 완료"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal" />
+
+        <!-- 여백을 추가하기 위한 빈 View -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
+
+    </LinearLayout>
+</ScrollView>

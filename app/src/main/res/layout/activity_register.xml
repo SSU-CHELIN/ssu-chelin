@@ -8,35 +8,52 @@
     tools:context=".RegisterActivity">
 
     <EditText
-        android:id="@+id/et_email2"
+        android:id="@+id/et_personname"
         android:layout_width="400dp"
         android:layout_height="85dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="350dp"
         android:ems="10"
-        android:hint="아이디를 입력해주세요"
-        android:inputType="textEmailAddress"
+        android:hint="닉네임을 입력해주세요"
+        android:inputType="text|textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:id="@+id/et_email2"
+        android:layout_width="400dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="150dp"
+        android:ems="10"
+        android:hint="아이디를 입력해주세요"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/et_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.011" />
+
+    <EditText
         android:id="@+id/et_password"
         android:layout_width="400dp"
         android:layout_height="85dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="250dp"
         android:ems="10"
         android:hint="비밀번호를 입력해주세요"
         android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/et_personname"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/btn_signup"
+        android:id="@+id/btn_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
-        android:text="가입완료"
+        android:text="다음으로"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

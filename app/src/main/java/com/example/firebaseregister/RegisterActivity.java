@@ -1,5 +1,7 @@
 package com.example.firebaseregister;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,9 +27,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth; // 파이어베이스 인증
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
-    private EditText mEtEmail, mEtpwd;
+    private EditText mEtEmail, mEtpwd, mEtpersonName;
     private Button mBtnRegister;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,11 +43,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("myapp");
 
         mEtEmail = findViewById(R.id.et_email2);
         mEtpwd = findViewById(R.id.et_password);
-        mBtnRegister = findViewById(R.id.btn_signup);
+        mBtnRegister = findViewById(R.id.btn_next);
+        mEtpersonName = findViewById(R.id.et_personname);
 
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,27 +56,39 @@ public class RegisterActivity extends AppCompatActivity {
                 //회원가입 처리시작
                 String strEmail = mEtEmail.getText().toString();
                 String strPwd = mEtpwd.getText().toString();
+                String strPersonName = mEtpersonName.getText().toString();
+
+                if (strEmail.isEmpty() || strPwd.isEmpty() || strPersonName.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "모든 필드를 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 //firebase Auth 진행
                 mFirebaseAuth.createUserWithEmailAndPassword(strEmail,strPwd).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
                             UserAccount account = new UserAccount();
                             account.setIdToken(firebaseUser.getUid());
                             account.setEmailId(firebaseUser.getEmail());
                             account.setPassword(strPwd);
+                            account.setPersonName(strPersonName);
 
+                            // 데이터베이스에 사용자 정보 저장
                             mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
-                            Toast.makeText(RegisterActivity.this,"회원가입에 성공했습니다.",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+
                         }
-                        else{
-                            Toast.makeText(RegisterActivity.this,"회원가입에 실패했습니다.",Toast.LENGTH_SHORT).show();
+                        else {
+                            Toast.makeText(RegisterActivity.this, "회원 정보가 없습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                 });
 
+                Intent intent = new Intent(RegisterActivity.this, PersonalActivity.class);
+                startActivity(intent);
 
             }
         });

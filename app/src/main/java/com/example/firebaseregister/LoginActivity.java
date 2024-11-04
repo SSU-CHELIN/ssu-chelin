@@ -30,13 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -44,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         mEtEmail = findViewById(R.id.et_email2);
         mEtpwd = findViewById(R.id.et_password);
         mBtnRegister = findViewById(R.id.btn_login2);
-        mBtnLogin = findViewById(R.id.btn_signup);
+        mBtnLogin = findViewById(R.id.btn_next);
 
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
+
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
