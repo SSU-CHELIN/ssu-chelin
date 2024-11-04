@@ -9,32 +9,39 @@
         android:layout_width="252dp"
         android:layout_height="50dp"
         android:layout_marginLeft="80dp"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="50dp">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/the_ssu_schelin_guide">
         </ImageView>
     </FrameLayout>
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
-        <FrameLayout
+        android:layout_height="150dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/month_year_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="50dp">
-            <Button
-                android:id="@+id/dateButton"
-                android:layout_width="150dp"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/week_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_height="match_parent"
-                android:text="today date">
-            </Button>
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
 
-
-        </FrameLayout>
-
-
-    </FrameLayout>
+    </LinearLayout>
 
     
 
