@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_initial_setting">
+    tools:context=".InitialSettingActivity">
 
 
     <LinearLayout
@@ -19,10 +19,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title=""
+            app:navigationIcon="@drawable/ic_back_arrow"
             android:contentInsetStartWithNavigation="0dp"
-            tools:ignore="MissingConstraints" />
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
         <!-- Toolbar와 나머지 요소 사이에 여백 추가 -->
         <View

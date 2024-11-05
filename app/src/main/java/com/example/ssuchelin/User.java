@@ -1,7 +1,7 @@
 package com.example.ssuchelin;
 
 
-//파이어베이스 유저
+//파이어베이스에서 데이터를 가져오거나 저장할 때 사용할 데이터 모델 역할을 함
 
 
 public class User {

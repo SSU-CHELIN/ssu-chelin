@@ -5,16 +5,18 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 // import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class activity_pro extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     private TextView usernameTextView, studentIdTextView, rankingTextView;
     private ImageView profilePicture;
@@ -23,7 +25,7 @@ public class activity_pro extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pro);
+        setContentView(R.layout.activity_profile);
 
         // View 초기화
         usernameTextView = findViewById(R.id.username);
@@ -38,6 +40,7 @@ public class activity_pro extends AppCompatActivity {
         loadUserData();
     }
 
+    // Firebase Realtime Database를 사용한 사용자 데이터 가져오기 (파베) / 주의할 점 : user_id가 고정되어있음, 사용자에따라 맞게 바꿔야함
     // Firebase에서 사용자 정보 불러오기
     private void loadUserData() {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("user_id"); // user_id를 실제 사용자 ID로 교체
@@ -94,12 +97,12 @@ public class activity_pro extends AppCompatActivity {
 
     // 화면 전환 함수들
     public void navigateToChangeProfile(View view) {
-        Intent intent = new Intent(this, activity_initial_setting.class);
+        Intent intent = new Intent(this, InitialSettingActivity.class);
         startActivity(intent);
     }
 
     public void navigateToInitialSettings(View view) {
-        Intent intent = new Intent(this, activity_first_setting.class);
+        Intent intent = new Intent(this, FirstSettingActivity.class);
         startActivity(intent);
     }
 
@@ -109,24 +112,25 @@ public class activity_pro extends AppCompatActivity {
     }
 
     public void navigateToTermsOfService(View view) {
-        Intent intent = new Intent(this, TermsOfServiceActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, TermsOfServiceActivity.class);
+        //startActivity(intent);
     }
 
     public void navigateToPrivacyPolicy(View view) {
-        Intent intent = new Intent(this, PrivacyPolicyActivity.class);
+        //Intent intent = new Intent(this, PrivacyPolicyActivity.class);
+        //startActivity(intent);
+    }
+
+    public void navigateToFeedback(View view) {
+        Intent intent = new Intent(this, FeedbackActivity.class);
         startActivity(intent);
     }
 
-    public void navigateToContactUs(View view) {
-        Intent intent = new Intent(this, ContactUsActivity.class);
-        startActivity(intent);
-    }
-
+    // Firebase Authentication을 사용한 로그아웃 기능 (파베)
     // 로그아웃 함수
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut(); // Firebase에서 로그아웃
-        Intent intent = new Intent(this, LoginActivity.class); // 로그인 화면으로 이동
+        Intent intent = new Intent(this, MainActivity.class); // 로그인 화면으로 이동
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

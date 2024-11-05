@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 // 프로필, 프로필정보 바꾸기 누르고 각 버튼 누를시
 
-public class activity_initial_setting extends AppCompatActivity {
+public class InitialSettingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class activity_initial_setting extends AppCompatActivity {
         findViewById(R.id.change_profile_picture_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity_initial_setting.this, activity_change_profile_picture.class);
+                Intent intent = new Intent(InitialSettingActivity.this, ChangeProfilePictureActivity.class);
                 startActivity(intent);
             }
         });
@@ -38,7 +38,7 @@ public class activity_initial_setting extends AppCompatActivity {
         findViewById(R.id.change_nickname_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity_initial_setting.this, activity_change_nickname.class);
+                Intent intent = new Intent(InitialSettingActivity.this, ChangeNicknameActivity.class);
                 startActivity(intent);
             }
         });
@@ -46,7 +46,7 @@ public class activity_initial_setting extends AppCompatActivity {
         findViewById(R.id.change_contact_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(activity_initial_setting.this, activity_change_contact.class);
+                Intent intent = new Intent(InitialSettingActivity.this, ChangeContactActivity.class);
                 startActivity(intent);
             }
         });

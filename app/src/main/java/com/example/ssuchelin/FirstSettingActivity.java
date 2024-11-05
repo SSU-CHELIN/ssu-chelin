@@ -2,7 +2,6 @@ package com.example.ssuchelin;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -15,7 +14,7 @@ import java.util.List;
 
 //초기설정화면
 
-public class activity_first_setting extends AppCompatActivity {
+public class FirstSettingActivity extends AppCompatActivity {
 
     private Button selectedSaltButton;
     private Button selectedSpicyButton;
@@ -110,6 +109,7 @@ public class activity_first_setting extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // 파베 / user_id 고정되어있음 , 실제 앱에서는 로그인 한 고유 ID를 가져와야함
     // Firebase에 데이터 저장 함수 예시
     private void saveDataToFirebase() {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users").child("user_id");

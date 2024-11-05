@@ -2,7 +2,6 @@ package com.example.ssuchelin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 
 //랭킹화면 구현
 
-public class activity_ranking extends AppCompatActivity {
+public class RankingActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RankingAdapter adapter;
@@ -63,6 +62,8 @@ public class activity_ranking extends AppCompatActivity {
         loadRankingData();
     }
 
+
+    //파베, Firebase Realtime Database를 사용한 데이터 가져오기 / 주의할 점 : User 객체의 FirebaseDatabase에 올바르게 저장되어있어야함, rankings 경로 아래 각 사용자 데이터가 User 클래스 구조에 맞게 저장되어 있어야 함
     private void loadRankingData() {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference("rankings");
 
@@ -97,6 +98,7 @@ public class activity_ranking extends AppCompatActivity {
         });
     }
 
+    //파베, 사용자 이미지 로드 / 주의할 점 : Glide 라이브러리가 프로젝트에 포함되어 있어야 함
     private void displayTopUser(ImageView imageView, TextView nameView, TextView scoreView, User user) {
         nameView.setText(user.getName());
         scoreView.setText(String.valueOf(user.getScore()));
