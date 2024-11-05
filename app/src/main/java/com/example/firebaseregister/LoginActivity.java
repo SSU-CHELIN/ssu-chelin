@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this,UsaintRegisterActivity.class);
                 startActivity(intent);
             }
         });

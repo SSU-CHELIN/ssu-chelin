@@ -5,6 +5,8 @@ public class UserAccount {
     private String emailId;
     private String password;
     private String personName;
+    private String studentId;
+    private String realStudentId;
 
     // Firebase에서 필요로 하는 기본 생성자
     public UserAccount() {}
@@ -39,5 +41,20 @@ public class UserAccount {
 
     public void setPersonName(String personName) {
         this.personName = personName;
+    }
+
+    public String getStudentId() {
+        return idToken;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+    public String getRealStudentId() {
+        return realStudentId;
+    }
+
+    public void setRealStudentId(String realStudentId) {
+        this.realStudentId = realStudentId;
     }
 }
