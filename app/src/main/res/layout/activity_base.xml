@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 화면 컨텐츠 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/container" />
+
+    <!-- 하단에 위치한 네비게이션 바 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="#006694"
+        android:padding="10dp"
+        android:layout_gravity="bottom">
+
+        <ImageButton
+            android:id="@+id/navigate_home_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#006694"
+            android:src="@drawable/navigate_home_unclick" />
+        <ImageButton
+            android:id="@+id/navigate_review_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#006694"
+            android:src="@drawable/navigate_review_unclick" />
+        <ImageButton
+            android:id="@+id/navigate_ranking_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#006694"
+            android:src="@drawable/navigate_ranking_unclick" />
+
+        <ImageButton
+            android:id="@+id/navigate_profile_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#006694"
+            android:layout_weight="1"
+            android:src="@drawable/navigate_profile_unclick" />
+    </LinearLayout>
+</LinearLayout>

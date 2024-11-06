@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class MainViewActivity extends AppCompatActivity {
+public class MainViewActivity extends BaseActivity {
 
     private RecyclerView weekRecyclerView,foodRecyclerView;
     private WeekAdapter weekAdapter;
