@@ -3,9 +3,14 @@ package com.example.ssuchelin;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 public class BaseActivity extends AppCompatActivity {
@@ -23,6 +28,12 @@ public class BaseActivity extends AppCompatActivity {
 
         homeButton.setOnClickListener(v -> navigateToHome());
 //        profileButton.setOnClickListener(v -> navigateToProfile());
+    }
+
+    protected void setContentLayout(@LayoutRes int layoutResID) {
+        FrameLayout container = findViewById(R.id.container);
+        View content = LayoutInflater.from(this).inflate(layoutResID, container, false);
+        container.addView(content);
     }
 
     private void navigateToHome() {

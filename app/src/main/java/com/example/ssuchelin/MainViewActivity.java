@@ -34,11 +34,13 @@ public class MainViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main_view_activity);
+
+        setContentLayout(R.layout.activity_main_view_activity);
 
         monthYearTextView = findViewById(R.id.month_year_text_view);
         weekRecyclerView = findViewById(R.id.week_recycler_view);
         weekRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
 
 
 
