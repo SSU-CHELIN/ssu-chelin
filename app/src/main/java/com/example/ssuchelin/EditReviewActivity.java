@@ -20,10 +20,10 @@ public class EditReviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_review); //리뷰 작성화면 xml
-
-        reviewContent = findViewById(R.id.review_content_edit);
-        saveButton = findViewById(R.id.save_button);
+//        setContentView(R.layout.activity_edit_review); //리뷰 작성화면 xml
+//
+//        reviewContent = findViewById(R.id.review_content_edit);
+//        saveButton = findViewById(R.id.save_button);
 
         String reviewId = getIntent().getStringExtra("review_id");
         reviewRef = FirebaseDatabase.getInstance().getReference("reviews/user_id").child(reviewId); // 파베 , Firebase Database Reference 초기화

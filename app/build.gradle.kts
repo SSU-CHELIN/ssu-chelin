@@ -29,6 +29,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    viewBinding{
+        enable=true
+    }
 }
 
 
@@ -36,6 +39,7 @@ android {
 
 dependencies {
 
+    implementation(libs.appcompat)
     implementation(libs.material)
 
     implementation ("com.google.firebase:firebase-storage:20.0.1")
@@ -46,6 +50,7 @@ dependencies {
 
     // Glide
     implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.firebase.common)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0");
 
     // Material Design
@@ -55,6 +60,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.recyclerview)
 
     // 테스트 라이브러리
     testImplementation(libs.junit)
