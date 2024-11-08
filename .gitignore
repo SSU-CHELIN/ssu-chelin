@@ -14,3 +14,5 @@
 .cxx
 local.properties
 *.idea
+#Firebase google service.json
+google-services.json
