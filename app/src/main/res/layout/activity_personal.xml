@@ -1,26 +1,65 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
         <!-- 상단에 배너를 위한 공간 150dp -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
 
-        <!-- 평소에 간을 어느정도로 먹나요? -->
+        <!-- 사용자 이름 입력 -->
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:srcCompat="@drawable/the_ssu_schelin_guide" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이름을 입력하세요"
+            android:textSize="18sp"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/et_user_name"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:hint="이름"
+            android:inputType="textPersonName"
+            android:padding="10dp" />
+
+        <!-- 닉네임 입력 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임을 입력하세요"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="10dp" />
+
+        <EditText
+            android:id="@+id/et_nickname"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:hint="닉네임"
+            android:inputType="textPersonName"
+            android:padding="10dp" />
+
+        <!-- 평소에 간을 어느 정도로 먹나요? -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="평소에 간을 어느정도로 먹나요?"
             android:textSize="18sp"
-            android:paddingBottom="8dp" />
+            android:paddingTop="16dp"
+            android:paddingBottom="10dp" />
 
         <!-- 간에 대한 RadioGroup -->
         <RadioGroup
@@ -68,7 +107,7 @@
             android:text="평소에 얼마나 맵게 먹나요?"
             android:textSize="18sp"
             android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="10dp" />
 
         <!-- 매운맛에 대한 RadioGroup -->
         <RadioGroup
@@ -116,7 +155,7 @@
             android:text="해당하는 알레르기가 있나요?"
             android:textSize="18sp"
             android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="10dp" />
 
         <!-- 알레르기 목록 TableLayout -->
         <TableLayout
