@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InitialSettingActivity">
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title=""
+            app:navigationIcon="@drawable/ic_back_arrow"
+            android:contentInsetStartWithNavigation="0dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+        <!-- Toolbar와 나머지 요소 사이에 여백 추가 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            tools:ignore="MissingConstraints" />
+
+
+        <Button
+            android:id="@+id/change_profile_picture_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="프로필 사진 변경"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/change_nickname_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="닉네임 변경"
+            android:backgroundTint="#E0E0E0"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/change_contact_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="연락처 변경"
+            android:backgroundTint="#E0E0E0" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

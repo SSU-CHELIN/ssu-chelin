@@ -26,8 +26,30 @@ public class BaseActivity extends AppCompatActivity {
         ImageButton rankingButton = findViewById(R.id.navigate_ranking_button);
         ImageButton profileButton = findViewById(R.id.navigate_profile_button);
 
-        homeButton.setOnClickListener(v -> navigateToHome());
-//        profileButton.setOnClickListener(v -> navigateToProfile());
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainViewActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        profileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileViewActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+//        reviewButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, Main.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            startActivity(intent);
+//        });
+
+//        profileButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, ProfileViewActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            startActivity(intent);
+//        });
+
     }
 
     protected void setContentLayout(@LayoutRes int layoutResID) {
@@ -42,19 +64,19 @@ public class BaseActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-//    private void navigateToProfile() {
-//        // 프로필 화면으로 이동
-//        Intent intent = new Intent(this, ProfileActivity.class);
-//        startActivity(intent);
-//    }
-//    private void navigateToReview() {
-//        //  review 화면으로 이동
-//        Intent intent = new Intent(this, ProfileActivity.class);
-//        startActivity(intent);
-//    }
-//    private void navigateToRanking() {
-//        // ranking 화면으로 이동
-//        Intent intent = new Intent(this, ProfileActivity.class);
-//        startActivity(intent);
-//    }
+    private void navigateToProfile() {
+        // 프로필 화면으로 이동
+        Intent intent = new Intent(this, ProfileViewActivity.class);
+        startActivity(intent);
+    }
+    private void navigateToReview() {
+        //  review 화면으로 이동
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+    private void navigateToRanking() {
+        // ranking 화면으로 이동
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
 }

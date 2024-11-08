@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="turquoise">#40E0D0</color>
+    <color name="default_button_color">#E0E0E0</color>
+    <color name="selected_button_color">#FFCC00</color>
 </resources>
