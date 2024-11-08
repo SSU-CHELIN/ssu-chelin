@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.firebaseregister"
+        applicationId = "com.example.ssuchelin"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

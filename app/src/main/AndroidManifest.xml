@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.ssuchelin"> <!-- 새 패키지 이름으로 변경 -->
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,6 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseRegister"
         tools:targetApi="31">
+
+        <!-- Activity 경로도 새 패키지 이름 기준으로 설정 -->
         <activity
             android:name=".MainViewActivity"
             android:exported="false" />
@@ -21,14 +24,10 @@
             android:name=".UsaintRegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".UsaintRegisteActivity"
-            android:exported="true" />
-        <activity
             android:name=".FirstloginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

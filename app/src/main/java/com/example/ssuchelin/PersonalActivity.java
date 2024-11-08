@@ -1,4 +1,4 @@
-package com.example.firebaseregister;
+package com.example.ssuchelin;
 
 import android.content.Intent;
 import android.os.Bundle;

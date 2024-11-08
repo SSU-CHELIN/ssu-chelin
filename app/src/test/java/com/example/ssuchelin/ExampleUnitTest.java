@@ -1,4 +1,4 @@
-package com.example.firebaseregister;
+package com.example.ssuchelin;
 
 import org.junit.Test;
 

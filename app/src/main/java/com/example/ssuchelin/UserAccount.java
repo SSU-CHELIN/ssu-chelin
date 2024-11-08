@@ -1,4 +1,4 @@
-package com.example.firebaseregister;
+package com.example.ssuchelin;
 
 public class UserAccount {
     private String idToken;
