@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.firebaseregister"
+    namespace = "com.example.ssuchelin"
     compileSdk = 34
 
     defaultConfig {
