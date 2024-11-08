@@ -1,0 +1,120 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="뚝배기 코너">
+            </TextView>
+        </LinearLayout>
+        <!-- 왼쪽에 이미지 표시 -->
+        <ImageView
+            android:id="@+id/food_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/star"
+            android:layout_marginEnd="5dp"/>
+        <!-- 별점 표시 (DB 값으로 설정) -->
+        <LinearLayout
+            android:id="@+id/food_rating_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- 별 이미지 5개 -->
+            <ImageView
+                android:id="@+id/star_1"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:src="@drawable/star_empty" />
+
+            <ImageView
+                android:id="@+id/star_2"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:src="@drawable/star_empty" />
+            <ImageView
+                android:id="@+id/star_3"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:src="@drawable/star_empty" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="알러지/원산지 정보 표시">
+            </TextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메인 메뉴"></TextView>
+            <TextView
+                android:id="@+id/food_main_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="4dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="서브 메뉴"></TextView>
+            <!-- 서브 메뉴 설명 -->
+            <TextView
+                android:id="@+id/food_sub_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="8dp"/>
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+</LinearLayout>
