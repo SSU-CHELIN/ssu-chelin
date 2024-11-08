@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FirebaseRegister"
+rootProject.name = "ssuchelin"
 include(":app")
