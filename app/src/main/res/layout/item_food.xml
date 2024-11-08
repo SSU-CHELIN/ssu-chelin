@@ -9,11 +9,20 @@
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="뚝배기 코너">
+            </TextView>
+        </LinearLayout>
         <!-- 왼쪽에 이미지 표시 -->
         <ImageView
             android:id="@+id/food_image_view"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
             android:src="@drawable/star"
             android:layout_marginEnd="5dp"/>
@@ -49,12 +58,22 @@
 
 
 
-    <!-- 오른쪽에 텍스트와 별점 표시 -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:orientation="vertical"
         android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="알러지/원산지 정보 표시">
+            </TextView>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

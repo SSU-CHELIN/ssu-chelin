@@ -13,6 +13,16 @@
         android:theme="@style/Theme.Ssuchelin"
         tools:targetApi="34">
         <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
             android:name=".ProfileViewActivity"
             android:exported="true">
             <intent-filter>
@@ -33,10 +43,12 @@
         <activity
             android:name=".MainViewActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="ssuchelin" android:host="callback" />
             </intent-filter>
         </activity>
         <activity
@@ -81,15 +93,7 @@
         <activity
             android:name=".RankingActivity"
             android:exported="true" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ReviewActivity"
             android:exported="true">
