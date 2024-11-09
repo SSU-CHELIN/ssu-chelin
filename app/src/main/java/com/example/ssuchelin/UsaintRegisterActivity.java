@@ -52,7 +52,7 @@ public class UsaintRegisterActivity extends AppCompatActivity {
                         if (dataSnapshot.exists()) {
                             // 학번이 이미 존재하는 경우 MainActivity로 이동
                             Toast.makeText(UsaintRegisterActivity.this, "이미 등록된 사용자입니다.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(UsaintRegisterActivity.this, MainActivity.class);
+                            Intent intent = new Intent(UsaintRegisterActivity.this, MainViewActivity.class);
                             startActivity(intent);
                             finish();
                         } else {

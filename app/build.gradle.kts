@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.ssuchelin"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -30,9 +30,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    viewBinding{
+        enable = true
+    }
 }
 
 dependencies {
+    implementation ("com.google.android.material:material:1.8.0")
+    implementation ("androidx.core:core-ktx:1.6.0")
     implementation("com.google.firebase:firebase-auth-ktx:21.0.1")
     implementation("com.google.firebase:firebase-database-ktx:20.0.3")
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
@@ -44,4 +49,9 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0")
+    implementation ("com.google.firebase:firebase-storage:19.2.0")
+    implementation ("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+
 }

@@ -1,14 +1,13 @@
 package com.example.ssuchelin;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.WindowInsetsController;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.example.ssuchelin.food.FoodAdapter;
 import com.example.ssuchelin.food.FoodItem;
@@ -21,19 +20,25 @@ import java.util.List;
 
 public class MainViewActivity extends BaseActivity {
 
-    private RecyclerView weekRecyclerView,foodRecyclerView;
+    private RecyclerView weekRecyclerView, foodRecyclerView;
     private WeekAdapter weekAdapter;
     private FoodAdapter foodAdapter;
     private List<Date> weekDates = new ArrayList<>();
     private TextView monthYearTextView;
 
-
-
     @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
+        // Edge-to-Edge 화면 설정 (API 레벨 30 이상에서만 적용)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+            WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+        }
 
         setContentLayout(R.layout.activity_main_view_activity);
 
@@ -41,15 +46,12 @@ public class MainViewActivity extends BaseActivity {
         weekRecyclerView = findViewById(R.id.week_recycler_view);
         weekRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-
-
-
         // 현재 날짜 가져오기
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH) + 1; // 0부터 시작하므로 +1
+        int month = calendar.get(Calendar.MONTH) + 1;
 
-        monthYearTextView.setText(String.format("<%d.%02d>", year, month)); // 형식화하여 출력
+        monthYearTextView.setText(String.format("<%d.%02d>", year, month));
 
         // 현재 날짜부터 주간 날짜 리스트 생성
         Calendar weekCalendar = Calendar.getInstance();
@@ -61,7 +63,6 @@ public class MainViewActivity extends BaseActivity {
         weekAdapter = new WeekAdapter(weekDates, this);
         weekRecyclerView.setAdapter(weekAdapter);
 
-
         foodRecyclerView = findViewById(R.id.food_view);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -69,7 +70,6 @@ public class MainViewActivity extends BaseActivity {
         List<FoodItem> foodItems = new ArrayList<>();
         foodItems.add(new FoodItem("김치찌개", "한국의 전통 김치찌개", R.drawable.star, 3.0f));
         foodItems.add(new FoodItem("비빔밥", "다양한 재료를 섞은 비빔밥", R.drawable.star, 2.3f));
-        // 더 많은 음식 아이템 추가...
 
         foodAdapter = new FoodAdapter(foodItems);
         foodRecyclerView.setAdapter(foodAdapter);

@@ -33,7 +33,7 @@ public class BaseActivity extends AppCompatActivity {
         });
 
         profileButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileViewActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         });
@@ -66,7 +66,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void navigateToProfile() {
         // 프로필 화면으로 이동
-        Intent intent = new Intent(this, ProfileViewActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
     private void navigateToReview() {

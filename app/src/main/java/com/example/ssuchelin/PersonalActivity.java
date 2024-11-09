@@ -120,7 +120,7 @@ public class PersonalActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 // 데이터 저장 성공 시 LoginActivity로 이동
                 Toast.makeText(PersonalActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(PersonalActivity.this, MainActivity.class);
+                Intent intent = new Intent(PersonalActivity.this, MainViewActivity.class);
                 startActivity(intent);
                 finish(); // PersonalActivity 종료
             } else {

@@ -37,9 +37,9 @@ public class ProfileActivity extends BaseActivity {
         star3 = findViewById(R.id.star3);
 
         // Firebase에서 사용자 데이터 가져오기
-        loadUserData();
+        //loadUserData();
     }
-
+    /*
     // Firebase Realtime Database를 사용한 사용자 데이터 가져오기 (파베) / 주의할 점 : user_id가 고정되어있음, 사용자에따라 맞게 바꿔야함
     // Firebase에서 사용자 정보 불러오기
     private void loadUserData() {
@@ -68,6 +68,7 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
+    */
     // 별 색상을 리뷰 점수에 따라 업데이트하는 함수
     private void updateStarRating(int score) {
         // 예시: 1~100의 점수를 받아 별을 채웁니다.
@@ -130,7 +131,7 @@ public class ProfileActivity extends BaseActivity {
     // 로그아웃 함수
     public void logout(View view) {
         FirebaseAuth.getInstance().signOut(); // Firebase에서 로그아웃
-        Intent intent = new Intent(this, MainActivity.class); // 로그인 화면으로 이동
+        Intent intent = new Intent(this, FirstloginActivity.class); // 로그인 화면으로 이동
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
