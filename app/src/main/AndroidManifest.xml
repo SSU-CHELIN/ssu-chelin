@@ -55,6 +55,21 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SubCategoryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ReviewListActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Review"
+            android:exported="true" />
+        <activity
+            android:name=".ReviewAdapter"
+            android:exported="true" />
+        <activity
+            android:name=".OverviewReviewsActivity"
+            android:exported="true" />
+        <activity
             android:name=".FeedbackActivity"
             android:exported="true" />
         <activity

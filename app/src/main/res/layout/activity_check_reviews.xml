@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".CheckReviewsActivity">
 
     <!-- Toolbar with Back Button -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         app:layout_constraintTop_toTopOf="parent"
         app:title=""
         app:navigationIcon="@drawable/ic_back_arrow"
@@ -34,13 +35,13 @@
             <TextView
                 android:id="@+id/no_reviews_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:gravity="center"
-                android:background="@drawable/no_reviews_box"
+                android:background="@drawable/custom_button_initial_background"
                 android:padding="24dp"
                 android:text="작성된 리뷰가 없습니다."
                 android:visibility="gone"
-                android:textColor="#888888"
+                android:textColor="#88000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 

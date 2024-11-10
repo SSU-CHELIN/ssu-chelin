@@ -7,6 +7,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+//뭐지
+
 public class ProfileViewActivity extends BaseActivity {
 
     @Override

@@ -16,7 +16,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             app:layout_constraintTop_toTopOf="parent"
             app:title=""
             app:navigationIcon="@drawable/ic_back_arrow"
@@ -35,7 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="사진 선택 및 업로드"
-            android:layout_marginTop="16dp" />
+            android:textColor="#88000000"
+            android:background="@drawable/custom_button_initial_background"
+            android:layout_marginTop="20dp" />
     </LinearLayout>
 
 
