@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".review.FeedbackActivity"
+    tools:context=".FeedbackActivity"
     android:padding="16dp">
 
     <LinearLayout
@@ -16,7 +16,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         app:layout_constraintTop_toTopOf="parent"
         app:title=""
         app:navigationIcon="@drawable/ic_back_arrow"
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="추가적인 의견 있으시면 남겨주세요!"
-        android:textSize="18sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,11 +38,11 @@
     <EditText
         android:id="@+id/feedback_input"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="400dp"
         android:layout_marginTop="16dp"
         android:hint="ex) xxx에 대한 알레르기 정보도 추가해주세요"
         android:padding="16dp"
-        android:background="@drawable/edit_text_background"
+        android:background="@drawable/custom_button_initial_background"
         android:gravity="top"
         android:inputType="textMultiLine"
         app:layout_constraintTop_toBottomOf="@id/feedback_input"
@@ -52,7 +52,7 @@
     <!-- 제출 버튼 -->
     <Button
         android:id="@+id/submit_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="제출하기"
         android:textSize="16sp"
@@ -60,10 +60,10 @@
         android:paddingHorizontal="24dp"
         android:paddingVertical="8dp"
         android:layout_marginTop="16dp"
+        android:textColor="#88000000"
+        android:background="@drawable/custom_button_setting_background"
         app:layout_constraintTop_toBottomOf="@id/feedback_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
