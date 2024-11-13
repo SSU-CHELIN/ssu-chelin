@@ -1,228 +1,271 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    android:orientation="vertical">
+    tools:context=".FirstSettingActivity"
+    android:padding="16dp">
 
-    <!-- ScrollView 내부의 모든 요소를 감싸는 LinearLayout -->
-    <LinearLayout
+    <!-- Toolbar를 상단에 고정 -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:contentInsetStartWithNavigation="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:title="" />
 
-        <!-- Toolbar -->
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title=""
-            app:navigationIcon="@drawable/ic_back_arrow"
-            android:contentInsetStartWithNavigation="0dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+    <!-- ScrollView로 내용 부분 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:layout_editor_absoluteX="16dp">
 
-        <!-- 간 설정 질문 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="평소에 간을 어느정도로 먹나요?"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
-
-        <!-- 간 설정 버튼 그룹 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:weightSum="5">
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- 간 설정 질문 -->
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="10dp"
+                android:text="평소에 간을 어느정도로 먹나요?"
+                android:textSize="18sp" />
 
-                <Button
-                    android:id="@+id/salt_level_1"
-                    style="@style/SelectableButtonStyle"
-                    android:layout_width="match_parent"
+            <!-- 간에 대한 RadioGroup -->
+            <RadioGroup
+                android:id="@+id/saltRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/salt_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="1" />
 
-                <TextView
+                <RadioButton
+                    android:id="@+id/salt_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="싱겁다"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:text="2" />
 
-            <Button
-                android:id="@+id/salt_level_2"
-                style="@style/SelectableButtonStyle"
-                android:text="2"
-                android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/salt_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3" />
 
-            <Button
-                android:id="@+id/salt_level_3"
-                style="@style/SelectableButtonStyle"
-                android:text="3"
-                android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/salt_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4" />
 
-            <Button
-                android:id="@+id/salt_level_4"
-                style="@style/SelectableButtonStyle"
-                android:text="4"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/salt_level_5"
-                    android:layout_width="match_parent"
-                    style="@style/SelectableButtonStyle"
+                <RadioButton
+                    android:id="@+id/salt_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="5" />
+            </RadioGroup>
 
-                <TextView
+            <!-- 매운맛에 대한 RadioGroup -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="10dp"
+                android:text="평소에 얼마나 맵게 먹나요?"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/spicyRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/spicy_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="짜다"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- 매운맛 설정 질문 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="평소에 얼마나 맵게 먹나요?"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
-
-        <!-- 매운맛 설정 버튼 그룹 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:weightSum="5">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/spicy_level_1"
-                    android:layout_width="match_parent"
-                    style="@style/SelectableButtonStyle"
                     android:text="1" />
 
-                <TextView
+                <RadioButton
+                    android:id="@+id/spicy_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="순하다"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:text="2" />
 
-            <Button
-                android:id="@+id/spicy_level_2"
-                style="@style/SelectableButtonStyle"
-                android:text="2"
-                android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/spicy_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3" />
 
-            <Button
-                android:id="@+id/spicy_level_3"
-                style="@style/SelectableButtonStyle"
-                android:text="3"
-                android:layout_weight="1" />
+                <RadioButton
+                    android:id="@+id/spicy_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4" />
 
-            <Button
-                android:id="@+id/spicy_level_4"
-                style="@style/SelectableButtonStyle"
-                android:text="4"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/spicy_level_5"
-                    android:layout_width="match_parent"
-                    style="@style/SelectableButtonStyle"
+                <RadioButton
+                    android:id="@+id/spicy_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="5" />
+            </RadioGroup>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="맵다"
-                    android:textSize="12sp" />
-            </LinearLayout>
+            <!-- 해당하는 알레르기가 있나요? -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="10dp"
+                android:text="해당하는 알레르기가 있나요?"
+                android:textSize="18sp" />
+
+            <!-- 알레르기 목록 TableLayout -->
+            <TableLayout
+                android:id="@+id/allergyTable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:stretchColumns="0,1,2">
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_shrimp"
+                        android:text="새우" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_pork"
+                        android:text="돈육" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_soybean"
+                        android:text="대두" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_milk"
+                        android:text="우유" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_rice"
+                        android:text="쌀" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_wheat"
+                        android:text="밀" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_chicken"
+                        android:text="계육" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_peanut"
+                        android:text="땅콩" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_egg"
+                        android:text="계란" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_shellfish"
+                        android:text="조개류" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_tomato"
+                        android:text="토마토" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_octopus"
+                        android:text="낙지" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_crab"
+                        android:text="게" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_mackerel"
+                        android:text="고등어" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_pufferfish"
+                        android:text="복어" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_yellowfish"
+                        android:text="굴비" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_avocado"
+                        android:text="아보카도" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_codroe"
+                        android:text="명란" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_squid"
+                        android:text="오징어" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_miso"
+                        android:text="미소 된장" />
+
+                    <CheckBox
+                        android:id="@+id/allergy_mussel"
+                        android:text="홍합" />
+                </TableRow>
+
+                <TableRow>
+
+                    <CheckBox
+                        android:id="@+id/allergy_roe"
+                        android:text="알류" />
+                </TableRow>
+            </TableLayout>
+
+            <Button
+                android:id="@+id/btn_complete_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="저장"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp" />
         </LinearLayout>
-
-        <!-- 알레르기 질문 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="해당하는 알레르기가 있나요?"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp" />
-
-        <!-- 알레르기 버튼 그룹 -->
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:rowCount="5"
-            android:columnCount="5"
-            android:alignmentMode="alignMargins"
-            android:useDefaultMargins="true">
-
-            <!-- 알레르기 버튼들, 일정한 가로 크기 적용 -->
-            <Button android:id="@+id/allergy_shrimp" style="@style/SelectableAllergyButtonStyle" android:text="새우" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_pork" style="@style/SelectableAllergyButtonStyle" android:text="돈육" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_soy" style="@style/SelectableAllergyButtonStyle" android:text="대두" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_milk" style="@style/SelectableAllergyButtonStyle" android:text="우유" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_rice" style="@style/SelectableAllergyButtonStyle" android:text="쌀" android:layout_width="0dp" android:layout_columnWeight="1" />
-
-            <Button android:id="@+id/allergy_wheat" style="@style/SelectableAllergyButtonStyle" android:text="밀" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_chicken" style="@style/SelectableAllergyButtonStyle" android:text="계육" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_peanut" style="@style/SelectableAllergyButtonStyle" android:text="땅콩" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_egg" style="@style/SelectableAllergyButtonStyle" android:text="계란" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_shellfish" style="@style/SelectableAllergyButtonStyle" android:text="조개류" android:layout_width="0dp" android:layout_columnWeight="1" />
-
-            <Button android:id="@+id/allergy_tomato" style="@style/SelectableAllergyButtonStyle" android:text="토마토" android:layout_width="0dp" android:layout_columnWeight="1" />
-            <Button android:id="@+id/allergy_octopus" style="@style/SelectableAllergyButtonStyle" android:text="낙지" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_bonito" style="@style/SelectableAllergyButtonStyle" android:text="가다랑어" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_sulfite" style="@style/SelectableAllergyButtonStyle" android:text="아황산류" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_fish" style="@style/SelectableAllergyButtonStyle" android:text="알류" android:layout_width="0dp" android:layout_columnWeight="1"/>
-
-            <Button android:id="@+id/allergy_pineapple" style="@style/SelectableAllergyButtonStyle" android:text="파인애플" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_squid" style="@style/SelectableAllergyButtonStyle" android:text="오징어" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_cod" style="@style/SelectableAllergyButtonStyle" android:text="코다리" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_quail" style="@style/SelectableAllergyButtonStyle" android:text="메추리알" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_pollock" style="@style/SelectableAllergyButtonStyle" android:text="명란" android:layout_width="0dp" android:layout_columnWeight="1"/>
-
-            <Button android:id="@+id/allergy_mackerel" style="@style/SelectableAllergyButtonStyle" android:text="고등어" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_dried_pollock" style="@style/SelectableAllergyButtonStyle" android:text="북어" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_whelk" style="@style/SelectableAllergyButtonStyle" android:text="골뱅이" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_mussel" style="@style/SelectableAllergyButtonStyle" android:text="홍합" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <Button android:id="@+id/allergy_clam" style="@style/SelectableAllergyButtonStyle" android:text="바지락" android:layout_width="0dp" android:layout_columnWeight="1"/>
-            <!-- 나머지 알레르기 버튼들 추가 -->
-        </GridLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

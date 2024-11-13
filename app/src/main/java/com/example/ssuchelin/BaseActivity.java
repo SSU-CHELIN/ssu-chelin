@@ -2,16 +2,25 @@
 package com.example.ssuchelin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -20,40 +29,31 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base); // 기본 레이아웃 설정
 
+
         // 네비게이션 바 버튼들 설정
         ImageButton homeButton = findViewById(R.id.navigate_home_button);
         ImageButton reviewButton = findViewById(R.id.navigate_review_button);
         ImageButton rankingButton = findViewById(R.id.navigate_ranking_button);
         ImageButton profileButton = findViewById(R.id.navigate_profile_button);
 
-        homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainViewActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        homeButton.setOnClickListener(v -> navigateToActivity(MainViewActivity.class));
+        profileButton.setOnClickListener(v -> navigateToActivity(ProfileViewActivity.class));
+        rankingButton.setOnClickListener(v -> navigateToActivity(RankingActivity.class));
 
-        profileButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+        // 필요 시 reviewButton의 주석 해제
+        // reviewButton.setOnClickListener(v -> navigateToActivity(ReviewActivity.class));
 
-//        reviewButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, Main.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            startActivity(intent);
-//        });
+    }
 
-//        profileButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(this, ProfileViewActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            startActivity(intent);
-//        });
-
+    private void navigateToActivity(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
 
     protected void setContentLayout(@LayoutRes int layoutResID) {
         FrameLayout container = findViewById(R.id.container);
+        container.removeAllViews();
         View content = LayoutInflater.from(this).inflate(layoutResID, container, false);
         container.addView(content);
     }
@@ -69,14 +69,16 @@ public class BaseActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
+    /*
     private void navigateToReview() {
         //  review 화면으로 이동
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
+    */
     private void navigateToRanking() {
         // ranking 화면으로 이동
-        Intent intent = new Intent(this, ProfileActivity.class);
+        Intent intent = new Intent(this, RankingActivity.class);
         startActivity(intent);
     }
 }

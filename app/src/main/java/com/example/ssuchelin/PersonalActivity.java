@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PersonalActivity extends AppCompatActivity {
+public class PersonalActivity extends BaseActivity {
 
     private RadioGroup saltRadioGroup, spicyRadioGroup;
     private Button btnCompleteRegistration;

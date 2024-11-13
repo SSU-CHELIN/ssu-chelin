@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 // 문의하기 화면
 
-public class FeedbackActivity extends AppCompatActivity {
+public class FeedbackActivity extends BaseActivity {
 
     private EditText feedbackInput;
     private Button submitButton;
@@ -20,7 +20,7 @@ public class FeedbackActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback);
+        setContentLayout(R.layout.activity_feedback);
 
         // Toolbar 설정
         Toolbar toolbar = findViewById(R.id.toolbar);

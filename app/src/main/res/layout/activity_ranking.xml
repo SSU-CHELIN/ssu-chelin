@@ -1,11 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:ignore="MissingConstraints">
 
-    <!-- 1~3위 / 4~10위는 ranking_item 참조 -->
+    <!-- 1~3위 영역 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,7 +22,7 @@
         android:gravity="center"
         android:paddingBottom="16dp">
 
-        <!-- 파베)2위 -->
+        <!-- 2위 -->
         <LinearLayout
             android:id="@+id/second_place_layout"
             android:layout_width="0dp"
@@ -55,7 +64,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- 파베)1위 -->
+        <!-- 1위 -->
         <LinearLayout
             android:id="@+id/first_place_layout"
             android:layout_width="0dp"
@@ -86,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:text="최정인"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -98,7 +107,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- 파베)3위 -->
+        <!-- 3위 -->
         <LinearLayout
             android:id="@+id/third_place_layout"
             android:layout_width="0dp"
@@ -148,9 +157,48 @@
         android:background="#DDDDDD"
         android:layout_marginBottom="8dp" />
 
-    <!-- RecyclerView / ranking_item 참조 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ranking_recycler_view"
+    <!-- 4~10위 정적 순위 리스트 -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 각 순위 항목 예시 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="4"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="BBB"
+                android:gravity="center"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="555"
+                android:gravity="center"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- 다른 순위 항목도 동일한 형식으로 추가 -->
+        <!-- ... -->
+    </LinearLayout>
+
 </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

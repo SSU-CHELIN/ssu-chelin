@@ -1,7 +1,9 @@
 package com.example.ssuchelin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,6 +52,7 @@ public class UsaintRegisterActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
+                            saveStudentIdToPreferences(studentId);
                             // 학번이 이미 존재하는 경우 MainActivity로 이동
                             Toast.makeText(UsaintRegisterActivity.this, "이미 등록된 사용자입니다.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(UsaintRegisterActivity.this, MainViewActivity.class);
@@ -63,6 +66,9 @@ public class UsaintRegisterActivity extends AppCompatActivity {
                                     UserAccount account = new UserAccount();
                                     account.setIdToken(token);
                                     account.setRealStudentId(studentId);
+
+                                    // 새로운 사용자의 학번을 SharedPreferences에 저장
+                                    saveStudentIdToPreferences(studentId);
 
                                     mDatabaseRef.child(studentId).child("UserAccount").setValue(account)
                                             .addOnCompleteListener(task -> {
@@ -93,5 +99,12 @@ public class UsaintRegisterActivity extends AppCompatActivity {
                 });
             }
         });
+
+    }
+    private void saveStudentIdToPreferences(String studentId) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("realStudentId", studentId);
+        editor.apply();
     }
 }
