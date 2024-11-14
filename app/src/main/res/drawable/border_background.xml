@@ -1,0 +1,15 @@
+<!-- res/drawable/border_background.xml -->
+<shape xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="ExtraText">
+    <!-- 배경색을 지정할 경우 solid 사용 -->
+    <solid android:color="@android:color/white" />
+
+    <!-- 외곽선 설정 -->
+    <stroke
+        android:width="2dp"
+        android:color="@android:color/darker_gray" />
+
+    <!-- 모서리를 둥글게 설정 (선택 사항) -->
+    <corners android:radius="8dp" />
+</shape>

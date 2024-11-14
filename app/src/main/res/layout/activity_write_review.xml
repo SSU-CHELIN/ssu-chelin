@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/border_background">>
+
+        <!-- Header Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="리뷰 작성"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:paddingBottom="16dp"/>
+
+        <!-- Image and Menu Information Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:elevation="4dp"
+            android:background="@drawable/border_background">>
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/pizza"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="메인 메뉴"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:paddingBottom="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="우삼겹쌀국수" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="서브 메뉴"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="4dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="마라왕교자만두\n미니밥\n단무지" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Star Rating Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <ImageButton
+                android:id="@+id/starButton1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/star_off"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:layout_margin="4dp"
+                android:contentDescription="별점 1점" />
+
+            <ImageButton
+                android:id="@+id/starButton2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/star_off"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:layout_margin="4dp"
+                android:contentDescription="별점 2점" />
+
+            <ImageButton
+                android:id="@+id/starButton3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/star_off"
+                android:background="@null"
+                android:scaleType="centerInside"
+                android:layout_margin="4dp"
+                android:contentDescription="별점 3점" />
+
+
+        </LinearLayout>
+
+        <!-- Review Text Area with Scrolling -->
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/border_background">>
+
+            <EditText
+                android:id="@+id/review_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:hint="리뷰를 작성해 주세요"
+                android:inputType="textMultiLine"
+                android:maxLength="300"
+                android:background="@android:color/transparent"
+                android:backgroundTint="@android:color/transparent"
+                android:padding="16dp" />
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Character Counter -->
+        <TextView
+            android:id="@+id/character_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 / 300"
+            android:layout_gravity="end"
+            android:paddingTop="4dp" />
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="작성하기"
+            android:textColor="@android:color/white"
+            android:layout_gravity="end"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>

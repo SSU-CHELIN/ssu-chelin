@@ -54,8 +54,8 @@ public class ProfileViewActivity extends BaseActivity {
         // OnClickListener 설정
         //changeProfile.setOnClickListener(view -> navigateToChangeProfile());
         changeInitialSettings.setOnClickListener(view -> navigateToInitialSettings());
-        //checkReviews.setOnClickListener(view -> navigateToCheckReviews());
-        //termsOfService.setOnClickListener(view -> navigateToTermsOfService());
+        checkReviews.setOnClickListener(view -> navigateToCheckReviews());
+        termsOfService.setOnClickListener(view -> navigateToTermsOfService());
         //privacyPolicy.setOnClickListener(view -> navigateToPrivacyPolicy());
         contactUs.setOnClickListener(view -> navigateToFeedback());
         logout.setOnClickListener(view -> logout());
@@ -68,10 +68,24 @@ public class ProfileViewActivity extends BaseActivity {
 
     }
 
+    private void navigateToCheckReviews() {
+        // 초기 설정 화면으로 이동
+        Intent intent = new Intent(ProfileViewActivity.this, CheckReviewsActivity.class);
+        startActivity(intent);
+
+    }
+
     private void navigateToPrivacyPolicy() {
         // 개인정보 처리방침 화면으로 이동
         Intent intent = new Intent(ProfileViewActivity.this, InitialSettingActivity.class);
         startActivity(intent);
+    }
+
+    private void navigateToTermsOfService() {
+        // 초기 설정 화면으로 이동
+        Intent intent = new Intent(ProfileViewActivity.this, WriteReviewActivity.class);
+        startActivity(intent);
+
     }
 
     private void navigateToFeedback() {

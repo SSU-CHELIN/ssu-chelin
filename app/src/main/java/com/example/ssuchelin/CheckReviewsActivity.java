@@ -1,115 +1,107 @@
 package com.example.ssuchelin;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
+import android.preference.PreferenceManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.Collections;
+
 import java.util.ArrayList;
 import java.util.List;
 
-// 내 리뷰 확인 화면
-
 public class CheckReviewsActivity extends AppCompatActivity {
 
-    private LinearLayout reviewsContainer;
-    private TextView noReviewsText;
+    private DatabaseReference databaseReference;
+    private DatabaseReference userInfoReference;
+    private RecyclerView reviewsRecyclerView;
+    private ReviewsAdapter reviewsAdapter;
+    private List<Review> reviewsList = new ArrayList<>();
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_reviews);
 
-        // Toolbar 설정
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        toolbar.setNavigationOnClickListener(v -> finish());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
 
-        reviewsContainer = findViewById(R.id.reviews_container);
-        noReviewsText = findViewById(R.id.no_reviews_text);
+        // Firebase Database reference
+        databaseReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("myReviewData");
+        userInfoReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("userinfo");
 
-        loadReviews();
+        reviewsRecyclerView = findViewById(R.id.reviews_recycler_view); // RecyclerView 초기화
+        // LinearLayoutManager 설정 (리스트 형태로 표시)
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        reviewsRecyclerView.setLayoutManager(layoutManager); // LayoutManager 설정
+
+        // 어댑터 설정
+        reviewsAdapter = new ReviewsAdapter(reviewsList);
+        reviewsRecyclerView.setAdapter(reviewsAdapter);
+        // 사용자 정보 로드
+        loadUserInfo();
     }
 
-    private void loadReviews() {
-        // 파베, Firebase Database Reference 초기화
-        DatabaseReference reviewsRef = FirebaseDatabase.getInstance().getReference("reviews").child("user_id");
-
-
-        // 파베, Firebase 데이터 불러오기
-
-        reviewsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
+    private void loadUserInfo() {
+        userInfoReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<DataSnapshot> reviewsList = new ArrayList<>();
-                for (DataSnapshot reviewSnapshot : snapshot.getChildren()) {
-                    reviewsList.add(reviewSnapshot);
+                username = snapshot.child("userName").getValue(String.class);
+                if (username == null) {
+                    username = "Unknown User";
                 }
 
-                // 최신순으로 정렬
-                Collections.sort(reviewsList, (a, b) -> {
-                    Long timeA = a.child("timestamp").getValue(Long.class);
-                    Long timeB = b.child("timestamp").getValue(Long.class);
-                    return timeB.compareTo(timeA);
-                });
-
-                if (reviewsList.isEmpty()) {
-                    noReviewsText.setVisibility(View.VISIBLE);
-                } else {
-                    noReviewsText.setVisibility(View.GONE);
-                    for (DataSnapshot reviewSnapshot : reviewsList) {
-                        View reviewView = getLayoutInflater().inflate(R.layout.review_item, reviewsContainer, false);
-
-                        // 리뷰 데이터 설정
-                        TextView username = reviewView.findViewById(R.id.review_username);
-                        TextView preferences = reviewView.findViewById(R.id.review_preferences);
-                        TextView content = reviewView.findViewById(R.id.review_content);
-                        TextView date = reviewView.findViewById(R.id.review_date);
-                        TextView menu = reviewView.findViewById(R.id.review_menu);
-                        TextView editButton = reviewView.findViewById(R.id.edit_button);
-
-                        username.setText("최정인");
-                        preferences.setText("간 정도 : " + reviewSnapshot.child("saltLevel").getValue()
-                                + " / 맵기 정도 : " + reviewSnapshot.child("spicyLevel").getValue()
-                                + " / 알레르기 : " + reviewSnapshot.child("allergy").getValue());
-                        content.setText(reviewSnapshot.child("content").getValue(String.class));
-                        date.setText(reviewSnapshot.child("date").getValue(String.class));
-                        menu.setText(reviewSnapshot.child("menuCategory").getValue(String.class) + " - "
-                                + reviewSnapshot.child("menuName").getValue(String.class));
-
-                        // 수정 버튼 클릭 리스너 설정
-                        editButton.setOnClickListener(v -> {
-                           // Intent intent = new Intent(CheckReviewsActivity.this, EditReviewActivity.class);
-                            //intent.putExtra("review_id", reviewSnapshot.getKey());
-                            //startActivity(intent);
-                        });
-
-                        reviewsContainer.addView(reviewView);
-                    }
-                }
+                // 리뷰 데이터 로드
+                loadReviews();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // 에러 처리
+                Toast.makeText(CheckReviewsActivity.this, "사용자 정보 로드 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void loadReviews() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                reviewsList.clear(); // 이전 리뷰 목록 초기화
 
+                for (DataSnapshot reviewSnapshot : dataSnapshot.getChildren()) {
+                    String myReview = reviewSnapshot.child("userReview").getValue(String.class);
+                    Integer starCount = reviewSnapshot.child("starCount").getValue(Integer.class);
+
+                    // 리뷰 객체 생성
+                    Review review = new Review(username, myReview, starCount != null ? starCount : 0);
+
+                    // 리스트에 추가
+                    reviewsList.add(review);
+                }
+
+                // 어댑터에 데이터 전달
+                reviewsAdapter = new ReviewsAdapter(reviewsList);
+                reviewsRecyclerView.setAdapter(reviewsAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(CheckReviewsActivity.this, "데이터 로드 실패: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
+
