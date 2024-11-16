@@ -33,26 +33,6 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".ProfileViewActivity"
-            android:exported="true" />
-        <activity
-            android:name=".BaseActivity"
-            android:exported="true" />
-        <activity
-            android:name=".MainViewActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="callback"
-                    android:scheme="ssuchelin" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".FeedbackActivity"
             android:exported="true" />
         <activity
@@ -74,9 +54,6 @@
             android:name=".InitialSettingActivity"
             android:exported="true" />
         <activity
-            android:name=".ProfileActivity"
-            android:exported="true" />
-        <activity
             android:name=".RankingActivity"
             android:exported="true" /> <!-- 추가된 누락된 액티비티들 -->
         <activity
@@ -84,9 +61,6 @@
             android:exported="true" />
         <activity
             android:name=".PersonalActivity"
-            android:exported="true" />
-        <activity
-            android:name=".RegisterActivity"
             android:exported="true" />
         <activity
             android:name=".UsaintAuthService"
