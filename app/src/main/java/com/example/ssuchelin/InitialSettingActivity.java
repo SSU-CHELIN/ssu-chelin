@@ -9,12 +9,12 @@ import android.view.MenuItem;
 
 // 프로필, 프로필정보 바꾸기 누르고 각 버튼 누를시
 
-public class InitialSettingActivity extends BaseActivity {
+public class InitialSettingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentLayout(R.layout.activity_initial_setting);
+        setContentView(R.layout.activity_initial_setting);
 
         // Toolbar 설정
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -14,7 +14,7 @@ import java.util.List;
 
 // 랭킹 화면 구현
 
-public class RankingActivity extends BaseActivity {
+public class RankingActivity extends AppCompatActivity {
 
     // 상위 3명 사용자 정보
     private TextView firstPlaceName, secondPlaceName, thirdPlaceName;
@@ -22,7 +22,7 @@ public class RankingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentLayout(R.layout.activity_ranking);
+        setContentView(R.layout.activity_ranking);
 
         // 상위 3명 View 초기화
         firstPlaceName = findViewById(R.id.first_place_name);

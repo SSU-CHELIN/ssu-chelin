@@ -1,97 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp">
+    android:layout_margin="8dp"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="12dp"
+    android:background="?attr/selectableItemBackground">
 
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
-android:padding="16dp">
-
-<!-- Header with User Info and Star Rating -->
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
-
-    <!-- User profile picture -->
-    <ImageView
-        android:id="@+id/user_image"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="User profile picture"/>
-
-    <!-- Username -->
-    <TextView
-        android:id="@+id/username"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="최정인"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginEnd="8dp"/>
+        android:padding="16dp">
 
-    <!-- Star Rating -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <!-- Star 1 -->
+        <!-- User profile picture -->
         <ImageView
-            android:id="@+id/star1"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/star_off"/>
+            android:id="@+id/user_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="User profile picture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Star 2 -->
-        <ImageView
-            android:id="@+id/star2"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/star_off"/>
+        <!-- Username -->
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="최정인"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            app:layout_constraintStart_toEndOf="@id/user_image"
+            app:layout_constraintTop_toTopOf="@id/user_image"
+            app:layout_constraintBottom_toBottomOf="@id/user_image" />
 
-        <!-- Star 3 -->
-        <ImageView
-            android:id="@+id/star3"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/star_off"/>
-    </LinearLayout>
-</LinearLayout>
+        <!-- Star Rating -->
+        <LinearLayout
+            android:id="@+id/star_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/username"
+            app:layout_constraintTop_toTopOf="@id/user_image"
+            app:layout_constraintBottom_toBottomOf="@id/user_image">
 
-<!-- Review Text -->
-<TextView
-    android:id="@+id/myreview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="맛있어요 ^.^"
-    android:textSize="14sp"
-    android:textColor="#333333"
-    android:paddingTop="8dp"/>
+            <ImageView
+                android:id="@+id/star1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/star_off" />
 
-<!-- Date and Menu Info -->
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="2024.10.29 (화)"
-    android:textSize="12sp"
-    android:textColor="#666666"
-    android:paddingTop="8dp"/>
+            <ImageView
+                android:id="@+id/star2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/star_off" />
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="뚝배기코너 - 우삼겹쌀국수"
-    android:textSize="12sp"
-    android:textColor="#666666"/>
+            <ImageView
+                android:id="@+id/star3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/star_off" />
+        </LinearLayout>
 
-</LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <!-- Edit Button -->
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="1dp"
+            android:text="수정"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Review Text -->
+        <TextView
+            android:id="@+id/myreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="맛있어요 ^.^"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_image"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Date Info -->
+        <TextView
+            android:id="@+id/review_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2024.10.29 (화)"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myreview" />
+
+        <!-- Menu Info -->
+        <TextView
+            android:id="@+id/menu_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="뚝배기코너 - 우삼겹쌀국수"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/review_date" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

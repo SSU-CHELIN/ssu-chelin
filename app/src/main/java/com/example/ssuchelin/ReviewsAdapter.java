@@ -1,10 +1,13 @@
 package com.example.ssuchelin;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +22,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     public ReviewsAdapter(List<Review> reviewsList) {
         this.reviewsList = reviewsList;
     }
+
 
     @NonNull
     @Override
@@ -41,6 +45,19 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
         holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
         holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
         holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+
+        // edit_button 클릭 이벤트
+        holder.editbtn.setOnClickListener(v -> {
+            // 수정 버튼 클릭 시 필요한 작업 수행
+            Toast.makeText(holder.itemView.getContext(), "수정 클릭됨: " + review.getUserReview(), Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(holder.itemView.getContext(), WriteReviewActivity.class);
+            intent.putExtra("editMode", true); // 수정 모드 활성화
+            intent.putExtra("reviewText", review.getUserReview());
+            intent.putExtra("reviewId", position);
+            intent.putExtra("starCount", review.getStarCount()); // 기존 별점 전달
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -53,6 +70,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
 
         TextView usernameTextView, reviewTextView;
         ImageView star1, star2, star3;
+        Button editbtn;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
@@ -61,6 +79,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
             star1 = itemView.findViewById(R.id.star1); // 첫 번째 별 이미지
             star2 = itemView.findViewById(R.id.star2); // 두 번째 별 이미지
             star3 = itemView.findViewById(R.id.star3); // 세 번째 별 이미지
+            editbtn = itemView.findViewById(R.id.edit_button);
         }
     }
 }
