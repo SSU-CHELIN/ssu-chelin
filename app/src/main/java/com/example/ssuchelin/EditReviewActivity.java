@@ -1,11 +1,16 @@
 package com.example.ssuchelin;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,6 +30,12 @@ public class EditReviewActivity extends AppCompatActivity {
 //        reviewContent = findViewById(R.id.review_content_edit);
 //        saveButton = findViewById(R.id.save_button);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //bottomNavigationView.setSelectedItemId(R.id.page_4); // 첫 번째 버튼을 활성화
+
+
+
         String reviewId = getIntent().getStringExtra("review_id");
         reviewRef = FirebaseDatabase.getInstance().getReference("reviews/user_id").child(reviewId); // 파베 , Firebase Database Reference 초기화
 
@@ -42,6 +53,8 @@ public class EditReviewActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
 
 

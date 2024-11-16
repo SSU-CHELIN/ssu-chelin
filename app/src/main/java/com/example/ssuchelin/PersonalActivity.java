@@ -120,9 +120,10 @@ public class PersonalActivity extends BaseActivity {
             if (task.isSuccessful()) {
                 // 데이터 저장 성공 시 LoginActivity로 이동
                 Toast.makeText(PersonalActivity.this, "회원가입이 완료되었습니다.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(PersonalActivity.this, MainViewActivity.class);
+                Intent intent = new Intent(PersonalActivity.this, MainActivity.class);
+                intent.putExtra("open_fragment", "MainViewFragment"); // 어떤 프래그먼트를 열지 전달
                 startActivity(intent);
-                finish(); // PersonalActivity 종료
+                finish();
             } else {
                 // 데이터 저장 실패 시 메시지 출력
                 Toast.makeText(PersonalActivity.this, "데이터 저장에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();

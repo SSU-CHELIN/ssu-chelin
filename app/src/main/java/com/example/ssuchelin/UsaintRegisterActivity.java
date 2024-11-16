@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +36,7 @@ public class UsaintRegisterActivity extends AppCompatActivity {
         mBtnRegister = findViewById(R.id.btn_register);
         usaintAuthService = new UsaintAuthService();
 
+
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +57,8 @@ public class UsaintRegisterActivity extends AppCompatActivity {
                             saveStudentIdToPreferences(studentId);
                             // 학번이 이미 존재하는 경우 MainActivity로 이동
                             Toast.makeText(UsaintRegisterActivity.this, "이미 등록된 사용자입니다.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(UsaintRegisterActivity.this, MainViewActivity.class);
+                            Intent intent = new Intent(UsaintRegisterActivity.this, MainActivity.class);
+                            intent.putExtra("open_fragment", "MainViewFragment"); // 어떤 프래그먼트를 열지 전달
                             startActivity(intent);
                             finish();
                         } else {
@@ -101,6 +104,14 @@ public class UsaintRegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    public void switchFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     private void saveStudentIdToPreferences(String studentId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();

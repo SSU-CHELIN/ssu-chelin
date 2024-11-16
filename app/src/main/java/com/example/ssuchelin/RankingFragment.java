@@ -1,36 +1,45 @@
 package com.example.ssuchelin;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
-// 랭킹 화면 구현
-
-public class RankingActivity extends BaseActivity {
+public class RankingFragment extends Fragment {
 
     // 상위 3명 사용자 정보
     private TextView firstPlaceName, secondPlaceName, thirdPlaceName;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentLayout(R.layout.activity_ranking);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_ranking, container, false);
+
 
         // 상위 3명 View 초기화
-        firstPlaceName = findViewById(R.id.first_place_name);
-        secondPlaceName = findViewById(R.id.second_place_name);
-        thirdPlaceName = findViewById(R.id.third_place_name);
+        firstPlaceName = view.findViewById(R.id.first_place_name);
+        secondPlaceName = view.findViewById(R.id.second_place_name);
+        thirdPlaceName = view.findViewById(R.id.third_place_name);
 
         // 상위 3명 사용자 이름 가져오기
         loadRankingData();
+
+        return view;
     }
 
     private void loadRankingData() {
@@ -68,4 +77,5 @@ public class RankingActivity extends BaseActivity {
             }
         });
     }
+
 }

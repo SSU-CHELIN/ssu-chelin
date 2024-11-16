@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,13 +16,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +55,7 @@ public class WriteReviewActivity extends BaseActivity {
         reviewEditText = findViewById(R.id.review_edit_text);
         submitbtn = findViewById(R.id.submit_button);
         characterCounterTextView = findViewById(R.id.character_counter);
+
 
         // EditText에 TextWatcher 설정
         reviewEditText.addTextChangedListener(new TextWatcher() {
@@ -157,4 +162,6 @@ public class WriteReviewActivity extends BaseActivity {
             }
         });
     }
+
+
 }

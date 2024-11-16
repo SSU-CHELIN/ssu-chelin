@@ -13,6 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.Map;
 
 //초기설정화면
 
-public class FirstSettingActivity extends BaseActivity {
+public class FirstSettingActivity extends AppCompatActivity {
 
     private RadioGroup saltRadioGroup, spicyRadioGroup;
     private Button btnSavePreferences;
@@ -34,7 +37,7 @@ public class FirstSettingActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentLayout(R.layout.activity_first_setting);
+        setContentView(R.layout.activity_first_setting);
 
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -138,4 +141,6 @@ public class FirstSettingActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

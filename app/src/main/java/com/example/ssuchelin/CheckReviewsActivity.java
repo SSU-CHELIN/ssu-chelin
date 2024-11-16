@@ -1,8 +1,10 @@
 package com.example.ssuchelin;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,9 +12,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +43,7 @@ public class CheckReviewsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
 
+
         // Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("myReviewData");
         userInfoReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("userinfo");
@@ -53,6 +58,8 @@ public class CheckReviewsActivity extends AppCompatActivity {
         reviewsRecyclerView.setAdapter(reviewsAdapter);
         // 사용자 정보 로드
         loadUserInfo();
+
+
     }
 
     private void loadUserInfo() {
@@ -103,5 +110,7 @@ public class CheckReviewsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
 

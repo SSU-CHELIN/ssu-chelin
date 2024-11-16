@@ -5,18 +5,23 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
+import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileViewActivity extends BaseActivity {
+public class ProfileViewActivity extends AppCompatActivity {
 
     private DatabaseReference database;
     private TextView studentIdTextView, usernameTextView;
@@ -26,7 +31,7 @@ public class ProfileViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        setContentLayout(R.layout.activity_profile_view);
+        setContentView(R.layout.activity_profile_view);
 
         changeProfile = findViewById(R.id.change_profile);
         changeInitialSettings = findViewById(R.id.change_initial_settings);
@@ -36,6 +41,34 @@ public class ProfileViewActivity extends BaseActivity {
         contactUs = findViewById(R.id.contact_us);
         logout = findViewById(R.id.logout);
 
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //bottomNavigationView.setSelectedItemId(R.id.page_1); // 첫 번째 버튼을 활성화
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.page_1) {
+                Intent intent1 = new Intent(this, MainViewActivity.class);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent1);
+                finish();
+                return true;
+            } else if (item.getItemId() == R.id.page_2) {
+                Intent intent2 = new Intent(this, ReviewActivity.class);
+                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent2);
+                finish();
+                return true;
+            } else if (item.getItemId() == R.id.page_3) {
+                Intent intent3 = new Intent(this, RankingActivity.class);
+                intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent3);
+                finish();
+                return true;
+            } else if (item.getItemId() == R.id.page_4) {
+                return true;
+            }
+            return false;
+        });
 
 
         // Retrieve the student ID from SharedPreferences
@@ -128,4 +161,12 @@ public class ProfileViewActivity extends BaseActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.page_4);
+    }
+
 }

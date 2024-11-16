@@ -1,18 +1,25 @@
 package com.example.ssuchelin;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 // 문의하기 화면
 
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends AppCompatActivity {
 
     private EditText feedbackInput;
     private Button submitButton;
@@ -20,7 +27,7 @@ public class FeedbackActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentLayout(R.layout.activity_feedback);
+        setContentView(R.layout.activity_feedback);
 
         // Toolbar 설정
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -60,6 +67,7 @@ public class FeedbackActivity extends BaseActivity {
             Toast.makeText(this, "의견을 입력하세요.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
 
 }
