@@ -56,7 +56,6 @@
         android:layout_height="wrap_content"
         android:text="제출하기"
         android:textSize="16sp"
-        android:backgroundTint="@color/turquoise"
         android:paddingHorizontal="24dp"
         android:paddingVertical="8dp"
         android:layout_marginTop="16dp"
