@@ -40,13 +40,13 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity
-            android:name=".FeedbackActivity"
+            android:name=".review.FeedbackActivity"
             android:exported="true" />
         <activity
             android:name=".review.CheckReviewsActivity"
             android:exported="true" />
         <activity
-            android:name=".FirstSettingActivity"
+            android:name=".user.FirstSettingActivity"
             android:exported="true" />
         <activity
             android:name=".user.ChangeProfilePictureActivity"
