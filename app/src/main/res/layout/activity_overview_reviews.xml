@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".OverviewReviewsActivity">
+
+    <!-- Toolbar with Back Button -->
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:contentInsetStartWithNavigation="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:titleTextColor="#FFFFFF"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="리뷰 전체 보기"
+        tools:layout_editor_absoluteX="7dp" />
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/search_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="메뉴 검색"
+        android:background="@drawable/custom_button_initial_background"
+        android:drawableEnd="@drawable/ic_search"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Scroll View for Category Selection -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/search_input"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/category_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Top-Level Categories -->
+            <TextView
+                android:id="@+id/category_tukbaegi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="> 뚝배기"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:onClick="onCategoryClick" />
+
+            <TextView
+                android:id="@+id/category_rice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="> 덮밥"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:onClick="onCategoryClick" />
+
+            <TextView
+                android:id="@+id/category_western"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="> 양식"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:onClick="onCategoryClick" />
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

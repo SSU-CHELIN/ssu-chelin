@@ -19,13 +19,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-//(프로필정보바꾸기) 프로필사진 클릭시
+// (프로필정보바꾸기) 프로필사진 클릭시
 
-public class ChangeProfilePictureActivity extends AppCompatActivity {
+public class ChangeProfilePictureActivity extends BaseActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView profileImage;
-    private Uri imageUri;
+    private static final int PICK_IMAGE_REQUEST = 1; // 이미지 선택 요청 코드
+    private ImageView profileImage; // 선택한 프로필 이미지를 보여주는 ImageView
+    private Uri imageUri; // 선택된 이미지의 URI를 저장하는 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,37 +42,52 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 뒤로가기 아이콘 활성화
         }
 
+        // 프로필 이미지 초기화
         profileImage = findViewById(R.id.profile_image);
 
+        // '사진 선택 및 업로드' 버튼 클릭 시 파일 선택 창을 열기 위한 클릭 리스너 설정
         findViewById(R.id.upload_image_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileChooser();
+                openFileChooser(); // 파일 선택 메서드 호출
             }
         });
     }
 
+    /**
+     * 이미지 파일을 선택할 수 있는 파일 선택기를 여는 메서드
+     */
     private void openFileChooser() {
         Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        intent.setType("image/*"); // 이미지 파일만 선택 가능
+        intent.setAction(Intent.ACTION_GET_CONTENT); // 파일 선택 창을 열기 위한 액션
+        startActivityForResult(intent, PICK_IMAGE_REQUEST); // 선택한 파일에 대해 결과를 받음
     }
 
+    /**
+     * 파일 선택기에서 이미지 선택 후 호출되는 메서드
+     *
+     * @param requestCode 요청 코드
+     * @param resultCode 결과 코드
+     * @param data 선택된 데이터 (이미지)
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // 이미지 선택이 성공했을 경우
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            profileImage.setImageURI(imageUri);
-            //uploadImageToFirebase();
+            imageUri = data.getData(); // 선택된 이미지의 URI 저장
+            profileImage.setImageURI(imageUri); // 선택된 이미지를 ImageView에 표시
+            //uploadImageToFirebase(); // Firebase 업로드 메서드를 호출 (현재 주석 처리됨)
         }
     }
 
-    //크아악 파베 / user_id 고정되어있음, 실제 앱에서는 ID에 맞게 프로필 이미지 저장해야함
+    /*
+    // Firebase에 선택한 이미지를 업로드하는 메서드
+    // (주의) 현재 user_id가 고정되어 있음, 실제 앱에서는 사용자의 고유 ID를 가져와야 함
     private void uploadImageToFirebase() {
         if (imageUri != null) {
-            // Firebase Storage에서 프로필 사진 저장 경로 지정
+            // Firebase Storage에 프로필 사진을 저장할 경로 설정
             StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_pictures/" + "user_id");
 
             // 파일 업로드 및 성공/실패 리스너 추가
@@ -94,17 +109,21 @@ public class ChangeProfilePictureActivity extends AppCompatActivity {
                     });
         }
     }
+    */
 
-
-    // 뒤로가기 버튼 클릭 이벤트 처리
+    /**
+     * Toolbar의 뒤로가기 버튼 클릭 이벤트 처리
+     * 뒤로가기 버튼이 클릭되면 현재 Activity를 종료하고 이전 화면으로 돌아감
+     *
+     * @param item 메뉴 항목
+     * @return 클릭 처리 여부
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // 이전 화면으로 돌아감
+        if (item.getItemId() == android.R.id.home) { // 뒤로가기 버튼이 클릭되었을 때
+            finish(); // 현재 화면을 종료하여 이전 화면으로 돌아감
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 }
-
-
