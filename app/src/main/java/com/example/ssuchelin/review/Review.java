@@ -1,10 +1,14 @@
 package com.example.ssuchelin.review;
 
-// Review 객체 (각 리뷰의 데이터를 담는 모델)
+
 public class Review {
-    private final String username;
-    private final String userReview;
-    private final int starCount;
+    private String username;
+    private String userReview;
+    private int starCount;
+
+    public Review() {
+        // Firebase 데이터 매핑을 위해 기본 생성자 필요
+    }
 
     public Review(String username, String userReview, int starCount) {
         this.username = username;
@@ -16,11 +20,24 @@ public class Review {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getUserReview() {
         return userReview;
+    }
+
+    public void setUserReview(String userReview) {
+        this.userReview = userReview;
     }
 
     public int getStarCount() {
         return starCount;
     }
+
+    public void setStarCount(int starCount) {
+        this.starCount = starCount;
+    }
 }
+

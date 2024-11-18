@@ -21,7 +21,7 @@ import com.google.firebase.storage.StorageReference;
 
 // (프로필정보바꾸기) 프로필사진 클릭시
 
-public class ChangeProfilePictureActivity extends BaseActivity {
+public class ChangeProfilePictureActivity extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 1; // 이미지 선택 요청 코드
     private ImageView profileImage; // 선택한 프로필 이미지를 보여주는 ImageView

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     public ReviewsAdapter(List<Review> reviewsList) {
         this.reviewsList = reviewsList;
     }
-
 
     @NonNull
     @Override
@@ -70,18 +68,18 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     // Review 객체를 담는 뷰홀더 클래스
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-        TextView usernameTextView, reviewTextView;
+        TextView usernameTextView, reviewTextView, reviewPreferences, reviewDate, reviewMenu;
         ImageView star1, star2, star3;
-        Button editbtn;
+        TextView editbtn;
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
-            usernameTextView = itemView.findViewById(R.id.username); // 사용자 이름
-            reviewTextView = itemView.findViewById(R.id.myreview); // 리뷰 텍스트
-            star1 = itemView.findViewById(R.id.star1); // 첫 번째 별 이미지
-            star2 = itemView.findViewById(R.id.star2); // 두 번째 별 이미지
-            star3 = itemView.findViewById(R.id.star3); // 세 번째 별 이미지
-            editbtn = itemView.findViewById(R.id.edit_button);
+            usernameTextView = itemView.findViewById(R.id.review_username); // 사용자 이름
+            reviewTextView = itemView.findViewById(R.id.review_content); // 리뷰 텍스트
+            star1 = itemView.findViewById(R.id.review_star1); // 첫 번째 별 이미지
+            star2 = itemView.findViewById(R.id.review_star2); // 두 번째 별 이미지
+            star3 = itemView.findViewById(R.id.review_star3); // 세 번째 별 이미지
+            editbtn = itemView.findViewById(R.id.edit_button); // 수정 버튼
         }
     }
 }

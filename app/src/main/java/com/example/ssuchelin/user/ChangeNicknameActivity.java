@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 // (프로필정보바꾸기) 닉네임변경 클릭시
 
-public class ChangeNicknameActivity extends BaseActivity {
+public class ChangeNicknameActivity extends AppCompatActivity {
 
     // 사용자가 새로 입력한 닉네임을 담는 EditText 필드
     private EditText newNickname;

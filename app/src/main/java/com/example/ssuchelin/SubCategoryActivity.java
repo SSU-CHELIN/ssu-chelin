@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class SubCategoryActivity extends BaseActivity {
+public class SubCategoryActivity extends AppCompatActivity {
 
     // 하위 카테고리를 표시하는 레이아웃 컨테이너
     private LinearLayout subCategoryContainer;
