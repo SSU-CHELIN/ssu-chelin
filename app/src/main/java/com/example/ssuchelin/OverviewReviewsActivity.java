@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 //파베 부분 추가 안함(현재 동적X), 카테고리 메인 화면
 
-public class OverviewReviewsActivity extends BaseActivity {
+public class OverviewReviewsActivity extends AppCompatActivity {
 
     // 카테고리 항목들이 담길 LinearLayout. 카테고리와 하위 카테고리들을 동적으로 추가하고 제거하기 위해 사용됩니다.
     private LinearLayout categoryContainer;
