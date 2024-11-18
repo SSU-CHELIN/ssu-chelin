@@ -8,6 +8,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.ssuchelin.R;
+import com.example.ssuchelin.user.ChangeContactActivity;
+import com.example.ssuchelin.user.ChangeNicknameActivity;
+import com.example.ssuchelin.user.ChangeProfilePictureActivity;
 
 // 프로필, 프로필정보 바꾸기 누르고 각 버튼 누를시
 

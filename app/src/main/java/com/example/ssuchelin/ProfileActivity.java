@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileActivity extends BaseActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     private TextView usernameTextView, studentIdTextView, rankingTextView; // 사용자 이름, 학번, 랭킹을 표시하는 텍스트뷰
     private ImageView profilePicture; // 프로필 사진을 표시하는 이미지뷰

@@ -22,7 +22,7 @@ import java.util.List;
 
 // 내 리뷰 확인 화면
 
-public class CheckReviewsActivity extends BaseActivity {
+public class CheckReviewsActivity extends AppCompatActivity {
 
     private LinearLayout reviewsContainer; // 리뷰 목록을 표시하는 LinearLayout
     private TextView noReviewsText; // "작성된 리뷰가 없습니다"라는 메시지를 표시하는 TextView

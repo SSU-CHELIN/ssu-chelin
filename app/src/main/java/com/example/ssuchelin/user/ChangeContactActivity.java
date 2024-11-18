@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 // (프로필정보바꾸기) 연락처변경 클릭시
 
-public class ChangeContactActivity extends BaseActivity {
+public class ChangeContactActivity extends AppCompatActivity {
 
     // 사용자가 새로 입력한 연락처를 담는 EditText 필드
     private EditText newContact;
