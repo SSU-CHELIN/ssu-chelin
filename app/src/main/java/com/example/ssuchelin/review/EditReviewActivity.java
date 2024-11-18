@@ -1,4 +1,4 @@
-package com.example.ssuchelin;
+package com.example.ssuchelin.review;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -29,9 +29,6 @@ public class EditReviewActivity extends AppCompatActivity {
 
         // 이전 화면에서 전달된 리뷰 ID를 받아옴
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        //bottomNavigationView.setSelectedItemId(R.id.page_4); // 첫 번째 버튼을 활성화
-
 
 
         String reviewId = getIntent().getStringExtra("review_id");

@@ -1,4 +1,4 @@
-package com.example.ssuchelin;
+package com.example.ssuchelin.user;
 
 import android.content.Intent;
 import android.os.Bundle;

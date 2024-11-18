@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.android.application") version "8.1.1" apply false
+
 }
 
 android {
@@ -66,7 +68,7 @@ dependencies {
 
     // Material Design
     implementation ("com.google.android.material:material:1.9.0")
-
+    implementation ("androidx.recyclerview:recyclerview:1.3.0")
     // AndroidX 라이브러리
     implementation(libs.appcompat)
     implementation(libs.activity)

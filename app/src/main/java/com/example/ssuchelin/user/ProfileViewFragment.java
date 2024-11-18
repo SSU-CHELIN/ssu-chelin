@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.ssuchelin.review.CheckReviewsActivity;
 import com.example.ssuchelin.review.FeedbackActivity;
 import com.example.ssuchelin.R;
 import com.example.ssuchelin.review.WriteReviewActivity;
