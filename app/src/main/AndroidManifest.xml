@@ -15,20 +15,27 @@
         android:theme="@style/Theme.Ssuchelin"
         tools:targetApi="34">
         <activity
-            android:name=".ReviewActivity"
+            android:name=".menu.ExampleActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".review.ReviewActivity"
             android:exported="false" />
         <activity
-            android:name=".WriteReviewActivity"
-            android:exported="false" /> <!-- FirstloginActivity 설정: 앱 실행 시 가장 먼저 실행되는 액티비티 -->
+            android:name=".review.WriteReviewActivity"
+            android:exported="false" />
         <activity
-            android:name=".FirstloginActivity"
+            android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- 나머지 액티비티 선언 -->
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true" />
@@ -36,40 +43,40 @@
             android:name=".FeedbackActivity"
             android:exported="true" />
         <activity
-            android:name=".CheckReviewsActivity"
+            android:name=".review.CheckReviewsActivity"
             android:exported="true" />
         <activity
             android:name=".FirstSettingActivity"
             android:exported="true" />
         <activity
-            android:name=".ChangeProfilePictureActivity"
+            android:name=".user.ChangeProfilePictureActivity"
             android:exported="true" />
         <activity
-            android:name=".ChangeContactActivity"
+            android:name=".user.ChangeContactActivity"
             android:exported="true" />
         <activity
-            android:name=".ChangeNicknameActivity"
+            android:name=".user.ChangeNicknameActivity"
             android:exported="true" />
         <activity
-            android:name=".InitialSettingActivity"
+            android:name=".user.InitialSettingActivity"
             android:exported="true" />
         <activity
-            android:name=".RankingActivity"
+            android:name=".ranking.RankingActivity"
             android:exported="true" /> <!-- 추가된 누락된 액티비티들 -->
         <activity
-            android:name=".EditReviewActivity"
+            android:name=".review.EditReviewActivity"
             android:exported="true" />
         <activity
-            android:name=".PersonalActivity"
+            android:name=".user.PersonalActivity"
             android:exported="true" />
         <activity
-            android:name=".UsaintAuthService"
+            android:name=".login.UsaintAuthService"
             android:exported="true" />
         <activity
-            android:name=".UsaintRegisterActivity"
+            android:name=".login.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".user.UserProfileActivity"
             android:exported="true" />
     </application>
 

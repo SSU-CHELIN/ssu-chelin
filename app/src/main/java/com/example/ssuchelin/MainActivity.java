@@ -5,6 +5,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.ssuchelin.menu.MenuFragment;
+import com.example.ssuchelin.ranking.RankingFragment;
+import com.example.ssuchelin.review.ReviewFragment;
+import com.example.ssuchelin.user.ProfileViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,17 +21,17 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             String openFragment = getIntent().getStringExtra("open_fragment");
 
-            if ("MainViewFragment".equals(openFragment)) {
-                switchFragment(new MainViewFragment());
+            if ("MenuFragment".equals(openFragment)) {
+                switchFragment(new MenuFragment());
             } else {
-                switchFragment(new MainViewFragment()); // 기본 프래그먼트도 MainViewFragment로 설정
+                switchFragment(new MenuFragment()); // 기본 프래그먼트도 MainViewFragment로 설정
             }
         }
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.page_1) {
-                switchFragment(new MainViewFragment());
+                switchFragment(new MenuFragment());
                 return true;
             } else if (item.getItemId() == R.id.page_2) {
                 switchFragment(new ReviewFragment());
