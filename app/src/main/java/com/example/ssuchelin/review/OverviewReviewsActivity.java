@@ -1,4 +1,4 @@
-package com.example.ssuchelin;
+package com.example.ssuchelin.review;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.ssuchelin.R;
+import com.example.ssuchelin.ReviewListActivity;
+
 import java.util.HashMap;
 
 //파베 부분 추가 안함(현재 동적X), 카테고리 메인 화면
