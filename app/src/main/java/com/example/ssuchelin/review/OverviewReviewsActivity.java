@@ -15,6 +15,7 @@ import com.example.ssuchelin.ReviewListActivity;
 
 import java.util.HashMap;
 
+//흐음
 //파베 부분 추가 안함(현재 동적X), 카테고리 메인 화면
 
 public class OverviewReviewsActivity extends AppCompatActivity {
