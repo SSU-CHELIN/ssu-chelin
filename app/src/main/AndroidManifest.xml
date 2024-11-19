@@ -14,15 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ssuchelin"
         tools:targetApi="34">
-        <activity
-            android:name=".menu.ExampleActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".review.ReviewActivity"
             android:exported="false" />
@@ -59,12 +51,8 @@
         <activity
             android:name=".user.ChangeNicknameActivity"
             android:exported="true" />
-        <activity
-            android:name=".user.InitialSettingActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ranking.RankingActivity"
-            android:exported="true" /> <!-- 추가된 누락된 액티비티들 -->
+
+
         <activity
             android:name=".review.EditReviewActivity"
             android:exported="true" />
