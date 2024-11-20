@@ -16,6 +16,18 @@
         app:navigationIcon="@drawable/ic_back_arrow"
         tools:ignore="MissingConstraints" />
 
+    <!-- 하위 카테고리 이름 -->
+    <TextView
+        android:id="@+id/sub_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <LinearLayout
         android:id="@+id/sub_category_container"
         android:layout_width="match_parent"
