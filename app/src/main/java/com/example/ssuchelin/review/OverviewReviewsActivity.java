@@ -2,6 +2,7 @@ package com.example.ssuchelin.review;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -31,9 +32,35 @@ public class OverviewReviewsActivity extends AppCompatActivity {
         expandedCategories = new HashMap<>();
         categoryRef = FirebaseDatabase.getInstance().getReference("Category"); // Firebase "Category" 루트
 
+        // 검색 입력창 초기화 및 리스너 추가
+        EditText searchInput = findViewById(R.id.search_input);
+        searchInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                String query = searchInput.getText().toString().trim();
+
+                if (!query.isEmpty()) {
+                    // 검색 이벤트 중복 방지
+                    if (!searchInput.isFocused()) return true; // 이미 처리된 이벤트는 무시
+
+                    // 검색어를 SearchResultsActivity로 전달
+                    Intent intent = new Intent(OverviewReviewsActivity.this, SearchResultsActivity.class);
+                    intent.putExtra("searchQuery", query);
+                    startActivity(intent);
+
+                    // 키보드 닫기 및 포커스 제거
+                    searchInput.clearFocus();
+                }
+                return true; // 이벤트 소비 (중복 방지)
+            }
+
+            return false; // 다른 이벤트로 전달
+        });
+
         // Firebase에서 상위 카테고리 로드
         loadCategories();
     }
+
+
 
     private void loadCategories() {
         categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,6 +122,11 @@ public class OverviewReviewsActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int index = categoryContainer.indexOfChild(categoryTextView) + 1;
 
+                // 순서 유지를 위해 상위 카테고리 이후에만 추가
+                if (expandedCategories.get(categoryKey) && index < categoryContainer.getChildCount()) {
+                    removeSubCategories(categoryTextView);
+                }
+
                 if (!snapshot.hasChildren()) {
                     TextView noSubCategoryTextView = new TextView(OverviewReviewsActivity.this);
                     noSubCategoryTextView.setText("   > 해당하는 메뉴가 없습니다");
@@ -106,15 +138,15 @@ public class OverviewReviewsActivity extends AppCompatActivity {
 
                 for (DataSnapshot subCategorySnapshot : snapshot.getChildren()) {
                     String subCategoryKey = subCategorySnapshot.getKey();
-                    String subCategoryName = subCategorySnapshot.getValue(String.class);
+                    String subCategoryName = subCategorySnapshot.getKey();
 
-                    if (subCategoryName != null && subCategoryKey != null) {
+                    if (subCategoryKey != null && subCategoryName != null) {
                         TextView subCategoryTextView = new TextView(OverviewReviewsActivity.this);
                         subCategoryTextView.setText("   > " + subCategoryName);
                         subCategoryTextView.setTextSize(16);
                         subCategoryTextView.setPadding(48, 8, 8, 8);
 
-                        subCategoryTextView.setOnClickListener(v -> openReviewList(subCategoryKey, subCategoryName));
+                        subCategoryTextView.setOnClickListener(v -> openReviewList(subCategoryKey, subCategoryName, categoryKey));
                         categoryContainer.addView(subCategoryTextView, index++);
                     }
                 }
@@ -135,10 +167,12 @@ public class OverviewReviewsActivity extends AppCompatActivity {
         }
     }
 
-    private void openReviewList(String subCategoryKey, String subCategoryName) {
+    private void openReviewList(String subCategoryKey, String subCategoryName, String parentNode) {
         Intent intent = new Intent(this, SubCategoryActivity.class);
+        intent.putExtra("parentNode", parentNode);
         intent.putExtra("subCategoryKey", subCategoryKey);
         intent.putExtra("subCategoryName", subCategoryName);
         startActivity(intent);
     }
+
 }

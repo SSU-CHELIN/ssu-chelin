@@ -16,6 +16,10 @@
         tools:targetApi="34">
 
         <activity
+            android:name=".review.SearchResultsActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
+        <activity
             android:name=".review.ReviewActivity"
             android:exported="false" />
         <activity
