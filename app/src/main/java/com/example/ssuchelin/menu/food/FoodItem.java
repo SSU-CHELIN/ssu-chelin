@@ -17,15 +17,31 @@ public class FoodItem {
         return mainMenu;
     }
 
+    public void setMainMenu(String mainMenu) {
+        this.mainMenu = mainMenu;
+    }
+
     public String getSubMenu() {
         return subMenu;
+    }
+
+    public void setSubMenu(String subMenu) {
+        this.subMenu = subMenu;
     }
 
     public int getImageResId() {
         return imageResId;
     }
 
+    public void setImageResId(int imageResId) {
+        this.imageResId = imageResId;
+    }
+
     public float getRating() {
         return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

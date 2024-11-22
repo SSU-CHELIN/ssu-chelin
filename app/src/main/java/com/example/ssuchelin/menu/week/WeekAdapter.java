@@ -25,6 +25,7 @@ public class WeekAdapter extends RecyclerView.Adapter<WeekAdapter.ViewHolder> {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
     private OnDateClickListener onDateClickListener;
 
+
     public WeekAdapter(List<Date> dates, Context context) {
         this.dates = dates;
         this.context = context;

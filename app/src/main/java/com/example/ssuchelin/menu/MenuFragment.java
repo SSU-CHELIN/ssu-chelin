@@ -144,23 +144,68 @@
 package com.example.ssuchelin.menu;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.ssuchelin.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class MenuFragment extends Fragment {
+    private Calendar calendar;
+    ImageButton prev,next;
+    EditText monthSelectButton;
 
     public MenuFragment() {
         // Required empty public constructor
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@Nullable LayoutInflater inflater,@Nullable ViewGroup container,@Nullable
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_menu, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Initialize calendar to current date
+        calendar = Calendar.getInstance();
+
+        // Find views
+        ImageButton prevButton = view.findViewById(R.id.prev_button);
+        ImageButton nextButton = view.findViewById(R.id.next_button);
+        monthSelectButton = view.findViewById(R.id.month_select_button);
+
+        // Set initial month
+        updateMonthDisplay();
+
+        // Set click listeners
+        prevButton.setOnClickListener(v -> {
+            calendar.add(Calendar.MONTH, -1); // Decrement month
+            updateMonthDisplay();
+        });
+
+        nextButton.setOnClickListener(v -> {
+            calendar.add(Calendar.MONTH, 1); // Increment month
+            updateMonthDisplay();
+        });
+    }
+    private void updateMonthDisplay() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+        String monthYear = dateFormat.format(calendar.getTime());
+        monthSelectButton.setText(monthYear); // Update EditText with new month
     }
 }
 

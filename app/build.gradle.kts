@@ -67,7 +67,7 @@ dependencies {
 
     // Material Design
     implementation ("com.google.android.material:material:1.9.0")
-    implementation ("androidx.recyclerview:recyclerview:1.4.0")
+    implementation ("androidx.recyclerview:recyclerview:1.3.0")
     // AndroidX 라이브러리
     implementation(libs.appcompat)
     implementation(libs.activity)
