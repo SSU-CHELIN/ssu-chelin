@@ -11,6 +11,9 @@ public class User {
     public User() {
         // Firebase를 위한 기본 생성자
     }
+    public User(String name) {
+        this.name = name;
+    }
 
     // 모든 필드를 초기화하는 생성자
     public User(String id, String name, int score, String profileImageUrl) {
@@ -31,6 +34,10 @@ public class User {
 
     public int getScore() {
         return score; // 사용자 점수 반환
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getProfileImageUrl() {

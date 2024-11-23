@@ -5,15 +5,21 @@ public class Review {
     private String username;
     private String userReview;
     private int starCount;
+    private int saltPreference;
+    private int spicyPreference;
+    private String allergies;
 
     public Review() {
         // Firebase 데이터 매핑을 위해 기본 생성자 필요
     }
 
-    public Review(String username, String userReview, int starCount) {
+    public Review(String username, String userReview, int starCount, int saltPreference, int spicyPreference, String allergies) {
         this.username = username;
         this.userReview = userReview;
         this.starCount = starCount;
+        this.saltPreference = saltPreference;
+        this.spicyPreference = spicyPreference;
+        this.allergies = allergies;
     }
 
     public String getUsername() {
@@ -39,5 +45,8 @@ public class Review {
     public void setStarCount(int starCount) {
         this.starCount = starCount;
     }
+    public int getSaltPreference() { return saltPreference; }
+    public int getSpicyPreference() { return spicyPreference; }
+    public String getAllergies() { return allergies; }
 }
 

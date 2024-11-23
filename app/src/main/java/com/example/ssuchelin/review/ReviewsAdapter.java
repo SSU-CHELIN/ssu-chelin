@@ -45,6 +45,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
         holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
         holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
         holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+        // 간 정도, 맵기 정도, 알레르기 정보 설정
+        holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
+        holder.spicyLevelTextView.setText("맵기 정도: " + review.getSpicyPreference());
+        holder.allergyInfoTextView.setText("알레르기: " + review.getAllergies());
 
         // edit_button 클릭 이벤트
         holder.editbtn.setOnClickListener(v -> {
@@ -65,10 +69,17 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
         return reviewsList.size(); // 리뷰의 개수를 반환
     }
 
+    // RecyclerView 데이터를 업데이트하는 메서드
+    public void updateReviews(List<Review> newReviews) {
+        reviewsList.clear(); // 기존 데이터 삭제
+        reviewsList.addAll(newReviews); // 새로운 데이터 추가
+        notifyDataSetChanged(); // RecyclerView에 변경 사항 알림
+    }
+
     // Review 객체를 담는 뷰홀더 클래스
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {
 
-        TextView usernameTextView, reviewTextView, reviewPreferences, reviewDate, reviewMenu;
+        TextView usernameTextView, reviewTextView, saltLevelTextView, spicyLevelTextView, allergyInfoTextView;
         ImageView star1, star2, star3;
         TextView editbtn;
 
@@ -80,6 +91,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
             star2 = itemView.findViewById(R.id.review_star2); // 두 번째 별 이미지
             star3 = itemView.findViewById(R.id.review_star3); // 세 번째 별 이미지
             editbtn = itemView.findViewById(R.id.edit_button); // 수정 버튼
+            saltLevelTextView = itemView.findViewById(R.id.salt_level); // 간 정도
+            spicyLevelTextView = itemView.findViewById(R.id.spicy_level); // 맵기 정도
+            allergyInfoTextView = itemView.findViewById(R.id.allergy_info); // 알레르기 정보
         }
     }
 }

@@ -30,6 +30,9 @@ public class CheckReviewsActivity extends AppCompatActivity {
     private ReviewsAdapter reviewsAdapter;
     private List<Review> reviewsList = new ArrayList<>();
     private String username;
+    private String saltPreference;
+    private String spicyPreference;
+    private String allergies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +73,26 @@ public class CheckReviewsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 username = snapshot.child("userName").getValue(String.class);
-                if (username == null) {
-                    username = "Unknown User";
+                saltPreference = snapshot.child("saltPreference").getValue(String.class);
+                spicyPreference = snapshot.child("spicyPreference").getValue(String.class);
+                // 알레르기 정보를 리스트로 가져옴
+                List<String> allergyList = new ArrayList<>();
+                DataSnapshot allergiesSnapshot = snapshot.child("allergies");
+                if (allergiesSnapshot.exists()) {
+                    for (DataSnapshot allergySnapshot : allergiesSnapshot.getChildren()) {
+                        String allergy = allergySnapshot.getValue(String.class);
+                        if (allergy != null) {
+                            allergyList.add(allergy);
+                        }
+                    }
                 }
+                allergies = allergyList.isEmpty() ? "None" : String.join(", ", allergyList);
+
+
+
+                if (username == null) username = "Unknown User";
+                if (saltPreference == null) saltPreference = "Unknown";
+                if (spicyPreference == null) spicyPreference = "Unknown";
 
                 // 리뷰 데이터 로드
                 loadReviews();
@@ -95,8 +115,14 @@ public class CheckReviewsActivity extends AppCompatActivity {
                     String myReview = reviewSnapshot.child("userReview").getValue(String.class);
                     Integer starCount = reviewSnapshot.child("starCount").getValue(Integer.class);
 
-                    // 리뷰 객체 생성
-                    Review review = new Review(username, myReview, starCount != null ? starCount : 0);
+                    Review review = new Review(
+                            username,
+                            myReview,
+                            starCount != null ? starCount : 0,
+                            Integer.parseInt(saltPreference),  // 간 정도
+                            Integer.parseInt(spicyPreference), // 맵기 정도
+                            allergies
+                    );
 
                     // 리스트에 추가
                     reviewsList.add(review);

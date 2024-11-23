@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +17,7 @@ import com.example.ssuchelin.user.User;
 import com.example.ssuchelin.user.UserProfileActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // 랭킹 4-10위 사용자를 동적으로 할당하여 표시하는 Adapter
 public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHolder> {
@@ -30,9 +33,10 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
 
     // 목록 업데이트 메서드: 새로운 사용자 리스트로 목록을 업데이트
     @SuppressLint("NotifyDataSetChanged")
-    public void updateList(ArrayList<User> newList) {
-        rankingList = newList; // 새로운 사용자 리스트로 랭킹 리스트 업데이트
+    public void updateList(List<User> newList) {
+        rankingList =new ArrayList<>(newList); // 새로운 사용자 리스트로 랭킹 리스트 업데이트
         notifyDataSetChanged(); // 데이터 변경을 RecyclerView에 알림
+        //Toast.makeText(context, "Adapter에 업데이트된 데이터 수: " + rankingList.size(), Toast.LENGTH_SHORT).show();
     }
 
     // ViewHolder 객체를 생성하는 메서드, XML 레이아웃을 객체로 변환

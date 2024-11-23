@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
 
-    <!-- 동적으로 된다는데 모르겠다..? -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        tools:ignore="MissingConstraints">
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/rank_position"
@@ -20,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="4"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/rank_name"
@@ -28,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="User Name"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/rank_score"
@@ -36,8 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="123"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="14sp" />
     </LinearLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
