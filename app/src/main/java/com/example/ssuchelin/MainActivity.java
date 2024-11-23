@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-                BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.page_1) {
                 switchFragment(new MenuFragment());
@@ -96,12 +96,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openFragment(@NonNull Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
     public void switchFragment(Fragment fragment) {
         String fragmentTag = fragment.getClass().getSimpleName();
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -115,5 +109,12 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
+
+    private void openFragment(@NonNull Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
+
 
 }
