@@ -332,20 +332,14 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
-    private void updateCalendar(RecyclerView recyclerView) {
-        calendarAdapter = new CalendarAdapter(getDaysOfMonth(currentCalendar), selectedDate -> {
-            // 날짜 클릭 이벤트 처리
-            Toast.makeText(getContext(), "Clicked: " + selectedDate, Toast.LENGTH_SHORT).show();
-        });
-        recyclerView.setAdapter(calendarAdapter);
-        updateMonthYearText();
-    }
 
     // RecyclerView에 해당 월의 날짜 갱신
-    private void updateCalendar() {
+    private void updateCalendar(RecyclerView recyclerView) {
         calendarAdapter.updateDays(getDaysOfMonth(currentCalendar));
         calendarAdapter.notifyDataSetChanged();
         monthYearText.setText(getMonthYearFromCalendar(currentCalendar));
+        recyclerView.setAdapter(calendarAdapter);
+        updateMonthYearText();
     }
 
     // 해당 월의 날짜 리스트 생성
