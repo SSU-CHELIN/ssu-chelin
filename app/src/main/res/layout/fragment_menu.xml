@@ -1,85 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <FrameLayout
-        android:layout_width="252dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="50dp">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/the_ssu_chelin_guide" />
-    </FrameLayout>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="vertical"
-        android:gravity="center">
-        <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <ImageView
+            android:padding="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/the_ssu_schelin_guide"
+            android:layout_gravity="center_horizontal">
+        </ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/prev_button"
+                android:id="@+id/prevButton"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back_arrow"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_back_arrow" />
+                android:text="Prev" />
+
             <EditText
+                android:id="@+id/monthYearText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="16dp"
                 android:text="month"
-                android:background="@android:color/transparent"
-                android:id="@+id/month_select_button">
-            </EditText>
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:id="@+id/next_button"
-                android:src="@drawable/ic_next_arrow"/>
-
-
-        </LinearLayout>
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/week_recycler_view"
+                android:id="@+id/nextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal" />
-        </HorizontalScrollView>
+                android:src="@drawable/ic_next_arrow"
+                android:background="@android:color/transparent"
+                android:text="Next" />
+        </LinearLayout>
 
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="380dp"
-        android:layout_height="10dp"
-        android:src="@drawable/line"
-        android:layout_gravity="center" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/food_view"
+            android:id="@+id/calendarRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:scrollbars="horizontal" />
+        <ImageView
+            android:paddingTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/line"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
+</FrameLayout>
 
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="match_parent"-->
+    <!--    android:fillViewport="true">-->
 
-</LinearLayout>
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:padding="16dp">-->
+
+    <!--        &lt;!&ndash; 캘린더 &ndash;&gt;-->
+    <!--        <CalendarView-->
+    <!--            android:id="@+id/calendarView"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginBottom="16dp" />-->
+
+    <!--        &lt;!&ndash; Fetch 버튼 &ndash;&gt;-->
+    <!--        <Button-->
+    <!--            android:id="@+id/buttonFetchMenu"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="Fetch Menu"-->
+    <!--            android:layout_marginBottom="16dp" />-->
+
+    <!--        &lt;!&ndash; 이미지1과 메뉴1 &ndash;&gt;-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:layout_marginBottom="8dp">-->
+    <!--            <ImageView-->
+    <!--                android:id="@+id/imageView1"-->
+    <!--                android:layout_width="120dp"-->
+    <!--                android:layout_height="120dp"-->
+    <!--                android:layout_marginEnd="8dp"-->
+    <!--                android:scaleType="centerCrop" />-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/menuText1"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:text="Menu 1"-->
+    <!--                android:textSize="16sp"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:background="#EFEFEF"-->
+    <!--                android:textColor="#333" />-->
+    <!--        </LinearLayout>-->
+
+    <!--        &lt;!&ndash; 이미지2과 메뉴2 &ndash;&gt;-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:layout_marginBottom="8dp">-->
+    <!--            <ImageView-->
+    <!--                android:id="@+id/imageView2"-->
+    <!--                android:layout_width="120dp"-->
+    <!--                android:layout_height="120dp"-->
+    <!--                android:layout_marginEnd="8dp"-->
+    <!--                android:scaleType="centerCrop" />-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/menuText2"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:text="Menu 2"-->
+    <!--                android:textSize="16sp"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:background="#EFEFEF"-->
+    <!--                android:textColor="#333" />-->
+    <!--        </LinearLayout>-->
+
+    <!--        &lt;!&ndash; 이미지3과 메뉴3 &ndash;&gt;-->
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:gravity="center_vertical">-->
+    <!--            <ImageView-->
+    <!--                android:id="@+id/imageView3"-->
+    <!--                android:layout_width="120dp"-->
+    <!--                android:layout_height="120dp"-->
+    <!--                android:layout_marginEnd="8dp"-->
+    <!--                android:scaleType="centerCrop" />-->
+    <!--            <TextView-->
+    <!--                android:id="@+id/menuText3"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_weight="1"-->
+    <!--                android:text="Menu 3"-->
+    <!--                android:textSize="16sp"-->
+    <!--                android:padding="8dp"-->
+    <!--                android:background="#EFEFEF"-->
+    <!--                android:textColor="#333" />-->
+    <!--        </LinearLayout>-->
+
+    <!--    </LinearLayout>-->
+    <!--</ScrollView>-->
