@@ -61,28 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
     }
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        // Intent에서 "open_fragment" 값을 가져옴
-//        String fragmentToOpen = getIntent().getStringExtra("open_fragment");
-//        if (fragmentToOpen != null) {
-//            switch (fragmentToOpen) {
-//                case "MenuFragment":
-//                    openFragment(new MenuFragment());
-//                    break;
-//                // 필요한 경우 다른 프래그먼트를 처리
-//            }
-//        }
-//    }
-//
-//    private void openFragment(@NonNull Fragment fragment) {
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, fragment)
-//                .commit();
-//    }
+
 
 
 }

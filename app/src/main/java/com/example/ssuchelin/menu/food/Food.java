@@ -1,12 +1,12 @@
 package com.example.ssuchelin.menu.food;
 
-public class FoodItem {
+public class Food {
     private String mainMenu;
     private String subMenu;
     private int imageResId;
     private float rating; // 별점
 
-    public FoodItem(String mainMenu, String subMenu, int imageResId, float rating) {
+    public Food(String mainMenu, String subMenu, int imageResId, float rating) {
         this.mainMenu = mainMenu;
         this.subMenu = subMenu;
         this.imageResId = imageResId;

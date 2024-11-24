@@ -13,9 +13,14 @@ import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
     private List<String> days;
+    private OnDayClickListener listener; // 클릭 리스너 인터페이스
 
-    public CalendarAdapter(List<String> days) {
+    public interface OnDayClickListener {
+        void onDayClick(String date);
+    }
+    public CalendarAdapter(List<String> days,OnDayClickListener listener) {
         this.days = days;
+        this.listener=listener;
     }
 
     @NonNull
@@ -28,7 +33,18 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
+        String day = days.get(position);
         holder.dayTextView.setText(days.get(position));
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDayClick(day); // 클릭된 날짜 전달
+            }
+        });
+    }
+
+    public void updateDays(List<String> newDays) {
+        this.days = newDays;
     }
 
     @Override
