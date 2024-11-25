@@ -64,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(RegisterActivity.this, "이미 등록된 사용자입니다.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                             intent.putExtra("open_fragment", "MenuFragment"); // 어떤 프래그먼트를 열지 전달
+                            saveLoginState();
                             startActivity(intent);
                             finish();
                         } else {
@@ -84,6 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                     Toast.makeText(RegisterActivity.this, "U-SAINT 로그인 성공", Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(RegisterActivity.this, PersonalActivity.class);
                                                     intent.putExtra("studentId", studentId);
+                                                    saveLoginState();
                                                     startActivity(intent);
                                                     finish();
                                                 } else {
@@ -123,4 +125,12 @@ public class RegisterActivity extends AppCompatActivity {
         editor.putString("realStudentId", studentId);
         editor.apply();
     }
+
+    public void saveLoginState() {
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", true); // 로그인 상태 저장
+        editor.apply();
+    }
+
 }
