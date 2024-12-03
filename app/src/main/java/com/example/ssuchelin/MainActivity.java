@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.menu.MenuFragment;
 import com.example.ssuchelin.ranking.RankingFragment;
+import com.example.ssuchelin.review.OverviewReviewsFragment;
 import com.example.ssuchelin.review.ReviewFragment;
 import com.example.ssuchelin.user.ProfileViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 switchFragment(new MenuFragment());
                 return true;
             } else if (item.getItemId() == R.id.page_2) {
-                switchFragment(new ReviewFragment());
+                switchFragment(new OverviewReviewsFragment());
                 return true;
             } else if (item.getItemId() == R.id.page_3) {
                 switchFragment(new RankingFragment());
