@@ -143,6 +143,7 @@
 //}
 package com.example.ssuchelin.menu;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -152,6 +153,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,6 +165,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ssuchelin.R;
+import com.example.ssuchelin.databinding.FragmentMenuBinding;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -178,28 +181,36 @@ import java.util.Locale;
 
 public class MenuFragment extends Fragment {
     private ImageView imageView1, imageView2, imageView3;
-    private TextView menuText1, menuText2, menuText3;
+    private TextView menuText1, menuText2, menuText3,subMenuText1,subMenuText2,subMenuText3;
+    private TextView categoryText1,categoryText2,categoryText3;
     private Calendar currentCalendar;
     private CalendarAdapter calendarAdapter;
     private TextView monthYearText;
     private String selectedDate;
     private RecyclerView calendarRecyclerView;
-
+    FragmentMenuBinding binding;
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
-
+        binding = FragmentMenuBinding.inflate(inflater, container, false);
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearText);
         ImageButton nextButton = view.findViewById(R.id.nextButton);
         ImageButton prevButton = view.findViewById(R.id.prevButton);
-        imageView1 = view.findViewById(R.id.imageView1);
-        imageView2 = view.findViewById(R.id.imageView2);
-        imageView3 = view.findViewById(R.id.imageView3);
-        menuText1 = view.findViewById(R.id.menuText1);
-        menuText2 = view.findViewById(R.id.menuText2);
-        menuText3 = view.findViewById(R.id.menuText3);
+        imageView1 = view.findViewById(R.id.foodImage1);
+        imageView2 = view.findViewById(R.id.foodImage2);
+        imageView3 = view.findViewById(R.id.foodImage3);
+        menuText1 = view.findViewById(R.id.foodMainMenu1);
+        menuText2 = view.findViewById(R.id.foodMainMenu2);
+        menuText3 = view.findViewById(R.id.foodMainMenu3);
+        subMenuText1=view.findViewById(R.id.foodSubMenu1);
+        subMenuText2=view.findViewById(R.id.foodSubMenu2);
+        subMenuText3=view.findViewById(R.id.foodSubMenu3);
+        categoryText1=view.findViewById(R.id.foodCategory1);
+        categoryText2=view.findViewById(R.id.foodCategory2);
+        categoryText3=view.findViewById(R.id.foodCategory3);
 
 
         currentCalendar = Calendar.getInstance();
@@ -304,9 +315,24 @@ public class MenuFragment extends Fragment {
         @Override
         protected void onPostExecute(List<String> menus) {
             // 메뉴 데이터 설정
-            menuText1.setText(menus.get(0));
-            menuText2.setText(menus.get(1));
-            menuText3.setText(menus.get(2));
+
+            FoodParser parser = new FoodParser();
+            FoodParser.FoodInfo foodInfo = parser.parseFoodData(menus.get(0));
+
+            Log.d("MenuFragment", "Menu texts: " + menus.get(0));
+            Log.d("Main Menu", parseMainMenu(menus.get(0)));
+            Log.d("Sub Menu", parseSubMenu(menus.get(0)).toString());
+            categoryText1.setText(parseCategory(menus.get(0)));
+            menuText1.setText(parseMainMenu(menus.get(0)));
+            subMenuText1.setText(parseSubMenu(menus.get(0)).toString());
+
+            categoryText2.setText(parseCategory(menus.get(1)));
+            menuText2.setText(parseMainMenu(menus.get(1)));
+            subMenuText2.setText(parseSubMenu(menus.get(1)).toString());
+
+            categoryText3.setText(parseCategory(menus.get(2)));
+            menuText3.setText(parseMainMenu(menus.get(2)));
+            subMenuText3.setText(parseSubMenu(menus.get(2)).toString());
 
             // 이미지 URL 생성 및 로드
             String baseUrl = "https://soongguri.com/menu/menu_file/";
@@ -315,6 +341,91 @@ public class MenuFragment extends Fragment {
             Glide.with(MenuFragment.this).load(baseUrl + selectedDate + "_1_4.jpg").into(imageView3);
 
             Toast.makeText(requireContext(), "Menu and Images Loaded", Toast.LENGTH_SHORT).show();
+        }
+
+
+        private String parseCategory(String data) {
+            int startIdx = data.indexOf("[");
+            int endIdx = data.indexOf("]");
+            if (startIdx != -1 && endIdx != -1) {
+                return data.substring(startIdx + 1, endIdx).trim();
+            }
+            return "Category 없음";
+        }
+
+        private String parseMainMenu(String data) {
+            // Main Menu는 '★' 이후, '-' 앞까지 (숫자 포함)
+            int startIdx = data.indexOf("★");
+            int endIdx = data.indexOf(" -", startIdx);
+            if (startIdx != -1 && endIdx != -1) {
+                endIdx += 6;
+                return data.substring(startIdx, endIdx).trim();
+            }
+            return "메인 메뉴 정보 없음";
+        }
+
+        private int findNumberEndIdx(String text) {
+            for (int i = 0; i < text.length(); i++) {
+                // 숫자와 소수점만 허용하고, 그 외의 문자가 나오면 끝으로 처리
+                if (!Character.isDigit(text.charAt(i)) && text.charAt(i) != '.') {
+                    return i; // 숫자나 소수점이 끝나는 위치
+                }
+            }
+            return -1; // 숫자가 끝나지 않은 경우
+        }
+
+        private List<String> parseSubMenu(String data) {
+            List<String> subMenu = new ArrayList<>();
+
+            // '★' 이후부터 메인 메뉴 끝까지
+            int mainMenuEndIdx = data.indexOf("★") + "★".length() + parseMainMenu(data).length();
+            // *알러지유발식품: 시작 인덱스
+            int allergyStartIdx = data.indexOf("*알러지유발식품:");
+
+            // Allergy 정보가 시작되기 전까지 서브 메뉴로 처리
+            String subMenuText = data.substring(mainMenuEndIdx, allergyStartIdx != -1 ? allergyStartIdx : data.length()).trim();
+            Log.d("SubMenu", subMenuText);  // subMenuText 로그 찍기
+
+            if (!subMenuText.isEmpty()) {
+                // 영어 텍스트를 무시하고, 나머지 메뉴 항목들만 추가
+                String[] items = subMenuText.split("\\s+");  // \\s+는 연속된 공백을 하나로 처리
+                for (String item : items) {
+                    if (!item.isEmpty()) {
+                        if (!containsEnglish(item)) {
+                            subMenu.add(item);
+                        } else {
+                            Log.d("Filtered English", "Removed: " + item);  // 영어 단어 로그 출력
+                        }
+                    }
+                }
+            }
+            return subMenu;
+        }
+
+        private boolean containsEnglish(String text) {
+            // 영어가 포함되어 있는지 체크하는 함수
+            for (char c : text.toCharArray()) {
+                if (Character.isAlphabetic(c) && Character.isLowerCase(c)) {  // 소문자 알파벳만 영어로 간주
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private String parseAllergyInfo(String data) {
+            int startIdx = data.indexOf("*알러지유발식품:");
+            if (startIdx != -1) {
+                return data.substring(startIdx).trim();
+            }
+            return "알러지 정보 없음";
+        }
+
+        private String parseOriginInfo(String data) {
+            int startIdx = data.indexOf("*원산지:");
+            if (startIdx != -1) {
+                return data.substring(startIdx).trim();
+            }
+            return "원산지 정보 없음";
         }
     }
     private String getFormattedDate(Calendar calendar) {
@@ -351,6 +462,9 @@ public class MenuFragment extends Fragment {
             return 0; // 기본값으로 현재 주
         }
     }
+
+
+
 
 
 }
