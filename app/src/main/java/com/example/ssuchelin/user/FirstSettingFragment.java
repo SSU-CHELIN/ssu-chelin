@@ -3,27 +3,32 @@ package com.example.ssuchelin.user;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//초기설정화면
-
-public class FirstSettingActivity extends AppCompatActivity {
+public class FirstSettingFragment extends Fragment {
 
     private RadioGroup saltRadioGroup, spicyRadioGroup;
     private Button btnSavePreferences;
@@ -32,42 +37,51 @@ public class FirstSettingActivity extends AppCompatActivity {
     private List<String> selectedAllergies = new ArrayList<>();
     private String studentId;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first_setting);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_first_setting, container, false);
 
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // SharedPreferences에서 studentId 가져오기
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
-
 
         // Firebase 데이터베이스 참조 설정
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("User").child(studentId);
 
         // Toolbar 설정
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+            }
         }
 
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!requireActivity().getSupportFragmentManager().isStateSaved()) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
         // View 초기화
-        saltRadioGroup = findViewById(R.id.saltRadioGroup);
-        spicyRadioGroup = findViewById(R.id.spicyRadioGroup);
-        btnSavePreferences = findViewById(R.id.btn_complete_registration);
+        saltRadioGroup = view.findViewById(R.id.saltRadioGroup);
+        spicyRadioGroup = view.findViewById(R.id.spicyRadioGroup);
+        btnSavePreferences = view.findViewById(R.id.btn_complete_registration);
 
         // 알레르기 체크박스 초기화
-        setupAllergyCheckboxes();
+        setupAllergyCheckboxes(view);
 
         // 저장 버튼 클릭 리스너
-        btnSavePreferences.setOnClickListener(view -> saveDataToFirebase());
+        btnSavePreferences.setOnClickListener(v -> saveDataToFirebase());
 
+        return view;
     }
 
     // 알레르기 체크박스 설정
-    private void setupAllergyCheckboxes() {
+    private void setupAllergyCheckboxes(View view) {
         int[] allergyCheckboxIds = {
                 R.id.allergy_shrimp, R.id.allergy_pork, R.id.allergy_soybean, R.id.allergy_milk, R.id.allergy_rice,
                 R.id.allergy_wheat, R.id.allergy_chicken, R.id.allergy_peanut, R.id.allergy_egg, R.id.allergy_shellfish,
@@ -77,7 +91,7 @@ public class FirstSettingActivity extends AppCompatActivity {
         };
 
         for (int id : allergyCheckboxIds) {
-            CheckBox checkbox = findViewById(id);
+            CheckBox checkbox = view.findViewById(id);
             allergyCheckboxes.add(checkbox);
             checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 String allergy = buttonView.getText().toString();
@@ -93,7 +107,7 @@ public class FirstSettingActivity extends AppCompatActivity {
     // Firebase에 데이터 저장
     private void saveDataToFirebase() {
         if (studentId == null) {
-            Toast.makeText(this, "학생 ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "학생 ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -101,7 +115,7 @@ public class FirstSettingActivity extends AppCompatActivity {
         int selectedSaltId = saltRadioGroup.getCheckedRadioButtonId();
         String saltPreference = "";
         if (selectedSaltId != -1) {
-            RadioButton selectedSaltButton = findViewById(selectedSaltId);
+            RadioButton selectedSaltButton = requireView().findViewById(selectedSaltId);
             saltPreference = selectedSaltButton.getText().toString();
         }
 
@@ -109,7 +123,7 @@ public class FirstSettingActivity extends AppCompatActivity {
         int selectedSpicyId = spicyRadioGroup.getCheckedRadioButtonId();
         String spicyPreference = "";
         if (selectedSpicyId != -1) {
-            RadioButton selectedSpicyButton = findViewById(selectedSpicyId);
+            RadioButton selectedSpicyButton = requireView().findViewById(selectedSpicyId);
             spicyPreference = selectedSpicyButton.getText().toString();
         }
 
@@ -122,23 +136,11 @@ public class FirstSettingActivity extends AppCompatActivity {
         // 데이터 저장
         mDatabaseRef.child("userinfo").updateChildren(userPreferences).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(FirstSettingActivity.this, "설정이 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(getContext(), "설정이 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                requireActivity().getSupportFragmentManager().popBackStack();
             } else {
-                Toast.makeText(FirstSettingActivity.this, "데이터 저장에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "데이터 저장에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    // 뒤로가기 버튼 클릭 이벤트 처리
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish(); // 이전 화면으로 돌아감
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
 }

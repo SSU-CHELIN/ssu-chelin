@@ -13,10 +13,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.example.ssuchelin.review.CheckReviewsActivity;
-import com.example.ssuchelin.review.FeedbackActivity;
+import com.example.ssuchelin.review.CheckReviewsFragment;
 import com.example.ssuchelin.R;
+import com.example.ssuchelin.review.FeedbackFragment;
 import com.example.ssuchelin.review.WriteReviewActivity;
 import com.example.ssuchelin.login.LoginActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -29,19 +30,44 @@ public class ProfileViewFragment extends Fragment {
 
     private DatabaseReference database;
     private TextView studentIdTextView, usernameTextView;
-    private TextView changeProfile, changeInitialSettings, checkReviews, termsOfService, privacyPolicy, contactUs, logout;
+    private TextView changeInitialSettings, changeFirstSettings, checkReviews, termsOfService, privacyPolicy, contactUs, logout;
     private String studentId;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_view, container, false);
 
-        changeProfile = view.findViewById(R.id.change_profile);
-        changeInitialSettings = view.findViewById(R.id.change_initial_settings);
-        checkReviews = view.findViewById(R.id.check_reviews);
+        view.findViewById(R.id.change_initial_settings).setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new InitialSettingFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        view.findViewById(R.id.change_first_settings).setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new FirstSettingFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        view.findViewById(R.id.check_reviews).setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new CheckReviewsFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        view.findViewById(R.id.contact_us).setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new FeedbackFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
         termsOfService = view.findViewById(R.id.terms_of_service);
         privacyPolicy = view.findViewById(R.id.privacy_policy);
-        contactUs = view.findViewById(R.id.contact_us);
+        //contactUs = view.findViewById(R.id.contact_us);
         logout = view.findViewById(R.id.logout);
 
         // Retrieve the sb tudent ID from SharedPreferences
@@ -55,10 +81,8 @@ public class ProfileViewFragment extends Fragment {
         studentIdTextView.setText(studentId);
         fetchUsernameFromDatabase(studentId);
 
-        changeInitialSettings.setOnClickListener(v -> navigateToInitialSettings());
-        checkReviews.setOnClickListener(v -> navigateToCheckReviews());
         termsOfService.setOnClickListener(v -> navigateToTermsOfService());
-        contactUs.setOnClickListener(v -> navigateToFeedback());
+        //contactUs.setOnClickListener(v -> navigateToFeedback());
         logout.setOnClickListener(v -> logout());
 
         return view;
@@ -98,25 +122,15 @@ public class ProfileViewFragment extends Fragment {
                 .commit();
     }
 
-    private void navigateToInitialSettings() {
-        Intent intent = new Intent(getActivity(), FirstSettingActivity.class);
-        startActivity(intent);
-    }
-
-    private void navigateToCheckReviews() {
-        Intent intent = new Intent(getActivity(), CheckReviewsActivity.class);
-        startActivity(intent);
-    }
-
     private void navigateToTermsOfService() {
         Intent intent = new Intent(getActivity(), WriteReviewActivity.class);
         startActivity(intent);
     }
 
-    private void navigateToFeedback() {
-        Intent intent = new Intent(getActivity(), FeedbackActivity.class);
-        startActivity(intent);
-    }
+//    private void navigateToFeedback() {
+//        Intent intent = new Intent(getActivity(), FeedbackActivity.class);
+//        startActivity(intent);
+//    }
 
     private void logout() {
         Toast.makeText(getActivity(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();

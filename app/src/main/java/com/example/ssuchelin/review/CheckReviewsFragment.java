@@ -3,12 +3,17 @@ package com.example.ssuchelin.review;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckReviewsActivity extends AppCompatActivity {
+public class CheckReviewsFragment extends Fragment {
 
     private DatabaseReference databaseReference;
     private DatabaseReference userInfoReference;
@@ -34,38 +39,50 @@ public class CheckReviewsActivity extends AppCompatActivity {
     private String spicyPreference;
     private String allergies;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_reviews);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_check_reviews, container, false);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
 
         // Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("myReviewData");
         userInfoReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("userinfo");
 
-        reviewsRecyclerView = findViewById(R.id.reviews_recycler_view); // RecyclerView 초기화
+
+        // Toolbar 설정
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+            }
+        }
+
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!requireActivity().getSupportFragmentManager().isStateSaved()) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+
+        reviewsRecyclerView = view.findViewById(R.id.reviews_recycler_view); // RecyclerView 초기화
         // LinearLayoutManager 설정 (리스트 형태로 표시)
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
         reviewsRecyclerView.setLayoutManager(layoutManager); // LayoutManager 설정
 
         // 어댑터 설정
         reviewsAdapter = new ReviewsAdapter(reviewsList);
         reviewsRecyclerView.setAdapter(reviewsAdapter);
+
         // 사용자 정보 로드
         loadUserInfo();
 
-
+        return view;
     }
 
     private void loadUserInfo() {
@@ -75,6 +92,7 @@ public class CheckReviewsActivity extends AppCompatActivity {
                 username = snapshot.child("userName").getValue(String.class);
                 saltPreference = snapshot.child("saltPreference").getValue(String.class);
                 spicyPreference = snapshot.child("spicyPreference").getValue(String.class);
+
                 // 알레르기 정보를 리스트로 가져옴
                 List<String> allergyList = new ArrayList<>();
                 DataSnapshot allergiesSnapshot = snapshot.child("allergies");
@@ -88,8 +106,6 @@ public class CheckReviewsActivity extends AppCompatActivity {
                 }
                 allergies = allergyList.isEmpty() ? "None" : String.join(", ", allergyList);
 
-
-
                 if (username == null) username = "Unknown User";
                 if (saltPreference == null) saltPreference = "Unknown";
                 if (spicyPreference == null) spicyPreference = "Unknown";
@@ -100,7 +116,7 @@ public class CheckReviewsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(CheckReviewsActivity.this, "사용자 정보 로드 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "사용자 정보 로드 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -129,27 +145,13 @@ public class CheckReviewsActivity extends AppCompatActivity {
                 }
 
                 // 어댑터에 데이터 전달
-                reviewsAdapter = new ReviewsAdapter(reviewsList);
-                reviewsRecyclerView.setAdapter(reviewsAdapter);
+                reviewsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(CheckReviewsActivity.this, "데이터 로드 실패: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "데이터 로드 실패: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // 툴바의 뒤로가기 버튼 클릭 처리
-        if (item.getItemId() == android.R.id.home) {
-            // 현재 Activity 종료하여 이전 화면으로 돌아감
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }
-

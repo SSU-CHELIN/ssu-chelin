@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".user.ProfileViewFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -103,24 +103,22 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/change_profile"
+                    android:id="@+id/change_initial_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="프로필 정보 바꾸기"
                     android:padding="14dp"
                     android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:onClick="navigateToChangeProfile" />
+                    android:clickable="true" />
 
                 <TextView
-                    android:id="@+id/change_initial_settings"
+                    android:id="@+id/change_first_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="초기 설정 바꾸기"
                     android:padding="14dp"
                     android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:onClick="navigateToInitialSettings" />
+                    android:clickable="true" />
 
                 <TextView
                     android:id="@+id/check_reviews"
@@ -129,8 +127,7 @@
                     android:text="내 리뷰 확인하기"
                     android:padding="14dp"
                     android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:onClick="navigateToCheckReviews" />
+                    android:clickable="true" />
 
                 <TextView
                     android:id="@+id/terms_of_service"

@@ -1,7 +1,6 @@
 package com.example.ssuchelin;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,7 +19,7 @@ public class FeedbackActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback); // 문의하기 화면 레이아웃 설정
+        setContentView(R.layout.fragment_feedback); // 문의하기 화면 레이아웃 설정
 
         // Toolbar 설정
         Toolbar toolbar = findViewById(R.id.toolbar);
