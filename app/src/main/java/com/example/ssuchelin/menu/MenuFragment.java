@@ -284,6 +284,71 @@ public class MenuFragment extends Fragment {
 
         });
 
+        food2.setOnClickListener(v->{
+
+            String mainMenu = menuText2.getText().toString();
+            String subMenu = subMenuText2.getText().toString();
+            String category = categoryText2.getText().toString();
+
+
+
+            Bitmap bitmap = ((BitmapDrawable) imageView2.getDrawable()).getBitmap();
+
+
+
+            // 데이터를 Bundle에 저장
+            Bundle bundle = new Bundle();
+            bundle.putString("mainMenu", mainMenu);
+            bundle.putString("subMenu", subMenu);
+            bundle.putString("category", category);
+            bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
+
+
+            // WriteReviewFragment로 데이터를 전달하면서 이동
+            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
+            writeReviewFragment.setArguments(bundle);
+
+            // FragmentTransaction을 사용하여 Fragment 이동
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .addToBackStack(null) // 뒤로 가기 스택에 추가
+                    .commit();
+
+        });
+
+        food3.setOnClickListener(v->{
+
+            String mainMenu = menuText3.getText().toString();
+            String subMenu = subMenuText3.getText().toString();
+            String category = categoryText3.getText().toString();
+
+
+
+            Bitmap bitmap = ((BitmapDrawable) imageView3.getDrawable()).getBitmap();
+
+
+
+            // 데이터를 Bundle에 저장
+            Bundle bundle = new Bundle();
+            bundle.putString("mainMenu", mainMenu);
+            bundle.putString("subMenu", subMenu);
+            bundle.putString("category", category);
+            bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
+
+
+            // WriteReviewFragment로 데이터를 전달하면서 이동
+            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
+            writeReviewFragment.setArguments(bundle);
+
+            // FragmentTransaction을 사용하여 Fragment 이동
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .addToBackStack(null) // 뒤로 가기 스택에 추가
+                    .commit();
+
+        });
+
+
 
 
         return view;
