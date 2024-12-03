@@ -1,6 +1,7 @@
 package com.example.ssuchelin.review;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,11 +46,45 @@ public class WriteReviewFragment extends Fragment {
     private boolean isEditMode = false;
     private int reviewId = -1;
     private int score = 0;
+    private TextView foodCategory,foodMainMenu,foodSubMenu;
+    private ImageView foodImage;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_write_review, container, false);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String mainMenu = bundle.getString("mainMenu");
+            String subMenu = bundle.getString("subMenu");
+            String category = bundle.getString("category");
+            Bitmap bitmap = bundle.getParcelable("imageBitmap");
+
+            // 데이터를 UI에 설정
+            TextView mainMenuText = view.findViewById(R.id.foodCategory);
+            TextView subMenuText = view.findViewById(R.id.foodSubMenu);
+            TextView categoryText = view.findViewById(R.id.foodMainMenu);
+            ImageView imageView = view.findViewById(R.id.foodImage);
+
+            mainMenuText.setText(mainMenu);
+            subMenuText.setText(subMenu);
+            categoryText.setText(category);
+            imageView.setImageBitmap(bitmap); // 비트맵을 ImageView에 설정
+        }
+
+        return view;
+    }
+
+
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        // XML 참조
+        foodCategory = view.findViewById(R.id.foodCategory);
+        foodMainMenu = view.findViewById(R.id.foodMainMenu);
+        foodSubMenu = view.findViewById(R.id.foodSubMenu);
+        foodImage = view.findViewById(R.id.foodImage);
 
         // Toolbar 설정
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -74,7 +110,6 @@ public class WriteReviewFragment extends Fragment {
         reviewEditText = view.findViewById(R.id.review_edit_text);
         submitButton = view.findViewById(R.id.submit_button);
         characterCounterTextView = view.findViewById(R.id.character_counter);
-        mainMenu = view.findViewById(R.id.main_menu);
 
         // 수정 모드 판단
         Bundle arguments = getArguments();
@@ -125,8 +160,6 @@ public class WriteReviewFragment extends Fragment {
                 saveUserReview(studentId, review);
             }
         });
-
-        return view;
     }
 
     // 클릭 리스너 정의

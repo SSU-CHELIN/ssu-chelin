@@ -144,6 +144,8 @@
 package com.example.ssuchelin.menu;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -160,12 +162,14 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.ssuchelin.R;
 import com.example.ssuchelin.databinding.FragmentMenuBinding;
+import com.example.ssuchelin.review.WriteReviewFragment;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -186,6 +190,7 @@ public class MenuFragment extends Fragment {
     private Calendar currentCalendar;
     private CalendarAdapter calendarAdapter;
     private TextView monthYearText;
+    private LinearLayout food1,food2,food3;
     private String selectedDate;
     private RecyclerView calendarRecyclerView;
     FragmentMenuBinding binding;
@@ -195,10 +200,15 @@ public class MenuFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
         binding = FragmentMenuBinding.inflate(inflater, container, false);
+
+
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearText);
         ImageButton nextButton = view.findViewById(R.id.nextButton);
         ImageButton prevButton = view.findViewById(R.id.prevButton);
+        food1 = view.findViewById(R.id.food1);
+        food2 = view.findViewById(R.id.food2);
+        food3 = view.findViewById(R.id.food3);
         imageView1 = view.findViewById(R.id.foodImage1);
         imageView2 = view.findViewById(R.id.foodImage2);
         imageView3 = view.findViewById(R.id.foodImage3);
@@ -238,6 +248,43 @@ public class MenuFragment extends Fragment {
             currentCalendar.add(Calendar.MONTH, -1);
             updateCalendar(calendarRecyclerView);
         });
+
+
+
+
+        food1.setOnClickListener(v->{
+
+            String mainMenu = menuText1.getText().toString();
+            String subMenu = subMenuText1.getText().toString();
+            String category = categoryText1.getText().toString();
+
+
+
+            Bitmap bitmap = ((BitmapDrawable) imageView1.getDrawable()).getBitmap();
+
+
+
+            // 데이터를 Bundle에 저장
+            Bundle bundle = new Bundle();
+            bundle.putString("mainMenu", mainMenu);
+            bundle.putString("subMenu", subMenu);
+            bundle.putString("category", category);
+            bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
+
+
+            // WriteReviewFragment로 데이터를 전달하면서 이동
+            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
+            writeReviewFragment.setArguments(bundle);
+
+            // FragmentTransaction을 사용하여 Fragment 이동
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .addToBackStack(null) // 뒤로 가기 스택에 추가
+                    .commit();
+
+        });
+
+
 
         return view;
     }
@@ -316,8 +363,7 @@ public class MenuFragment extends Fragment {
         protected void onPostExecute(List<String> menus) {
             // 메뉴 데이터 설정
 
-            FoodParser parser = new FoodParser();
-            FoodParser.FoodInfo foodInfo = parser.parseFoodData(menus.get(0));
+
 
             Log.d("MenuFragment", "Menu texts: " + menus.get(0));
             Log.d("Main Menu", parseMainMenu(menus.get(0)));
@@ -463,6 +509,16 @@ public class MenuFragment extends Fragment {
         }
     }
 
+
+
+    private void transferTo(Fragment fragment){
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+
+    }
 
 
 

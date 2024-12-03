@@ -66,10 +66,12 @@
         <!-- 이미지 1 과 메뉴 1-->
 
         <LinearLayout
+            android:id="@+id/food1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
+            android:background="@drawable/border_background"
             android:orientation="horizontal">
 
             <ImageView
@@ -150,10 +152,12 @@
 
         <!-- 이미지2과 메뉴2 -->
         <LinearLayout
+            android:id="@+id/food2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
+            android:background="@drawable/border_background"
             android:orientation="horizontal">
 
             <ImageView
@@ -227,10 +231,12 @@
 
         <!-- 이미지3과 메뉴3 -->
         <LinearLayout
+            android:id="@+id/food3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
+            android:background="@drawable/border_background"
             android:orientation="horizontal">
 
             <ImageView
