@@ -1,6 +1,5 @@
 package com.example.ssuchelin.review;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,9 +43,7 @@ public class OverviewReviewsFragment extends Fragment {
                 String query = searchInput.getText().toString().trim();
 
                 if (!query.isEmpty()) {
-                    Intent intent = new Intent(getContext(), SearchResultsActivity.class);
-                    intent.putExtra("searchQuery", query);
-                    startActivity(intent);
+                    openSearchResults(query);
                     searchInput.clearFocus();
                 }
                 return true; // 이벤트 소비
@@ -164,6 +161,18 @@ public class OverviewReviewsFragment extends Fragment {
         }
     }
 
+    private void openSearchResults(String query) {
+        SearchResultsFragment fragment = new SearchResultsFragment();
+        Bundle args = new Bundle();
+        args.putString("searchQuery", query);
+        fragment.setArguments(args);
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     private void openReviewList(String subCategoryKey, String subCategoryName, String parentNode) {
         SubCategoryFragment fragment = new SubCategoryFragment();
         Bundle args = new Bundle();
@@ -177,5 +186,4 @@ public class OverviewReviewsFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
-
 }

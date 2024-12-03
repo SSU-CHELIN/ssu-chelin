@@ -1,6 +1,6 @@
 package com.example.ssuchelin.review;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ssuchelin.R;
@@ -45,6 +48,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
         holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
         holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
         holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+
         // 간 정도, 맵기 정도, 알레르기 정보 설정
         holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
         holder.spicyLevelTextView.setText("맵기 정도: " + review.getSpicyPreference());
@@ -55,12 +59,25 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
             // 수정 버튼 클릭 시 필요한 작업 수행
             Toast.makeText(holder.itemView.getContext(), "수정 클릭됨: " + review.getUserReview(), Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(holder.itemView.getContext(), WriteReviewActivity.class);
-            intent.putExtra("editMode", true); // 수정 모드 활성화
-            intent.putExtra("reviewText", review.getUserReview());
-            intent.putExtra("reviewId", position);
-            intent.putExtra("starCount", review.getStarCount()); // 기존 별점 전달
-            holder.itemView.getContext().startActivity(intent);
+            FragmentActivity activity = (FragmentActivity) holder.itemView.getContext();
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
+
+            // 프래그로 바꾸면서 수정된 부분
+            // 데이터 전달을 위한 번들 생성
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("editMode", true); // 수정 모드 활성화
+            bundle.putString("reviewText", review.getUserReview());
+            bundle.putInt("reviewId", position);
+            bundle.putInt("starCount", review.getStarCount()); // 기존 별점 전달
+            writeReviewFragment.setArguments(bundle);
+
+            // 프래그먼트를 교체
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 

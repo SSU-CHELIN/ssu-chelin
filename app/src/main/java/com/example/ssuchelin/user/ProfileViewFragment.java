@@ -18,8 +18,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.ssuchelin.review.CheckReviewsFragment;
 import com.example.ssuchelin.R;
 import com.example.ssuchelin.review.FeedbackFragment;
-import com.example.ssuchelin.review.WriteReviewActivity;
 import com.example.ssuchelin.login.LoginActivity;
+import com.example.ssuchelin.review.WriteReviewFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,9 +65,14 @@ public class ProfileViewFragment extends Fragment {
             transaction.commit();
         });
 
-        termsOfService = view.findViewById(R.id.terms_of_service);
+        view.findViewById(R.id.terms_of_service).setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new WriteReviewFragment());
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
         privacyPolicy = view.findViewById(R.id.privacy_policy);
-        //contactUs = view.findViewById(R.id.contact_us);
         logout = view.findViewById(R.id.logout);
 
         // Retrieve the sb tudent ID from SharedPreferences
@@ -81,8 +86,6 @@ public class ProfileViewFragment extends Fragment {
         studentIdTextView.setText(studentId);
         fetchUsernameFromDatabase(studentId);
 
-        termsOfService.setOnClickListener(v -> navigateToTermsOfService());
-        //contactUs.setOnClickListener(v -> navigateToFeedback());
         logout.setOnClickListener(v -> logout());
 
         return view;
@@ -122,15 +125,6 @@ public class ProfileViewFragment extends Fragment {
                 .commit();
     }
 
-    private void navigateToTermsOfService() {
-        Intent intent = new Intent(getActivity(), WriteReviewActivity.class);
-        startActivity(intent);
-    }
-
-//    private void navigateToFeedback() {
-//        Intent intent = new Intent(getActivity(), FeedbackActivity.class);
-//        startActivity(intent);
-//    }
 
     private void logout() {
         Toast.makeText(getActivity(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();

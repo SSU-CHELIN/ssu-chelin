@@ -133,11 +133,10 @@
                     android:id="@+id/terms_of_service"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="서비스 이용약관"
+                    android:text="!!!임시 리뷰작성!!!"
                     android:padding="14dp"
                     android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:onClick="navigateToTermsOfService" />
+                    android:clickable="true" />
 
                 <TextView
                     android:id="@+id/privacy_policy"
