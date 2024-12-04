@@ -1,5 +1,8 @@
 package com.example.ssuchelin.user;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -86,7 +89,9 @@ public class ProfileViewFragment extends Fragment {
         studentIdTextView.setText(studentId);
         fetchUsernameFromDatabase(studentId);
 
-        logout.setOnClickListener(v -> logout());
+        logout.setOnClickListener(v->{
+            logout();
+        });
 
         return view;
     }
@@ -127,10 +132,20 @@ public class ProfileViewFragment extends Fragment {
 
 
     private void logout() {
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isLoggedIn", false); // 로그아웃 상태로 저장
+        editor.apply();
+
         Toast.makeText(getActivity(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // 현재 스택을 정리하고 새로운 액티비티 시작
         startActivity(intent);
     }
+
+
 
 }
