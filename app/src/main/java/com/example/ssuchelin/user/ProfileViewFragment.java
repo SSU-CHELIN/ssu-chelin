@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -90,7 +91,19 @@ public class ProfileViewFragment extends Fragment {
         fetchUsernameFromDatabase(studentId);
 
         logout.setOnClickListener(v->{
-            logout();
+
+            new AlertDialog.Builder(requireContext())
+                    .setMessage("로그아웃 하시겠습니까?")
+                    .setPositiveButton("확인", (dialog, which) -> {
+                        logout();
+                        // 확인 버튼 클릭 시 동작
+                    })
+                    .setNegativeButton("취소", (dialog, which) -> {
+                        // 취소 버튼 클릭 시 동작
+                        dialog.dismiss();
+                    })
+                    .show();
+
         });
 
         return view;
