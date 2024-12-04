@@ -169,6 +169,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.ssuchelin.R;
 import com.example.ssuchelin.databinding.FragmentMenuBinding;
+import com.example.ssuchelin.review.ReviewFragment;
 import com.example.ssuchelin.review.WriteReviewFragment;
 
 import org.jsoup.Jsoup;
@@ -273,12 +274,12 @@ public class MenuFragment extends Fragment {
 
 
             // WriteReviewFragment로 데이터를 전달하면서 이동
-            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
-            writeReviewFragment.setArguments(bundle);
+            ReviewFragment reviewFragment = new ReviewFragment();
+            reviewFragment.setArguments(bundle);
 
             // FragmentTransaction을 사용하여 Fragment 이동
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .replace(R.id.fragment_container, reviewFragment)
                     .addToBackStack(null) // 뒤로 가기 스택에 추가
                     .commit();
 
@@ -305,12 +306,12 @@ public class MenuFragment extends Fragment {
 
 
             // WriteReviewFragment로 데이터를 전달하면서 이동
-            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
-            writeReviewFragment.setArguments(bundle);
+            ReviewFragment reviewFragment = new ReviewFragment();
+            reviewFragment.setArguments(bundle);
 
             // FragmentTransaction을 사용하여 Fragment 이동
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .replace(R.id.fragment_container, reviewFragment)
                     .addToBackStack(null) // 뒤로 가기 스택에 추가
                     .commit();
 
@@ -336,13 +337,13 @@ public class MenuFragment extends Fragment {
             bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
 
 
-            // WriteReviewFragment로 데이터를 전달하면서 이동
-            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
-            writeReviewFragment.setArguments(bundle);
+            // ReviewFragment로 데이터를 전달하면서 이동
+            ReviewFragment reviewFragment = new ReviewFragment();
+            reviewFragment.setArguments(bundle);
 
             // FragmentTransaction을 사용하여 Fragment 이동
             getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, writeReviewFragment)
+                    .replace(R.id.fragment_container, reviewFragment)
                     .addToBackStack(null) // 뒤로 가기 스택에 추가
                     .commit();
 

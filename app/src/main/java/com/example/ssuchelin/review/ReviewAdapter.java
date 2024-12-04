@@ -9,21 +9,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ssuchelin.R;
+import com.example.ssuchelin.databinding.ItemReviewBinding;
 
 import java.util.List;
 
-public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder> {
+public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
     private final List<Review> reviewsList;
 
     // 어댑터 초기화 시 데이터 리스트를 받음
-    public ReviewsAdapter(List<Review> reviewsList) {
+    public ReviewAdapter(List<Review> reviewsList) {
         this.reviewsList = reviewsList;
     }
 
@@ -31,7 +31,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // LayoutInflater를 이용해 리뷰 아이템 레이아웃을 인플레이트
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review, parent, false);
         return new ReviewViewHolder(view);
     }
 
@@ -45,9 +45,9 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
         holder.reviewTextView.setText(review.getUserReview());
 
         // 별점 설정 (별점 수에 맞춰 아이콘 표시)
-        holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
-        holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
-        holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+        holder.star1.setImageResource(review.getScore() >= 1 ? R.drawable.star : R.drawable.star_off);
+        holder.star2.setImageResource(review.getScore() >= 2 ? R.drawable.star : R.drawable.star_off);
+        holder.star3.setImageResource(review.getScore() >= 3 ? R.drawable.star : R.drawable.star_off);
 
         // 간 정도, 맵기 정도, 알레르기 정보 설정
         holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
@@ -70,7 +70,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
             bundle.putBoolean("editMode", true); // 수정 모드 활성화
             bundle.putString("reviewText", review.getUserReview());
             bundle.putInt("reviewId", position);
-            bundle.putInt("starCount", review.getStarCount()); // 기존 별점 전달
+            bundle.putFloat("starCount", review.getScore()); // 기존 별점 전달
             writeReviewFragment.setArguments(bundle);
 
             // 프래그먼트를 교체
@@ -100,6 +100,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
         ImageView star1, star2, star3;
         TextView editbtn;
 
+        ItemReviewBinding binding;
+
         public ReviewViewHolder(View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.review_username); // 사용자 이름
@@ -112,5 +114,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
             spicyLevelTextView = itemView.findViewById(R.id.spicy_level); // 맵기 정도
             allergyInfoTextView = itemView.findViewById(R.id.allergy_info); // 알레르기 정보
         }
+        public void bind(Review review) {
+            binding.reviewUsername.setText(review.getUsername());
+            binding.reviewContent.setText(review.getUserReview());
+            binding.reviewStar1.setImageResource(review.getScore() >= 1 ? R.drawable.star : R.drawable.star_off);
+            binding.reviewStar2.setImageResource(review.getScore() >= 2 ? R.drawable.star : R.drawable.star_off);
+            binding.reviewStar3.setImageResource(review.getScore() >= 3 ? R.drawable.star : R.drawable.star_off);
+        }
+
     }
 }

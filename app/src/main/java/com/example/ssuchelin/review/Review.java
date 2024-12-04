@@ -4,23 +4,27 @@ package com.example.ssuchelin.review;
 public class Review {
     private String username;
     private String userReview;
-    private int starCount;
+    private float score;
     private int saltPreference;
     private int spicyPreference;
     private String allergies;
+
+
+
+    public Review(String username, String userReview, float score, int saltPreference, int spicyPreference, String allergies) {
+        this.username = username;
+        this.userReview = userReview;
+        this.score = score;
+        this.saltPreference = saltPreference;
+        this.spicyPreference = spicyPreference;
+        this.allergies = allergies;
+    }
 
     public Review() {
         // Firebase 데이터 매핑을 위해 기본 생성자 필요
     }
 
-    public Review(String username, String userReview, int starCount, int saltPreference, int spicyPreference, String allergies) {
-        this.username = username;
-        this.userReview = userReview;
-        this.starCount = starCount;
-        this.saltPreference = saltPreference;
-        this.spicyPreference = spicyPreference;
-        this.allergies = allergies;
-    }
+
 
     public String getUsername() {
         return username;
@@ -38,15 +42,39 @@ public class Review {
         this.userReview = userReview;
     }
 
-    public int getStarCount() {
-        return starCount;
+    public float getScore() {
+        return score;
     }
 
-    public void setStarCount(int starCount) {
-        this.starCount = starCount;
+    public void setScore(float score) {
+        this.score = score;
     }
-    public int getSaltPreference() { return saltPreference; }
-    public int getSpicyPreference() { return spicyPreference; }
-    public String getAllergies() { return allergies; }
+
+    public int getSaltPreference() {
+        return saltPreference;
+    }
+
+    public void setSaltPreference(int saltPreference) {
+        this.saltPreference = saltPreference;
+    }
+
+    public int getSpicyPreference() {
+        return spicyPreference;
+    }
+
+    public void setSpicyPreference(int spicyPreference) {
+        this.spicyPreference = spicyPreference;
+    }
+
+    public String getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(String allergies) {
+        this.allergies = allergies;
+    }
+
+
+
 }
 

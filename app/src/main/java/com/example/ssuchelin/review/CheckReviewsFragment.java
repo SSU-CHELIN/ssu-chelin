@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -32,7 +31,7 @@ public class CheckReviewsFragment extends Fragment {
     private DatabaseReference databaseReference;
     private DatabaseReference userInfoReference;
     private RecyclerView reviewsRecyclerView;
-    private ReviewsAdapter reviewsAdapter;
+    private ReviewAdapter reviewAdapter;
     private List<Review> reviewsList = new ArrayList<>();
     private String username;
     private String saltPreference;
@@ -76,8 +75,8 @@ public class CheckReviewsFragment extends Fragment {
         reviewsRecyclerView.setLayoutManager(layoutManager); // LayoutManager 설정
 
         // 어댑터 설정
-        reviewsAdapter = new ReviewsAdapter(reviewsList);
-        reviewsRecyclerView.setAdapter(reviewsAdapter);
+        reviewAdapter = new ReviewAdapter(reviewsList);
+        reviewsRecyclerView.setAdapter(reviewAdapter);
 
         // 사용자 정보 로드
         loadUserInfo();
@@ -145,7 +144,7 @@ public class CheckReviewsFragment extends Fragment {
                 }
 
                 // 어댑터에 데이터 전달
-                reviewsAdapter.notifyDataSetChanged();
+                reviewAdapter.notifyDataSetChanged();
             }
 
             @Override

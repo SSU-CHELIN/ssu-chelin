@@ -24,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.R;
+import com.example.ssuchelin.databinding.FragmentWriteReviewBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,11 +49,12 @@ public class WriteReviewFragment extends Fragment {
     private int score = 0;
     private TextView foodCategory,foodMainMenu,foodSubMenu;
     private ImageView foodImage;
+    private FragmentWriteReviewBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_write_review, container, false);
+        binding = FragmentWriteReviewBinding.inflate(inflater, container, false);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -61,19 +63,16 @@ public class WriteReviewFragment extends Fragment {
             String category = bundle.getString("category");
             Bitmap bitmap = bundle.getParcelable("imageBitmap");
 
-            // 데이터를 UI에 설정
-            TextView mainMenuText = view.findViewById(R.id.foodCategory);
-            TextView subMenuText = view.findViewById(R.id.foodSubMenu);
-            TextView categoryText = view.findViewById(R.id.foodMainMenu);
-            ImageView imageView = view.findViewById(R.id.foodImage);
 
-            mainMenuText.setText(mainMenu);
-            subMenuText.setText(subMenu);
-            categoryText.setText(category);
-            imageView.setImageBitmap(bitmap); // 비트맵을 ImageView에 설정
+
+            binding.foodCategory.setText(category);
+            binding.foodSubMenu.setText(subMenu);
+            binding.foodMainMenu.setText(mainMenu);
+            binding.foodImage.setImageBitmap(bitmap);
+
         }
 
-        return view;
+        return binding.getRoot();
     }
 
 
