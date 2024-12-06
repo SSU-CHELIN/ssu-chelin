@@ -2,6 +2,7 @@ package com.example.ssuchelin.review;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,33 +85,66 @@ public class ReviewFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 reviewList.clear(); // 기존 리스트 초기화
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    // userinfo 데이터를 가져옵니다.
+                    DataSnapshot userInfoSnapshot = userSnapshot.child("userinfo");
+                    if (!userInfoSnapshot.exists()) {
+                        Log.d("ReviewFragment", "userinfo 데이터가 없음: " + userSnapshot.getKey());
+                        continue;
+                    }
+
+                    // 유저 정보 가져오기
+                    String username = userInfoSnapshot.child("userName").getValue(String.class);
+
+                    int saltPreference = 0;
+                    int spicyPreference = 0;
+
+                    try {
+                        // Long 타입으로 데이터를 가져와 int로 변환
+                        Long saltPrefValue = userInfoSnapshot.child("saltPreference").getValue(Long.class);
+                        Long spicyPrefValue = userInfoSnapshot.child("spicyPreference").getValue(Long.class);
+
+                        saltPreference = saltPrefValue != null ? saltPrefValue.intValue() : 0;
+                        spicyPreference = spicyPrefValue != null ? spicyPrefValue.intValue() : 0;
+                    } catch (Exception e) {
+                        Log.e("ReviewFragment", "Error parsing preferences: " + e.getMessage());
+                    }
+
+
+                    // 알레르기 리스트 처리
+                    List<String> allergyList = new ArrayList<>();
+                    DataSnapshot allergiesSnapshot = userInfoSnapshot.child("allergies");
+                    if (allergiesSnapshot.exists()) {
+                        for (DataSnapshot allergySnapshot : allergiesSnapshot.getChildren()) {
+                            String allergy = allergySnapshot.getValue(String.class);
+                            if (allergy != null) {
+                                allergyList.add(allergy);
+                            }
+                        }
+                    }
+                    String allergies = allergyList.isEmpty() ? "None" : String.join(", ", allergyList);
+
+                    // 기본값 처리
+                    if (username == null) username = "Unknown User";
+
+
+                    // myReviewData 데이터를 가져옵니다.
                     DataSnapshot reviewDataSnapshot = userSnapshot.child("myReviewData");
                     for (DataSnapshot reviewSnapshot : reviewDataSnapshot.getChildren()) {
                         String mainMenu = reviewSnapshot.child("Mainmenu").getValue(String.class);
                         if (mainMenu != null && mainMenu.equals(selectedMainMenu)) {
-                            // Firebase에서 데이터 가져오기
+                            // 리뷰 데이터 가져오기
                             String subMenu = reviewSnapshot.child("Submenu").getValue(String.class);
                             String userReview = reviewSnapshot.child("userReview").getValue(String.class);
                             int starCount = reviewSnapshot.child("starCount").getValue(Integer.class) != null
                                     ? reviewSnapshot.child("starCount").getValue(Integer.class)
                                     : 0;
 
-                            // 추가 데이터
-                            String username = userSnapshot.child("UserAccount").child("username").getValue(String.class);
-                            int saltPreference = reviewSnapshot.child("saltPreference").getValue(Integer.class) != null
-                                    ? reviewSnapshot.child("saltPreference").getValue(Integer.class)
-                                    : 0;
-                            int spicyPreference = reviewSnapshot.child("spicyPreference").getValue(Integer.class) != null
-                                    ? reviewSnapshot.child("spicyPreference").getValue(Integer.class)
-                                    : 0;
-                            String allergies = reviewSnapshot.child("allergies").getValue(String.class);
-
                             // Review 객체 생성
                             Review review = new Review(mainMenu, subMenu, userReview, starCount);
-                            review.setUsername(username != null ? username : "Unknown");
+                            review.setUsername(username);
                             review.setSaltPreference(saltPreference);
                             review.setSpicyPreference(spicyPreference);
-                            review.setAllergies(allergies != null ? allergies : "없음");
+                            review.setAllergies(allergies);
 
                             // 리스트에 추가
                             reviewList.add(review);
@@ -126,8 +160,6 @@ public class ReviewFragment extends Fragment {
             }
         });
     }
-
-
 
     @Override
     public void onDestroyView() {
