@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="@android:color/white">
 
@@ -19,6 +19,7 @@
             android:orientation="vertical"
             android:layout_marginBottom="8dp"
             android:padding="12dp"
+            android:background="@drawable/review_item_background"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -156,6 +157,50 @@
                 android:layout_height="wrap_content"
                 android:text="뚝배기코너 - 우삼겹쌀국수"
                 android:textSize="12sp" />
+
+
+            <!-- 좋아요(추천), 싫어요 버튼 영역 추가 -->
+            <LinearLayout
+                android:id="@+id/like_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="right"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/like_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_like_off"
+                    android:contentDescription="Like Icon"/>
+
+                <TextView
+                    android:id="@+id/like_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:layout_marginStart="4dp"
+                    android:textSize="14sp"/>
+
+                <!-- 싫어요 버튼 -->
+                <ImageView
+                    android:id="@+id/dislike_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_dislike_off"
+                    android:contentDescription="Dislike Icon"/>
+
+                <TextView
+                    android:id="@+id/dislike_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:layout_marginStart="4dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

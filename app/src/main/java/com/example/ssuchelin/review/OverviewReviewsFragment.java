@@ -23,9 +23,9 @@ import java.util.HashMap;
 
 public class OverviewReviewsFragment extends Fragment {
 
-    private LinearLayout categoryContainer; // 카테고리를 동적으로 추가할 컨테이너
-    private HashMap<String, Boolean> expandedCategories; // 카테고리 확장 상태 저장
-    private DatabaseReference categoryRef; // Firebase Database 참조
+    private LinearLayout categoryContainer;
+    private HashMap<String, Boolean> expandedCategories;
+    private DatabaseReference categoryRef;
 
     @Nullable
     @Override
@@ -34,24 +34,21 @@ public class OverviewReviewsFragment extends Fragment {
 
         categoryContainer = view.findViewById(R.id.category_container);
         expandedCategories = new HashMap<>();
-        categoryRef = FirebaseDatabase.getInstance().getReference("Category"); // Firebase "Category" 루트
+        categoryRef = FirebaseDatabase.getInstance().getReference("Category");
 
-        // 검색 입력창 초기화 및 리스너 추가
         EditText searchInput = view.findViewById(R.id.search_input);
         searchInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
                 String query = searchInput.getText().toString().trim();
-
                 if (!query.isEmpty()) {
                     openSearchResults(query);
                     searchInput.clearFocus();
                 }
-                return true; // 이벤트 소비
+                return true;
             }
-            return false; // 다른 이벤트로 전달
+            return false;
         });
 
-        // Firebase에서 상위 카테고리 로드
         loadCategories();
 
         return view;
@@ -71,10 +68,10 @@ public class OverviewReviewsFragment extends Fragment {
                 }
 
                 for (DataSnapshot categorySnapshot : snapshot.getChildren()) {
-                    String categoryKey = categorySnapshot.getKey(); // 상위 카테고리 키
+                    String categoryKey = categorySnapshot.getKey();
                     if (categoryKey != null) {
-                        expandedCategories.put(categoryKey, false); // 초기 확장 상태 설정
-                        addCategoryToView(categoryKey, categoryKey); // 카테고리를 추가
+                        expandedCategories.put(categoryKey, false);
+                        addCategoryToView(categoryKey, categoryKey);
                     }
                 }
             }
