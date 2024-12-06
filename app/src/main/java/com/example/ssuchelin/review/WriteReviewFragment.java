@@ -149,16 +149,19 @@ public class WriteReviewFragment extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
 
-        // 제출 버튼 리스너
         submitButton.setOnClickListener(view1 -> {
             String review = reviewEditText.getText().toString();
+            //submitButton.setEnabled(false); // 중복 클릭 방지
 
             if (isEditMode) {
+                // 수정 모드에서 업데이트
                 updateUserReview(studentId, reviewId, review);
             } else {
+                // 새 리뷰 저장
                 saveUserReview(studentId, review);
             }
         });
+
     }
 
     // 클릭 리스너 정의
@@ -199,12 +202,16 @@ public class WriteReviewFragment extends Fragment {
                 userReview.put("userReview", review);
                 userReview.put("starCount", starCount);
                 userReview.put("score", score);
-                userReview.put("Mainmenu", mainMenu.getText().toString());
+
+                // 메인 메뉴와 서브 메뉴 추가
+                userReview.put("Mainmenu", binding.foodMainMenu.getText().toString());
+                userReview.put("Submenu", binding.foodSubMenu.getText().toString());
 
                 mDatabaseRef.child("myReviewData").child(reviewKey).setValue(userReview).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         mDatabaseRef.child("reviewCnt").setValue(reviewCnt.get());
                         Toast.makeText(getContext(), "리뷰가 등록되었습니다.", Toast.LENGTH_SHORT).show();
+                        requireActivity().getSupportFragmentManager().popBackStack();
                     } else {
                         Toast.makeText(getContext(), "리뷰 저장에 실패했습니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -217,6 +224,7 @@ public class WriteReviewFragment extends Fragment {
             }
         });
     }
+
 
     // 리뷰 업데이트
     private void updateUserReview(String studentId, int reviewId, String updatedReview) {
@@ -233,12 +241,18 @@ public class WriteReviewFragment extends Fragment {
         updatedData.put("starCount", starCount);
         updatedData.put("score", score);
 
+        // 메인 메뉴와 서브 메뉴 업데이트 추가
+        updatedData.put("Mainmenu", binding.foodMainMenu.getText().toString());
+        updatedData.put("Submenu", binding.foodSubMenu.getText().toString());
+
         reviewRef.updateChildren(updatedData).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "리뷰가 수정되었습니다.", Toast.LENGTH_SHORT).show();
+                requireActivity().getSupportFragmentManager().popBackStack();
             } else {
                 Toast.makeText(getContext(), "리뷰 수정에 실패했습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }

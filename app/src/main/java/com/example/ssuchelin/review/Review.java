@@ -14,6 +14,10 @@ public class Review {
     private boolean disliked;     // 싫어요 여부
     private int dislikeCount;     // 싫어요 수
 
+    private String mainMenu;      // 메인 메뉴
+    private String subMenu;       // 서브 메뉴
+
+
     public Review(String username, String userReview, float starCount, int saltPreference, int spicyPreference, String allergies,
                   boolean liked, int likeCount, boolean disliked, int dislikeCount) {
         this.username = username;
@@ -26,6 +30,24 @@ public class Review {
         this.likeCount = likeCount;
         this.disliked = disliked;
         this.dislikeCount = dislikeCount;
+    }
+
+    //메인 메뉴, 서브 메뉴, 리뷰 내용, 별점만 포함한 생성자
+    public Review(String mainMenu, String subMenu, String userReview, float starCount) {
+        this.mainMenu = mainMenu;
+        this.subMenu = subMenu;
+        this.userReview = userReview;
+        this.starCount = starCount;
+
+        // 나머지 필드는 기본값으로 설정
+        this.username = "";
+        this.saltPreference = 0;
+        this.spicyPreference = 0;
+        this.allergies = "";
+        this.liked = false;
+        this.likeCount = 0;
+        this.disliked = false;
+        this.dislikeCount = 0;
     }
 
     public Review() {
@@ -61,4 +83,10 @@ public class Review {
 
     public int getDislikeCount() { return dislikeCount; }
     public void setDislikeCount(int dislikeCount) { this.dislikeCount = dislikeCount; }
+
+    public String getMainMenu() { return mainMenu; }
+    public void setMainMenu(String mainMenu) { this.mainMenu = mainMenu; }
+
+    public String getSubMenu() { return subMenu; }
+    public void setSubMenu(String subMenu) { this.subMenu = subMenu; }
 }
