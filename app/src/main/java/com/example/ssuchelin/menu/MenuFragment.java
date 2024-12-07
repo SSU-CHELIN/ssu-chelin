@@ -361,14 +361,20 @@ public class MenuFragment extends Fragment {
 
             // '★' 이후부터 메인 메뉴 끝까지
             int mainMenuEndIdx = data.indexOf("★") + "★".length() + parseMainMenu(data).length();
-            // *알러지유발식품: 시작 인덱스
             int allergyStartIdx = data.indexOf("*알러지유발식품:");
+
+            // mainMenuEndIdx와 allergyStartIdx 유효성 검사
+            if (mainMenuEndIdx < 0 || mainMenuEndIdx > data.length()) {
+                return subMenu;
+            }
+            if (allergyStartIdx != -1 && mainMenuEndIdx > allergyStartIdx) {
+                return subMenu;
+            }
 
             // Allergy 정보가 시작되기 전까지 서브 메뉴로 처리
             String subMenuText = data.substring(mainMenuEndIdx, allergyStartIdx != -1 ? allergyStartIdx : data.length()).trim();
 
             if (!subMenuText.isEmpty()) {
-                // Split by commas, trim spaces, and remove unwanted characters
                 String[] items = subMenuText.split("[,\\s]+"); // 쉼표 또는 공백으로 분리
                 for (String item : items) {
                     if (!item.isEmpty()) {
