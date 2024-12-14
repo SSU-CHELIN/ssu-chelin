@@ -20,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.ssuchelin.R;
 import com.example.ssuchelin.databinding.FragmentReviewBinding;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -92,10 +94,12 @@ public class ReviewFragment extends Fragment {
         latestBtn = view.findViewById(R.id.latest);
 
         recommendBtn.setOnClickListener(v -> {
-            Collections.sort(reviewList, (r1, r2) -> r2.getLikeDifference() - r1.getLikeDifference());
-            Log.d("ReviewFragment", "Sorted by recommendation: " + reviewList.toString());
+            // starCount 기준으로 내림차순 정렬
+            Collections.sort(reviewList, (r1, r2) -> Float.compare(r2.getStarCount(), r1.getStarCount()));
+            Log.d("ReviewFragment", "Sorted by starCount: " + reviewList.toString());
             reviewAdapter.updateReviews(reviewList, reviewKeys);
         });
+
 
         latestBtn.setOnClickListener(v -> {
             if (reviewList.isEmpty()) {
@@ -140,26 +144,21 @@ public class ReviewFragment extends Fragment {
                 .child(mainMenu)
                 .child("whoWriteReview");
 
-        whoWriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        whoWriteRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
                 List<String> userIds = new ArrayList<>();
-                for (DataSnapshot userIdSnap : snapshot.getChildren()) {
+                for (DataSnapshot userIdSnap : task.getResult().getChildren()) {
                     String userId = userIdSnap.getKey();
-                    if (userId != null) {
-                        userIds.add(userId);
-                    }
+                    if (userId != null) userIds.add(userId);
                 }
+
                 if (userIds.isEmpty()) {
                     Toast.makeText(getContext(), "리뷰가 없습니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     fetchReviewsAndKeys(userIds, mainMenu);
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "데이터를 불러오지 못했습니다: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -168,35 +167,44 @@ public class ReviewFragment extends Fragment {
         reviewList.clear();
         reviewKeys.clear(); // 키 리스트 초기화
 
-        final int[] remaining = {userIds.size()};
+        List<Task<DataSnapshot>> tasks = new ArrayList<>();
         for (String userId : userIds) {
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
-            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot userSnapshot) {
-                    DataSnapshot reviewDataSnapshot = userSnapshot.child("myReviewData");
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId).child("myReviewData");
+            tasks.add(userRef.get());
+        }
+
+        // 모든 데이터를 병렬로 가져온 후 처리
+        Tasks.whenAllComplete(tasks).addOnCompleteListener(task -> {
+            float totalStar = 0;
+            int reviewCount = 0;
+
+            for (Task<DataSnapshot> individualTask : tasks) {
+                if (individualTask.isSuccessful() && individualTask.getResult() != null) {
+                    DataSnapshot reviewDataSnapshot = individualTask.getResult();
                     for (DataSnapshot reviewSnap : reviewDataSnapshot.getChildren()) {
                         String reviewMainMenu = reviewSnap.child("Mainmenu").getValue(String.class);
                         if (mainMenu.equals(reviewMainMenu)) {
-                            // 리뷰 데이터와 키 추가
                             Review review = parseReview(reviewSnap);
                             reviewList.add(review);
                             reviewKeys.add(reviewSnap.getKey());
+
+                            // 별점 계산
+                            totalStar += review.getStarCount();
+                            reviewCount++;
                         }
                     }
-                    remaining[0]--;
-                    if (remaining[0] == 0) {
-                        reviewAdapter.updateReviews(reviewList, reviewKeys);
-                    }
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("ReviewFragment", "Failed to fetch data: " + error.getMessage());
-                    remaining[0]--;
-                }
-            });
-        }
+            // 평균 별점 계산 및 UI 업데이트
+            reviewAdapter.updateReviews(reviewList, reviewKeys);
+
+            float avg = reviewCount > 0 ? totalStar / reviewCount : 0;
+
+            String formattedAvg = String.format("%.1f", avg);
+            binding.scoreNum.setText(formattedAvg);
+            updateStarImages(avg);
+        });
     }
 
     private Review parseReview(DataSnapshot reviewSnap) {
@@ -218,5 +226,55 @@ public class ReviewFragment extends Fragment {
             Log.e("parseInt", "Failed to parse int: " + value, e);
         }
         return defaultValue;
+    }
+
+    private void updateStarImages(float avg) {
+        float portionStar1 = avg - 0;
+        float portionStar2 = avg - 1;
+        float portionStar3 = avg - 2;
+
+        binding.starButton1.setImageResource(getStarResourceForPortion(portionStar1));
+        binding.starButton2.setImageResource(getStarResourceForPortion(portionStar2));
+        binding.starButton3.setImageResource(getStarResourceForPortion(portionStar3));
+    }
+
+    private int getStarResourceForPortion(float portion) {
+        if (portion <= 0) {
+            return R.drawable.star_0;
+        } else if (portion >= 1) {
+            return R.drawable.star_100;
+        } else {
+            float percent = portion * 100;
+            float[] thresholds = {0,12.5f,25f,37.5f,50f,62.5f,75f,87.5f,100f};
+            int[] drawables = {
+                    R.drawable.star_0,
+                    R.drawable.star_12_5,
+                    R.drawable.star_25,
+                    R.drawable.star_37_5,
+                    R.drawable.star_50,
+                    R.drawable.star_62_5,
+                    R.drawable.star_75,
+                    R.drawable.star_87_5,
+                    R.drawable.star_100
+            };
+
+            float minDiff = Float.MAX_VALUE;
+            int chosenIndex = 0;
+            for (int i = 0; i < thresholds.length; i++) {
+                float diff = Math.abs(percent - thresholds[i]);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    chosenIndex = i;
+                }
+            }
+
+            return drawables[chosenIndex];
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

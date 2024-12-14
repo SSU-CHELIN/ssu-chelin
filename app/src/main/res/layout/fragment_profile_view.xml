@@ -156,16 +156,6 @@
                     android:clickable="true" />
 
                 <TextView
-                    android:id="@+id/privacy_policy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="개인정보 처리방침"
-                    android:padding="14dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:onClick="navigateToPrivacyPolicy" />
-
-                <TextView
                     android:id="@+id/contact_us"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
