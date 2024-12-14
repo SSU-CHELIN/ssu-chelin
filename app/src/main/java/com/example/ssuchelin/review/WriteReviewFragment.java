@@ -66,6 +66,7 @@ public class WriteReviewFragment extends Fragment {
 
 
 
+
             binding.foodCategory.setText(category);
             binding.foodSubMenu.setText(subMenu);
             binding.foodMainMenu.setText(mainMenu);

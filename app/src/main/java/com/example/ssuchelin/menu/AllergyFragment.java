@@ -2,6 +2,8 @@ package com.example.ssuchelin.menu;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -67,5 +69,32 @@ public class AllergyFragment extends Fragment {
         binding = FragmentAllergyBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+        String allergy = getArguments().getString("Allergy");
+
+
+        // Toolbar 설정
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+            }
+        }
+
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!requireActivity().getSupportFragmentManager().isStateSaved()) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        binding.allergyInfoDescription.setText(allergy);
+
     }
 }
