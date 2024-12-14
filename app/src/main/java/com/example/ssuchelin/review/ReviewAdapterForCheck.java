@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ssuchelin.R;
 import com.google.firebase.database.DataSnapshot;
@@ -65,13 +67,21 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
 
         // Edit 버튼 클릭 시 EditReviewActivity로 이동
         holder.editbtn.setOnClickListener(v -> {
+//            String reviewKey = reviewKeys.get(position);
+//            Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
+//            intent.putExtra("review_id", reviewKey);
+//            intent.putExtra("student_id", userId);
+//            intent.putExtra("username", review.getUsername());
+//            // 여기서 Mainmenu나 Submenu 같은 추가 정보가 필요하다면 intent.putExtra("mainMenu", review.getMainMenu()) 등을 추가할 수 있음.
+//            holder.itemView.getContext().startActivity(intent);
             String reviewKey = reviewKeys.get(position);
-            Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
-            intent.putExtra("review_id", reviewKey);
-            intent.putExtra("student_id", userId);
-            intent.putExtra("username", review.getUsername());
-            // 여기서 Mainmenu나 Submenu 같은 추가 정보가 필요하다면 intent.putExtra("mainMenu", review.getMainMenu()) 등을 추가할 수 있음.
-            holder.itemView.getContext().startActivity(intent);
+
+            // DialogFragment 호출
+            EditReviewDialogFragment dialogFragment = EditReviewDialogFragment.newInstance(reviewKey, userId);
+
+            // FragmentManager 사용
+            FragmentManager fragmentManager = ((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager();
+            dialogFragment.show(fragmentManager, "EditReviewDialog");
         });
 
         holder.deletebtn.setOnClickListener(v->{
