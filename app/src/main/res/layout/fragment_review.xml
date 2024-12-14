@@ -5,6 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- ProgressBar와 로딩 메시지 -->
+    <LinearLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로딩 중..."
+            android:paddingTop="16dp"
+            android:textSize="16sp" />
+    </LinearLayout>
+
     <!-- Toolbar with Back Button -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -34,6 +55,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/review_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="56dp"

@@ -141,6 +141,9 @@ public class ReviewFragment extends Fragment {
             Log.e("ReviewFragment", "typeN is null or empty");
             return;
         }
+        // 로딩 화면 표시
+        binding.progressLayout.setVisibility(View.VISIBLE);
+        binding.reviewLayout.setVisibility(View.GONE);
 
         DatabaseReference whoWriteRef = FirebaseDatabase.getInstance().getReference("Category")
                 .child(typeN)
@@ -164,6 +167,10 @@ public class ReviewFragment extends Fragment {
             } else {
                 Toast.makeText(getContext(), "데이터를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show();
             }
+
+            // 로딩 화면 숨기기, 실제 화면 표시
+            binding.progressLayout.setVisibility(View.GONE);
+            binding.reviewLayout.setVisibility(View.VISIBLE);
         });
     }
     private void fetchReviewsAndKeys(List<String> userIds, String mainMenu) {

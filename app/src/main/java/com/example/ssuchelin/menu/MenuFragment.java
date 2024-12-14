@@ -60,6 +60,7 @@ public class MenuFragment extends Fragment {
     private Button allergyButton1,allergyButton2,allergyButton3;
     private RecyclerView calendarRecyclerView;
     private CalendarView calendarView;
+    private View progressLayout; // 로딩 화면
 
     FragmentMenuBinding binding;
     @SuppressLint("MissingInflatedId")
@@ -67,6 +68,10 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
+
+        // Progress Layout 초기화
+        progressLayout = view.findViewById(R.id.progress_layout);
+
         binding = FragmentMenuBinding.inflate(inflater, container, false);
 
 
@@ -475,6 +480,13 @@ public class MenuFragment extends Fragment {
     private class FetchMenuTask extends AsyncTask<String, Void, List<String>> {
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // 로딩 화면 표시
+            showLoading();
+        }
+
+        @Override
         protected List<String> doInBackground(String... params) {
             String date = params[0];
             int junValue = calculateJunValue(date); // 동적으로 jun 값을 계산
@@ -507,6 +519,10 @@ public class MenuFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> menus) {
+            super.onPostExecute(menus);
+            // 로딩 화면 숨기기
+            hideLoading();
+
             if (menus.isEmpty()) {
                 Toast.makeText(getContext(), "메뉴 데이터를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show();
             } else {
@@ -538,9 +554,6 @@ public class MenuFragment extends Fragment {
             }
         }
 
-
-
-
         private String parseCategory(String data) {
             int startIdx = data.indexOf("[");
             int endIdx = data.indexOf("]");
@@ -551,8 +564,6 @@ public class MenuFragment extends Fragment {
             }
             return "Category 없음";
         }
-
-
 
         private boolean isWeekend(Calendar calendar) {
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -616,7 +627,6 @@ public class MenuFragment extends Fragment {
             }
             return subMenu;
         }
-
 
         private boolean containsEnglish(String text) {
             // 영어가 포함되어 있는지 체크하는 함수
@@ -690,7 +700,12 @@ public class MenuFragment extends Fragment {
 
     }
 
+    private void showLoading() {
+        progressLayout.setVisibility(View.VISIBLE);
+    }
 
-
+    private void hideLoading() {
+        progressLayout.setVisibility(View.GONE);
+    }
 
 }
