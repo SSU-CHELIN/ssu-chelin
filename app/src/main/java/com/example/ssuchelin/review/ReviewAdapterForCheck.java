@@ -76,6 +76,12 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
             intent.putExtra("username", review.getUsername()); // 사용자 이름 전달
             holder.itemView.getContext().startActivity(intent);
         });
+        holder.deletebtn.setOnClickListener(v->{
+            String reviewKey = reviewKeys.get(position);
+            databaseReference.child(reviewKey).removeValue();
+            reviewsList.remove(position);
+            notifyItemRemoved(position);
+        });
 
         // 좋아요 버튼 클릭
         holder.likeIcon.setOnClickListener(v -> {
@@ -101,7 +107,7 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
     class ReviewViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView, reviewTextView, saltLevelTextView, spicyLevelTextView, allergyInfoTextView;
         ImageView star1, star2, star3;
-        TextView editbtn, reviewDateTextView, reviewMenuTextView;
+        TextView editbtn, reviewDateTextView, reviewMenuTextView, deletebtn;
         ImageView likeIcon;
         TextView likeCountText;
         ImageView dislikeIcon;
@@ -118,6 +124,7 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
             star2 = itemView.findViewById(R.id.review_star2);
             star3 = itemView.findViewById(R.id.review_star3);
             editbtn = itemView.findViewById(R.id.edit_button);
+            deletebtn = itemView.findViewById(R.id.delete_button);
             reviewDateTextView = itemView.findViewById(R.id.review_date);
             reviewMenuTextView = itemView.findViewById(R.id.review_menu);
 
