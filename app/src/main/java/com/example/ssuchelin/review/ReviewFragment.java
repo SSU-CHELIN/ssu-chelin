@@ -28,9 +28,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ReviewFragment extends Fragment {
     private FragmentReviewBinding binding;
@@ -162,7 +166,6 @@ public class ReviewFragment extends Fragment {
             }
         });
     }
-
     private void fetchReviewsAndKeys(List<String> userIds, String mainMenu) {
         reviewList.clear();
         reviewKeys.clear(); // 키 리스트 초기화
@@ -173,10 +176,9 @@ public class ReviewFragment extends Fragment {
             tasks.add(userRef.get());
         }
 
-        // 모든 데이터를 병렬로 가져온 후 처리
         Tasks.whenAllComplete(tasks).addOnCompleteListener(task -> {
-            float totalStar = 0;
-            int reviewCount = 0;
+            float totalStar = 0; // 총 starCount
+            int reviewCount = 0; // 리뷰 개수
 
             for (Task<DataSnapshot> individualTask : tasks) {
                 if (individualTask.isSuccessful() && individualTask.getResult() != null) {
@@ -185,27 +187,69 @@ public class ReviewFragment extends Fragment {
                         String reviewMainMenu = reviewSnap.child("Mainmenu").getValue(String.class);
                         if (mainMenu.equals(reviewMainMenu)) {
                             Review review = parseReview(reviewSnap);
-                            reviewList.add(review);
-                            reviewKeys.add(reviewSnap.getKey());
+                            String reviewKey = reviewSnap.getKey(); // 키 가져오기
+                            String userId = reviewSnap.getRef().getParent().getParent().getKey();
 
-                            // 별점 계산
+                            if (userId != null && reviewKey != null) {
+                                loadUserInfoForReview(userId, review, reviewKey);
+                            }
+
+                            // 총 starCount 및 리뷰 개수 계산
                             totalStar += review.getStarCount();
                             reviewCount++;
                         }
                     }
                 }
             }
+            // 평균 평점 계산
+            float averageStar = (reviewCount > 0) ? (totalStar / reviewCount) : 0;
 
-            // 평균 별점 계산 및 UI 업데이트
-            reviewAdapter.updateReviews(reviewList, reviewKeys);
-
-            float avg = reviewCount > 0 ? totalStar / reviewCount : 0;
-
-            String formattedAvg = String.format("%.1f", avg);
+            // UI에 평균 평점 표시
+            String formattedAvg = String.format(Locale.KOREA, "%.1f", averageStar);
             binding.scoreNum.setText(formattedAvg);
-            updateStarImages(avg);
+
+            // 별 이미지 업데이트
+            updateStarImages(averageStar);
         });
     }
+
+
+    private void loadUserInfoForReview(String userId, Review review, String reviewKey) {
+        DatabaseReference userInfoRef = FirebaseDatabase.getInstance().getReference("User").child(userId).child("userinfo");
+        userInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // `userinfo` 데이터 로드
+                int saltPreference = parseInt(snapshot.child("saltPreference").getValue(String.class), 0);
+                int spicyPreference = parseInt(snapshot.child("spicyPreference").getValue(String.class), 0);
+
+                List<String> allergyList = new ArrayList<>();
+                for (DataSnapshot allergySnap : snapshot.child("allergies").getChildren()) {
+                    String allergy = allergySnap.getValue(String.class);
+                    if (allergy != null) allergyList.add(allergy);
+                }
+                String allergies = allergyList.isEmpty() ? "없음" : String.join(", ", allergyList);
+
+                // 리뷰 객체에 추가
+                review.setSaltPreference(saltPreference);
+                review.setSpicyPreference(spicyPreference);
+                review.setAllergies(allergies);
+
+                // 리뷰와 키를 동기화하여 리스트에 추가
+                synchronized (reviewList) {
+                    reviewList.add(review);
+                    reviewKeys.add(reviewKey); // 키도 함께 추가
+                    reviewAdapter.updateReviews(new ArrayList<>(reviewList), new ArrayList<>(reviewKeys));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("loadUserInfoForReview", "Failed to load user info for review: " + error.getMessage());
+            }
+        });
+    }
+
 
     private Review parseReview(DataSnapshot reviewSnap) {
         String mainMenu = reviewSnap.child("Mainmenu").getValue(String.class);
@@ -214,9 +258,26 @@ public class ReviewFragment extends Fragment {
         int starCount = parseInt(reviewSnap.child("starCount").getValue(Integer.class), 0);
         Long timeValue = reviewSnap.child("time").getValue(Long.class);
         long timeMillis = (timeValue != null) ? timeValue : 0;
+
+        // 시간 포맷팅
+        String formattedTime = "알 수 없음";
+        if (timeMillis > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+            sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+            Date date = new Date(timeMillis);
+            formattedTime = sdf.format(date);
+        }
+
         int likeDifference = parseInt(reviewSnap.child("likeDifference").getValue(Integer.class), 0);
-        return new Review(mainMenu, subMenu, userReview, starCount, timeMillis, likeDifference);
+
+        // 리뷰 객체 생성 (userinfo 데이터 없이 초기화)
+        Review review = new Review(mainMenu, subMenu, userReview, starCount, timeMillis, likeDifference);
+        review.setReviewTime(formattedTime);
+
+        return review;
     }
+
+
 
     private int parseInt(Object value, int defaultValue) {
         try {
