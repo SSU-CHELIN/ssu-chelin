@@ -47,6 +47,7 @@ public class WriteReviewFragment extends Fragment {
     private boolean isEditMode = false;
     private int reviewId = -1;
     private int score = 0;
+    private String type;
     private TextView foodCategory,foodMainMenu,foodSubMenu;
     private ImageView foodImage;
     private FragmentWriteReviewBinding binding;
@@ -78,6 +79,8 @@ public class WriteReviewFragment extends Fragment {
 
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+
+        type = getArguments().getString("type"); //ddook,dub,yang
 
         // XML 참조
         foodCategory = view.findViewById(R.id.foodCategory);
@@ -202,6 +205,7 @@ public class WriteReviewFragment extends Fragment {
                 userReview.put("userReview", review);
                 userReview.put("starCount", starCount);
                 userReview.put("score", score);
+
 
                 // 메인 메뉴와 서브 메뉴 추가
                 userReview.put("Mainmenu", binding.foodMainMenu.getText().toString());

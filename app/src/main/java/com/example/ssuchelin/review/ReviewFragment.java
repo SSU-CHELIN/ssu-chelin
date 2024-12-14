@@ -56,6 +56,8 @@ public class ReviewFragment extends Fragment {
         binding.reviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         binding.reviewRecyclerView.setAdapter(reviewAdapter);
 
+        String type = getArguments().getString("type");
+
         // Firebase에서 리뷰 데이터 가져오기
         String selectedMainMenu = binding.foodMainMenu.getText().toString();
         fetchReviews(selectedMainMenu);
@@ -65,6 +67,7 @@ public class ReviewFragment extends Fragment {
             bundle.putString("mainMenu", binding.foodMainMenu.getText().toString());
             bundle.putString("subMenu", binding.foodSubMenu.getText().toString());
             bundle.putString("category", binding.foodCategory.getText().toString());
+            bundle.putString("type",type);
             bundle.putParcelable("imageBitmap", (((BitmapDrawable) binding.foodImage.getDrawable()).getBitmap()));
 
             WriteReviewFragment writeReviewFragment = new WriteReviewFragment();

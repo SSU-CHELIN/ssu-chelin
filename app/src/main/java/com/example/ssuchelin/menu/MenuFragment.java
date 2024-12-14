@@ -127,6 +127,7 @@ public class MenuFragment extends Fragment {
             bundle.putString("mainMenu", mainMenu);
             bundle.putString("subMenu", subMenu);
             bundle.putString("category", category);
+            bundle.putString("type","ddook");
             bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
 
 
@@ -159,6 +160,7 @@ public class MenuFragment extends Fragment {
             bundle.putString("mainMenu", mainMenu);
             bundle.putString("subMenu", subMenu);
             bundle.putString("category", category);
+            bundle.putString("type","dub");
             bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
 
 
@@ -196,6 +198,7 @@ public class MenuFragment extends Fragment {
             bundle.putString("mainMenu", mainMenu);
             bundle.putString("subMenu", subMenu);
             bundle.putString("category", category);
+            bundle.putString("type","yang");
             bundle.putParcelable("imageBitmap", bitmap);  // 이미지 데이터를 Bitmap 형태로 전달
 
 
@@ -296,6 +299,8 @@ public class MenuFragment extends Fragment {
                 categoryText1.setText(parseCategory(menus.get(0)));
                 menuText1.setText(parseMainMenu(menus.get(0)));
                 subMenuText1.setText(String.join(", ", parseSubMenu(menus.get(0)))); // 한글 이름만 서브 메뉴에 설정
+
+
 
                 categoryText2.setText(parseCategory(menus.get(1)));
                 menuText2.setText(parseMainMenu(menus.get(1)));
