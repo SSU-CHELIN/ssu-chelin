@@ -1,9 +1,11 @@
 package com.example.ssuchelin.review;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ssuchelin.R;
 import com.google.firebase.database.DataSnapshot;
@@ -21,14 +25,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SubCategoryFragment extends Fragment {
 
-    private LinearLayout subCategoryContainer; // 하위 노드를 출력할 컨테이너
-    private DatabaseReference categoryRef; // Firebase 참조
+    private String parentNode, subCategoryKey, subCategoryName;
+    private RecyclerView reviewRecyclerView;
+    private ReviewAdapter reviewAdapter;
+    private LinearLayout subCategoryContainer;
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sub_category, container, false);
 
         // Toolbar 설정
@@ -48,34 +58,56 @@ public class SubCategoryFragment extends Fragment {
             }
         });
 
-        // 전달된 상위/중간 노드 이름과 키 가져오기
         Bundle arguments = getArguments();
         if (arguments == null) {
             Toast.makeText(getContext(), "필요한 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
             return view;
         }
 
-        String parentNode = arguments.getString("parentNode", "");
-        String subCategoryKey = arguments.getString("subCategoryKey", "");
-        String subCategoryName = arguments.getString("subCategoryName", "");
+        parentNode = arguments.getString("parentNode", "");
+        subCategoryKey = arguments.getString("subCategoryKey", "");
+        subCategoryName = arguments.getString("subCategoryName", "");
 
-        // 타이틀 구성
         TextView subCategoryTextView = view.findViewById(R.id.sub_category_name);
-        subCategoryTextView.setText(parentNode + "코너 > " + subCategoryName);
+        subCategoryTextView.setText(parentNode + " > " + subCategoryName);
 
-        // 하위 노드 출력 컨테이너
+        subCategoryTextView.setPadding(
+                subCategoryTextView.getPaddingLeft(),
+                subCategoryTextView.getPaddingTop(),
+                subCategoryTextView.getPaddingRight(),
+                dpToPx(20)
+        );
+
         subCategoryContainer = view.findViewById(R.id.sub_category_container);
 
-        // Firebase 참조
-        categoryRef = FirebaseDatabase.getInstance().getReference("Category").child(parentNode).child(subCategoryKey);
+        // RecyclerView 설정
+        reviewRecyclerView = new RecyclerView(getContext());
+        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        reviewAdapter = new ReviewAdapter(new ArrayList<>());
+        reviewRecyclerView.setAdapter(reviewAdapter);
+        subCategoryContainer.addView(reviewRecyclerView);
 
-        // 하위 노드 로드
-        loadSubCategories();
+        // 여기서 subCategoryKey가 "Mainmenu"면 하위 메뉴 목록을 불러오고,
+        // 아니면 실제 메뉴명이라고 판단, whoWriteReview에서 리뷰 로드
+        if (subCategoryKey.equals("Mainmenu")) {
+            loadMainMenus();
+        } else {
+            // subCategoryKey가 실제 메뉴명
+            loadReviewsForMenu(subCategoryKey);
+        }
 
         return view;
     }
 
-    private void loadSubCategories() {
+    // dp 값을 px로 변환하는 메서드
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
+    }
+
+
+    // Mainmenu 하위 메뉴 로드
+    private void loadMainMenus() {
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("Category").child(parentNode).child(subCategoryKey);
         categoryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -91,12 +123,15 @@ public class SubCategoryFragment extends Fragment {
                 }
 
                 for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                    String childNodeName = childSnapshot.getValue(String.class);
+                    String childNodeName = childSnapshot.getKey();
                     if (childNodeName != null) {
                         TextView childTextView = new TextView(getContext());
                         childTextView.setText("   > " + childNodeName);
                         childTextView.setTextSize(16);
                         childTextView.setPadding(32, 16, 16, 16);
+
+                        // 메뉴 아이템 클릭 시 다시 SubCategoryFragment 호출 (여기서 childNodeName이 실제 메뉴)
+                        childTextView.setOnClickListener(v -> openSubCategoryAgain(parentNode, childNodeName, childNodeName));
                         subCategoryContainer.addView(childTextView);
                     }
                 }
@@ -112,4 +147,181 @@ public class SubCategoryFragment extends Fragment {
             }
         });
     }
+
+    // 실제 메뉴 클릭 시 다시 SubCategoryFragment로 이동
+    private void openSubCategoryAgain(String parentNode, String subCategoryKey, String subCategoryName) {
+        SubCategoryFragment fragment = new SubCategoryFragment();
+        Bundle args = new Bundle();
+        args.putString("parentNode", parentNode);
+        args.putString("subCategoryKey", subCategoryKey);
+        args.putString("subCategoryName", subCategoryName);
+        fragment.setArguments(args);
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    // 실제 메뉴에 대한 리뷰 로드
+    private void loadReviewsForMenu(String menuName) {
+        reviewAdapter.updateReviews(new ArrayList<>()); // 초기화
+        DatabaseReference whoWriteRef = FirebaseDatabase.getInstance().getReference("Category")
+                .child(parentNode)
+                .child("Mainmenu")
+                .child(menuName)
+                .child("whoWriteReview");
+
+        whoWriteRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    reviewAdapter.updateReviews(new ArrayList<>());
+                    return;
+                }
+
+                List<String> studentIds = new ArrayList<>();
+                for (DataSnapshot idSnap : snapshot.getChildren()) {
+                    String studentId = idSnap.getKey();
+                    if (!TextUtils.isEmpty(studentId)) {
+                        studentIds.add(studentId);
+                    }
+                }
+
+                if (studentIds.isEmpty()) {
+                    reviewAdapter.updateReviews(new ArrayList<>());
+                } else {
+                    loadUserReviews(studentIds, menuName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "리뷰 로드 중 오류: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadUserReviews(List<String> studentIds, String menuName) {
+        List<Review> allReviews = new ArrayList<>();
+        final int[] remaining = {studentIds.size()};
+        for (String studentId : studentIds) {
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(studentId);
+
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                    // /// 수정 부분: userName 가져오기
+                    String userName = userSnapshot.child("userinfo").child("userName").getValue(String.class);
+                    if (userName == null) userName = studentId; // userName 없으면 studentId 사용
+
+                    DataSnapshot myReviewData = userSnapshot.child("myReviewData");
+                    for (DataSnapshot reviewSnap : myReviewData.getChildren()) {
+                        String reviewMainMenu = reviewSnap.child("Mainmenu").getValue(String.class);
+                        if (menuName.equals(reviewMainMenu)) {
+                            String userReview = reviewSnap.child("userReview").getValue(String.class);
+                            Integer starCount = reviewSnap.child("starCount").getValue(Integer.class);
+
+                            // 작성자를 userName으로 표시
+                            Review reviewObj = new Review(userName, userReview != null ? userReview : "",
+                                    starCount != null ? starCount : 0);
+                            allReviews.add(reviewObj);
+                        }
+                    }
+
+                    remaining[0]--;
+                    if (remaining[0] == 0) {
+                        reviewAdapter.updateReviews(allReviews);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    remaining[0]--;
+                    if (remaining[0] == 0) {
+                        reviewAdapter.updateReviews(allReviews);
+                    }
+                }
+            });
+        }
+    }
+
+    // 리뷰 객체
+    class Review {
+        private String userName;  // /// 수정 부분: userName 필드 사용
+        private String userReview;
+        private int starCount;
+
+        public Review(String userName, String userReview, int starCount) {
+            this.userName = userName;
+            this.userReview = userReview;
+            this.starCount = starCount;
+        }
+
+        public String getUserName() { return userName; } // /// 수정 부분: userName getter
+        public String getUserReview() { return userReview; }
+        public int getStarCount() { return starCount; }
+    }
+
+    // RecyclerView 어댑터
+    class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
+
+        private List<Review> reviewList;
+
+        public ReviewAdapter(List<Review> reviewList) {
+            this.reviewList = reviewList;
+        }
+
+        @NonNull
+        @Override
+        public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.overview_review_item, parent, false);
+            return new ReviewViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
+            Review review = reviewList.get(position);
+            // /// 수정 부분: 작성자에 userName 사용
+            holder.usernameTextView.setText(review.getUserName());
+            holder.reviewTextView.setText(review.getUserReview());
+
+            // 별점에 따라 별 UI 업데이트
+            holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
+            holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
+            holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+
+            // 수정 버튼 클릭 시 예시
+            holder.editbtn.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "수정 기능 예시: " + review.getUserReview(), Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return reviewList.size();
+        }
+
+        public void updateReviews(List<Review> newReviews) {
+            this.reviewList = newReviews;
+            notifyDataSetChanged();
+        }
+
+        class ReviewViewHolder extends RecyclerView.ViewHolder {
+            TextView usernameTextView, reviewTextView;
+            ImageView star1, star2, star3; // ImageView로 변경
+            TextView editbtn;
+
+            public ReviewViewHolder(@NonNull View itemView) {
+                super(itemView);
+                usernameTextView = itemView.findViewById(R.id.review_username);
+                reviewTextView = itemView.findViewById(R.id.review_content);
+                star1 = itemView.findViewById(R.id.review_star1);
+                star2 = itemView.findViewById(R.id.review_star2);
+                star3 = itemView.findViewById(R.id.review_star3);
+                editbtn = itemView.findViewById(R.id.edit_button);
+            }
+        }
+    }
+
 }

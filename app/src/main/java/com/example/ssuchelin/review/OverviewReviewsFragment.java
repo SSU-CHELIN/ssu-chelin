@@ -109,7 +109,9 @@ public class OverviewReviewsFragment extends Fragment {
     }
 
     private void addSubCategories(String categoryKey, TextView categoryTextView) {
-        categoryRef.child(categoryKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        // 여기서 '뚝배기 코너' 클릭 시 Mainmenu 안에 있는 실제 메뉴(예: 투다리김치우동)를 바로 가져오고 싶으므로
+        // categoryRef.child(categoryKey).child("Mainmenu")에 접근하여 하위 메뉴를 표시한다.
+        categoryRef.child(categoryKey).child("Mainmenu").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int index = categoryContainer.indexOfChild(categoryTextView) + 1;
@@ -118,7 +120,7 @@ public class OverviewReviewsFragment extends Fragment {
                     removeSubCategories(categoryTextView);
                 }
 
-                if (!snapshot.hasChildren()) {
+                if (!snapshot.exists() || !snapshot.hasChildren()) {
                     TextView noSubCategoryTextView = new TextView(getContext());
                     noSubCategoryTextView.setText("   > 해당하는 메뉴가 없습니다");
                     noSubCategoryTextView.setTextSize(16);
@@ -127,19 +129,23 @@ public class OverviewReviewsFragment extends Fragment {
                     return;
                 }
 
-                for (DataSnapshot subCategorySnapshot : snapshot.getChildren()) {
-                    String subCategoryKey = subCategorySnapshot.getKey();
-                    String subCategoryName = subCategorySnapshot.getKey();
+                // Mainmenu 하위의 실제 메뉴 아이템 표시
+                for (DataSnapshot menuSnapshot : snapshot.getChildren()) {
+                    String menuName = menuSnapshot.getKey();
+                    if (menuName == null) continue;
 
-                    if (subCategoryKey != null && subCategoryName != null) {
-                        TextView subCategoryTextView = new TextView(getContext());
-                        subCategoryTextView.setText("   > " + subCategoryName);
-                        subCategoryTextView.setTextSize(16);
-                        subCategoryTextView.setPadding(48, 8, 8, 8);
+                    TextView menuTextView = new TextView(getContext());
+                    menuTextView.setTextSize(16);
+                    menuTextView.setPadding(48, 8, 8, 8);
+                    menuTextView.setText("   > " + menuName);
 
-                        subCategoryTextView.setOnClickListener(v -> openReviewList(subCategoryKey, subCategoryName, categoryKey));
-                        categoryContainer.addView(subCategoryTextView, index++);
-                    }
+                    // 메뉴 클릭 시 SubCategoryFragment로 이동
+                    // parentNode = categoryKey
+                    // subCategoryKey = 실제 메뉴 이름
+                    // subCategoryName = 메뉴 이름
+                    menuTextView.setOnClickListener(v -> openSubCategory(categoryKey, menuName, menuName));
+
+                    categoryContainer.addView(menuTextView, index++);
                 }
             }
 
@@ -170,7 +176,7 @@ public class OverviewReviewsFragment extends Fragment {
                 .commit();
     }
 
-    private void openReviewList(String subCategoryKey, String subCategoryName, String parentNode) {
+    private void openSubCategory(String parentNode, String subCategoryKey, String subCategoryName) {
         SubCategoryFragment fragment = new SubCategoryFragment();
         Bundle args = new Bundle();
         args.putString("parentNode", parentNode);

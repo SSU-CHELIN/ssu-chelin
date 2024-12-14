@@ -1,216 +1,244 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:padding="16dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 1~3위 / 4~10위는 ranking_item 참조 -->
+    <!-- ProgressBar와 로딩 메시지 -->
     <LinearLayout
+        android:id="@+id/progress_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity=""
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <!-- 파베)2위 -->
-        <LinearLayout
-            android:id="@+id/second_place_layout"
-            android:layout_width="0dp"
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground">
-
-            <TextView
-                android:id="@+id/third_none"
-                android:layout_width="wrap_content"
-                android:layout_height="12dp"
-                android:text=""
-                android:gravity="center"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/second_place_badge"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/silver_medal"
-                android:contentDescription="Second Place Badge" />
-
-            <ImageView
-                android:id="@+id/second_place_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/none_pro"
-                android:contentDescription="Second Place Profile Image" />
-
-            <TextView
-                android:id="@+id/second_place_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="윤상진"
-                android:gravity="center"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/second_place_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="888"
-                android:gravity="center"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- 파베)1위 -->
-        <LinearLayout
-            android:id="@+id/first_place_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground">
-
-            <ImageView
-                android:id="@+id/first_place_badge"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/gold_medal"
-                android:contentDescription="First Place Badge" />
-
-            <ImageView
-                android:id="@+id/first_place_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/none_pro"
-                android:contentDescription="First Place Profile Image" />
-
-            <TextView
-                android:id="@+id/first_place_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="최정인"
-                android:gravity="center"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/first_place_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="999"
-                android:gravity="center"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- 파베)3위 -->
-        <LinearLayout
-            android:id="@+id/third_place_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground">
-
-            <TextView
-                android:id="@+id/second_none"
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:text=""
-                android:gravity="center"
-                android:textSize="14sp" />
-
-            <ImageView
-                android:id="@+id/third_place_badge"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/bronze_medal"
-                android:contentDescription="Third Place Badge" />
-
-            <ImageView
-                android:id="@+id/third_place_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/none_pro"
-                android:contentDescription="Third Place Profile Image" />
-
-            <TextView
-                android:id="@+id/third_place_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="최승환"
-                android:gravity="center"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/third_place_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="777"
-                android:gravity="center"
-                android:textSize="14sp" />
-        </LinearLayout>
+            android:text="로딩 중..."
+            android:paddingTop="16dp"
+            android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- 상단 구분선 -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DDDFFF"
-        android:layout_marginBottom="8dp" />
-
+    <!-- 실제 랭킹 UI -->
     <LinearLayout
+        android:id="@+id/ranking_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        tools:ignore="MissingConstraints"
-        android:layout_marginBottom="8dp" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <TextView
-            android:id="@+id/rank_position"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="순위"
-            android:gravity="center"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity=""
+            android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/rank_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="닉네임"
-            android:gravity="center"
-            android:textStyle="bold" />
+            <!-- 파베)2위 -->
+            <LinearLayout
+                android:id="@+id/second_place_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
 
-        <TextView
-            android:id="@+id/rank_score"
-            android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/third_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="12dp"
+                    android:text=""
+                    android:gravity="center"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/second_place_badge"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/silver_medal"
+                    android:contentDescription="Second Place Badge" />
+
+                <ImageView
+                    android:id="@+id/second_place_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/none_pro"
+                    android:contentDescription="Second Place Profile Image" />
+
+                <TextView
+                    android:id="@+id/second_place_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="윤상진"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/second_place_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="888"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- 파베)1위 -->
+            <LinearLayout
+                android:id="@+id/first_place_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/first_place_badge"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/gold_medal"
+                    android:contentDescription="First Place Badge" />
+
+                <ImageView
+                    android:id="@+id/first_place_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/none_pro"
+                    android:contentDescription="First Place Profile Image" />
+
+                <TextView
+                    android:id="@+id/first_place_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="최정인"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/first_place_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="999"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- 파베)3위 -->
+            <LinearLayout
+                android:id="@+id/third_place_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/second_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text=""
+                    android:gravity="center"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/third_place_badge"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/bronze_medal"
+                    android:contentDescription="Third Place Badge" />
+
+                <ImageView
+                    android:id="@+id/third_place_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/none_pro"
+                    android:contentDescription="Third Place Profile Image" />
+
+                <TextView
+                    android:id="@+id/third_place_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="최승환"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/third_place_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="777"
+                    android:gravity="center"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 상단 구분선 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDFFF"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="추천수"
-            android:gravity="center"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            tools:ignore="MissingConstraints"
+            android:layout_marginBottom="8dp" >
+
+            <TextView
+                android:id="@+id/rank_position"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="순위"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/rank_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="닉네임"
+                android:gravity="center"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/rank_score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="추천수"
+                android:gravity="center"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 하단 구분선 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDFFF"
+            android:layout_marginBottom="8dp" />
+
+        <!-- RecyclerView / ranking_item 참조 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ranking_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
     </LinearLayout>
-
-    <!-- 하단 구분선 -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DDDFFF"
-        android:layout_marginBottom="8dp" />
-
-    <!-- RecyclerView / ranking_item 참조 -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ranking_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-</LinearLayout>
+</FrameLayout>

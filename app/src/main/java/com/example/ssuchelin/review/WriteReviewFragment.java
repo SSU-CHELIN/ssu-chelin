@@ -66,7 +66,6 @@ public class WriteReviewFragment extends Fragment {
 
 
 
-
             binding.foodCategory.setText(category);
             binding.foodSubMenu.setText(subMenu);
             binding.foodMainMenu.setText(mainMenu);
@@ -82,6 +81,9 @@ public class WriteReviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         type = getArguments().getString("type"); //ddook,dub,yang
+        if(type == "ddook") type = "뚝배기 코너";
+        if(type == "dub") type = "덮밥 코너";
+        if(type == "yang") type = "양식 코너";
 
         // XML 참조
         foodCategory = view.findViewById(R.id.foodCategory);
@@ -170,19 +172,24 @@ public class WriteReviewFragment extends Fragment {
 
     // 클릭 리스너 정의
     private final View.OnClickListener starClickListener = view -> {
+        // 첫 번째 별 클릭 시
+        // starCount가 1이면 다시 0으로 만들고, 아니면 1로 설정
         if (view.getId() == R.id.starButton1) {
-            isStar1On = !isStar1On;
-            starButton1.setImageResource(isStar1On ? R.drawable.star : R.drawable.star_off);
-            starCount = isStar1On ? starCount + 1 : starCount - 1;
+            if (starCount == 1) {
+                starCount = 0; // 이미 1점 상태에서 다시 첫 번째 별 클릭하면 0점
+            } else {
+                starCount = 1; // 그렇지 않다면 1점
+            }
         } else if (view.getId() == R.id.starButton2) {
-            isStar2On = !isStar2On;
-            starButton2.setImageResource(isStar2On ? R.drawable.star : R.drawable.star_off);
-            starCount = isStar2On ? starCount + 1 : starCount - 1;
+            // 두 번째 별 클릭 시 항상 2점
+            starCount = 2;
         } else if (view.getId() == R.id.starButton3) {
-            isStar3On = !isStar3On;
-            starButton3.setImageResource(isStar3On ? R.drawable.star : R.drawable.star_off);
-            starCount = isStar3On ? starCount + 1 : starCount - 1;
+            // 세 번째 별 클릭 시 항상 3점
+            starCount = 3;
         }
+
+        // 변경된 starCount에 따라 별 UI 갱신
+        updateStarButtons();
     };
 
     // 별 UI 업데이트
@@ -211,6 +218,16 @@ public class WriteReviewFragment extends Fragment {
                 // 메인 메뉴와 서브 메뉴 추가
                 userReview.put("Mainmenu", binding.foodMainMenu.getText().toString());
                 userReview.put("Submenu", binding.foodSubMenu.getText().toString());
+
+                // 여기 밑에 추가해줘 whoWriteReview에는 쓴 사람의 studentId를 가져와야해
+                // Category/{type}/{Mainmenu}/{메인메뉴이름}/whoWriteReview/{studentId}: true
+                DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("Category");
+                categoryRef.child(type) // type 들어가는곳
+                        .child("Mainmenu")
+                        .child(binding.foodMainMenu.getText().toString())
+                        .child("whoWriteReview")
+                        .child(studentId)
+                        .setValue(true);
 
                 mDatabaseRef.child("myReviewData").child(reviewKey).setValue(userReview).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -249,6 +266,18 @@ public class WriteReviewFragment extends Fragment {
         // 메인 메뉴와 서브 메뉴 업데이트 추가
         updatedData.put("Mainmenu", binding.foodMainMenu.getText().toString());
         updatedData.put("Submenu", binding.foodSubMenu.getText().toString());
+
+        // 여기 밑에 추가해줘 whoWriteReview에는 쓴 사람의 studentId를 가져와야해
+        // Category/{type}/{Mainmenu}/{메인메뉴이름}/whoWriteReview/{studentId}: true
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String studentIdSP = sharedPreferences.getString("realStudentId", "Unknown ID");
+        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference("Category");
+        categoryRef.child(type) // type 들어가는곳
+                .child("Mainmenu")
+                .child(binding.foodMainMenu.getText().toString())
+                .child("whoWriteReview")
+                .child(studentIdSP)
+                .setValue(true);
 
         reviewRef.updateChildren(updatedData).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

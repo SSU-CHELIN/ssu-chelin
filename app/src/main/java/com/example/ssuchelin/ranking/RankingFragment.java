@@ -23,26 +23,29 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
 
 public class RankingFragment extends Fragment {
     private TextView firstPlaceName, secondPlaceName, thirdPlaceName;
     private TextView firstPlaceScore, secondPlaceScore, thirdPlaceScore;
     private RecyclerView recyclerView;
     private RankingAdapter adapter;
+    private View progressLayout; // 로딩 화면
+    private View rankingLayout;  // 실제 랭킹 화면
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ranking, container, false);
 
+        // 로딩 및 랭킹 레이아웃 초기화
+        progressLayout = view.findViewById(R.id.progress_layout); // 로딩 화면
+        rankingLayout = view.findViewById(R.id.ranking_layout);   // 실제 랭킹 화면
+
         // 상위 3명 View 초기화
         firstPlaceName = view.findViewById(R.id.first_place_name);
         secondPlaceName = view.findViewById(R.id.second_place_name);
         thirdPlaceName = view.findViewById(R.id.third_place_name);
-
         firstPlaceScore = view.findViewById(R.id.first_place_score);
         secondPlaceScore = view.findViewById(R.id.second_place_score);
         thirdPlaceScore = view.findViewById(R.id.third_place_score);
@@ -53,13 +56,17 @@ public class RankingFragment extends Fragment {
         adapter = new RankingAdapter(new ArrayList<>(), getContext());
         recyclerView.setAdapter(adapter);
 
-        // 랭킹 데이터 로드
+        // 데이터 로드
         loadRankingData();
 
         return view;
     }
 
     private void loadRankingData() {
+        // 로딩 화면 표시
+        progressLayout.setVisibility(View.VISIBLE);
+        rankingLayout.setVisibility(View.GONE);
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("User");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -67,109 +74,98 @@ public class RankingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<User> userList = new ArrayList<>();
 
-                // 모든 사용자 데이터 가져오기
+                // 사용자 데이터 로드
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     String userName = userSnapshot.child("userinfo/userName").getValue(String.class);
                     Integer totalLike = userSnapshot.child("totalLike").getValue(Integer.class);
                     String studentId = userSnapshot.child("UserAccount/realStudentId").getValue(String.class);
 
                     if (totalLike == null) totalLike = 0;
-                    if (studentId == null) studentId = "99999999"; // Null 대비 기본값
+                    if (studentId == null) studentId = "99999999";
                     if (userName != null) {
-                        User user = new User(userName, studentId, totalLike);
-                        userList.add(user);
+                        userList.add(new User(userName, studentId, totalLike));
                     }
                 }
 
-                // totalLike 내림차순, 같으면 studentId 오름차순 정렬
-                Collections.sort(userList, new Comparator<User>() {
-                    @Override
-                    public int compare(User u1, User u2) {
-                        // totalLike 내림차순
-                        int diff = Integer.compare(u2.getTotalLike(), u1.getTotalLike());
-                        if (diff == 0) {
-                            // totalLike 같으면 studentId 오름차순
-                            return u1.getStudentId().compareTo(u2.getStudentId());
-                        }
-                        return diff;
+                // 정렬 및 데이터 설정
+                Collections.sort(userList, (u1, u2) -> {
+                    int diff = Integer.compare(u2.getTotalLike(), u1.getTotalLike());
+                    if (diff == 0) {
+                        return u1.getStudentId().compareTo(u2.getStudentId());
                     }
+                    return diff;
                 });
 
-                // 순위 매기기 (동순위 허용)
-                // 최대 10명까지만 처리
-                int limit = Math.min(10, userList.size());
-                List<UserWithRank> rankedList = new ArrayList<>();
+                updateUI(userList);
 
-                if (limit > 0) {
-                    // 첫 번째 유저는 rank = 1
-                    int currentRank = 1;
-                    int prevLike = userList.get(0).getTotalLike();
-                    rankedList.add(new UserWithRank(userList.get(0), currentRank));
-
-                    for (int i = 1; i < limit; i++) {
-                        User currentUser = userList.get(i);
-                        int currentLike = currentUser.getTotalLike();
-
-                        if (currentLike == prevLike) {
-                            // 이전과 totalLike 동일하면 같은 rank
-                            rankedList.add(new UserWithRank(currentUser, currentRank));
-                        } else {
-                            // 다르면 rank = i+1
-                            currentRank = i + 1;
-                            rankedList.add(new UserWithRank(currentUser, currentRank));
-                        }
-                        prevLike = currentLike;
-                    }
-                }
-
-                // 상위 3명 설정
-                if (rankedList.size() > 0) {
-                    firstPlaceName.setText(rankedList.get(0).user.getName());
-                    firstPlaceScore.setText(String.valueOf(rankedList.get(0).user.getTotalLike()));
-                } else {
-                    firstPlaceName.setText("-");
-                    firstPlaceScore.setText("0");
-                }
-
-                if (rankedList.size() > 1) {
-                    secondPlaceName.setText(rankedList.get(1).user.getName());
-                    secondPlaceScore.setText(String.valueOf(rankedList.get(1).user.getTotalLike()));
-                } else {
-                    secondPlaceName.setText("-");
-                    secondPlaceScore.setText("0");
-                }
-
-                if (rankedList.size() > 2) {
-                    thirdPlaceName.setText(rankedList.get(2).user.getName());
-                    thirdPlaceScore.setText(String.valueOf(rankedList.get(2).user.getTotalLike()));
-                } else {
-                    thirdPlaceName.setText("-");
-                    thirdPlaceScore.setText("0");
-                }
-
-                // 4위부터 나머지 RecyclerView에 설정
-                List<UserWithRank> remainingUsers = new ArrayList<>();
-                if (rankedList.size() > 3) {
-                    for (int i = 3; i < rankedList.size(); i++) {
-                        remainingUsers.add(rankedList.get(i));
-                    }
-                }
-
-                adapter.updateList(remainingUsers);
+                // 로딩 화면 숨기기, 실제 UI 표시
+                progressLayout.setVisibility(View.GONE);
+                rankingLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "데이터 로드 실패", Toast.LENGTH_SHORT).show();
+                progressLayout.setVisibility(View.GONE);
+                rankingLayout.setVisibility(View.VISIBLE);
             }
         });
     }
 
-    // 순위와 함께 User를 담을 내부 클래스
-    static class UserWithRank {
+    private void updateUI(List<User> userList) {
+        List<UserWithRank> rankedList = new ArrayList<>();
+
+        // 순위 부여
+        for (int i = 0; i < userList.size(); i++) {
+            int rank = i + 1; // 순위는 1부터 시작
+            rankedList.add(new UserWithRank(userList.get(i), rank));
+        }
+
+        // 상위 3명 업데이트
+        updateTopThree(rankedList);
+
+        // RecyclerView 업데이트
+        List<UserWithRank> remainingUsers = new ArrayList<>();
+        if (rankedList.size() > 3) {
+            remainingUsers.addAll(rankedList.subList(3, rankedList.size()));
+        }
+        adapter.updateList(remainingUsers);
+    }
+
+
+
+    private void updateTopThree(List<UserWithRank> rankedList) {
+        if (rankedList.size() > 0) {
+            firstPlaceName.setText(rankedList.get(0).user.getName());
+            firstPlaceScore.setText(String.valueOf(rankedList.get(0).user.getTotalLike()));
+        } else {
+            firstPlaceName.setText("-");
+            firstPlaceScore.setText("0");
+        }
+
+        if (rankedList.size() > 1) {
+            secondPlaceName.setText(rankedList.get(1).user.getName());
+            secondPlaceScore.setText(String.valueOf(rankedList.get(1).user.getTotalLike()));
+        } else {
+            secondPlaceName.setText("-");
+            secondPlaceScore.setText("0");
+        }
+
+        if (rankedList.size() > 2) {
+            thirdPlaceName.setText(rankedList.get(2).user.getName());
+            thirdPlaceScore.setText(String.valueOf(rankedList.get(2).user.getTotalLike()));
+        } else {
+            thirdPlaceName.setText("-");
+            thirdPlaceScore.setText("0");
+        }
+    }
+
+
+    public static class UserWithRank {
         User user;
         int rank;
-        UserWithRank(User user, int rank) {
+
+        public UserWithRank(User user, int rank) {
             this.user = user;
             this.rank = rank;
         }
