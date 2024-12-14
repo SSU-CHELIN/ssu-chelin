@@ -63,6 +63,8 @@ public class WriteReviewFragment extends Fragment {
             String category = bundle.getString("category");
             Bitmap bitmap = bundle.getParcelable("imageBitmap");
 
+
+
             binding.foodCategory.setText(category);
             binding.foodSubMenu.setText(subMenu);
             binding.foodMainMenu.setText(mainMenu);
@@ -154,6 +156,7 @@ public class WriteReviewFragment extends Fragment {
 
         submitButton.setOnClickListener(view1 -> {
             String review = reviewEditText.getText().toString();
+            //submitButton.setEnabled(false); // 중복 클릭 방지
 
             if (isEditMode) {
                 // 수정 모드에서 업데이트
