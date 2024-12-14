@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +29,8 @@ public class SearchResultsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search_results, container, false);
 
         // Toolbar 설정
@@ -47,7 +49,6 @@ public class SearchResultsFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack();
             }
         });
-
 
         // View 초기화
         resultsContainer = view.findViewById(R.id.results_container);
@@ -71,40 +72,54 @@ public class SearchResultsFragment extends Fragment {
                 resultsContainer.removeAllViews();
                 boolean hasResults = false;
 
+                // /// 수정 부분: 새로운 구조에 맞게 탐색
+                // Category/{type}/Mainmenu/{메뉴명} 형태
                 for (DataSnapshot categorySnapshot : snapshot.getChildren()) {
-                    String parentNode = categorySnapshot.getKey(); // 상위 노드
+                    String parentNode = categorySnapshot.getKey(); // 상위 노드(type 들어가는곳)
+                    if (parentNode == null) continue;
 
-                    for (DataSnapshot subCategorySnapshot : categorySnapshot.getChildren()) {
-                        String subCategoryKey = subCategorySnapshot.getKey(); // 중간 노드
-                        boolean subCategoryHasResults = false;
+                    DataSnapshot mainMenuSnapshot = categorySnapshot.child("Mainmenu");
+                    if (!mainMenuSnapshot.exists()) {
+                        continue;
+                    }
 
-                        LinearLayout subCategoryLayout = new LinearLayout(getContext());
-                        subCategoryLayout.setOrientation(LinearLayout.VERTICAL);
+                    // mainMenuSnapshot 하위에 실제 메뉴명들이 key로 있음
+                    // 예: mainMenuSnapshot.child("숯불바베큐치밥")
+                    // menuName.toLowerCase().contains(searchQuery.toLowerCase()) 검사
+                    boolean typeHasResults = false;
+                    LinearLayout menuLayout = new LinearLayout(getContext());
+                    menuLayout.setOrientation(LinearLayout.VERTICAL);
 
-                        for (DataSnapshot childNodeSnapshot : subCategorySnapshot.getChildren()) {
-                            String childNodeName = childNodeSnapshot.getValue(String.class); // 하위 노드의 값 (메뉴 이름)
+                    for (DataSnapshot menuSnapshot : mainMenuSnapshot.getChildren()) {
+                        String menuName = menuSnapshot.getKey();
+                        if (menuName != null && menuName.toLowerCase().contains(searchQuery.toLowerCase())) {
+                            // 검색어 포함 메뉴명 발견
+                            typeHasResults = true;
+                            hasResults = true;
 
-                            if (childNodeName != null && childNodeName.toLowerCase().contains(searchQuery.toLowerCase())) {
-                                subCategoryHasResults = true;
-                                hasResults = true;
+                            TextView menuTextView = new TextView(getContext());
+                            menuTextView.setText("   > " + menuName);
+                            menuTextView.setTextSize(16);
+                            menuTextView.setPadding(48, 8, 8, 8);
 
-                                TextView childTextView = new TextView(getContext());
-                                childTextView.setText("   > " + childNodeName);
-                                childTextView.setTextSize(16);
-                                childTextView.setPadding(48, 8, 8, 8);
-                                subCategoryLayout.addView(childTextView);
-                            }
+                            // 메뉴 클릭 시 SubCategoryFragment로 이동
+                            // parentNode = type 들어가는곳
+                            // subCategoryKey = menuName (메뉴 이름)
+                            // subCategoryName = menuName
+                            menuTextView.setOnClickListener(v -> openSubCategory(parentNode, menuName, menuName));
+
+                            menuLayout.addView(menuTextView);
                         }
+                    }
 
-                        // 중간 노드 출력
-                        if (subCategoryHasResults) {
-                            TextView subCategoryTextView = new TextView(getContext());
-                            subCategoryTextView.setText(parentNode + "코너 > " + subCategoryKey);
-                            subCategoryTextView.setTextSize(20);
-                            subCategoryTextView.setPadding(32, 16, 16, 16);
-                            resultsContainer.addView(subCategoryTextView);
-                            resultsContainer.addView(subCategoryLayout);
-                        }
+                    if (typeHasResults) {
+                        TextView typeTextView = new TextView(getContext());
+                        typeTextView.setText("> " + parentNode);
+                        typeTextView.setTextSize(20);
+                        typeTextView.setPadding(32, 16, 16, 16);
+
+                        resultsContainer.addView(typeTextView);
+                        resultsContainer.addView(menuLayout);
                     }
                 }
 
@@ -135,5 +150,19 @@ public class SearchResultsFragment extends Fragment {
         args.putString("searchQuery", query);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private void openSubCategory(String parentNode, String subCategoryKey, String subCategoryName) {
+        SubCategoryFragment fragment = new SubCategoryFragment();
+        Bundle args = new Bundle();
+        args.putString("parentNode", parentNode);
+        args.putString("subCategoryKey", subCategoryKey);
+        args.putString("subCategoryName", subCategoryName);
+        fragment.setArguments(args);
+
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
