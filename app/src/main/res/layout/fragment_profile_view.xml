@@ -7,10 +7,35 @@
     android:layout_height="match_parent"
     tools:context=".user.ProfileViewFragment">
 
-    <ScrollView
+    <!-- 로딩 화면 -->
+    <LinearLayout
+        android:id="@+id/profile_loading_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로딩 중..."
+            android:layout_marginTop="16dp"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- ScrollView로 메인 컨텐츠 -->
+    <ScrollView
+        android:id="@+id/profile_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:visibility="visible"> <!-- 기본적으로 보이도록 설정 -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,7 +43,7 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
-            <!-- 파베) 프로필 사진 -->
+            <!-- 프로필 이미지 -->
             <ImageView
                 android:id="@+id/profile_picture"
                 android:layout_width="80dp"
@@ -28,7 +53,7 @@
                 android:backgroundTint="#CCCCCC"
                 android:scaleType="centerCrop" />
 
-            <!-- 파베) 이름, 학번 -->
+            <!-- 이름, 학번 -->
             <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
@@ -53,7 +78,7 @@
                 android:textSize="16sp"
                 android:textColor="#888888" />
 
-            <!-- 파베) 랭킹 -->
+            <!-- 랭킹 -->
             <TextView
                 android:id="@+id/ranking"
                 android:layout_width="wrap_content"
@@ -63,7 +88,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />
 
-            <!-- 파베) 리뷰 평균 점수 -->
+            <!-- 리뷰 평균 점수 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +114,7 @@
                     android:src="@drawable/star" />
             </LinearLayout>
 
-            <!-- 섹터 나누기 -->
+            <!-- 구분선 -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -169,5 +194,4 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
