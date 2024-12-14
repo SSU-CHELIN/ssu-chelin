@@ -31,7 +31,7 @@
                 android:src="@drawable/ic_back_arrow"
                 android:text="Prev" />
 
-            <EditText
+            <TextView
                 android:id="@+id/monthYearText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         <LinearLayout
             android:id="@+id/food1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:background="@drawable/border_background"
@@ -86,11 +86,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
+                <Button
                     android:id="@+id/foodAllergy1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="end"
+                    android:background="@android:color/transparent"
                     android:text="알러지/원산지 보러가기"
                     android:textColor="#333"
                     android:textSize="8sp" />
@@ -154,7 +155,7 @@
         <LinearLayout
             android:id="@+id/food2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:background="@drawable/border_background"
@@ -171,14 +172,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <TextView
+                <Button
                     android:id="@+id/foodAllergy2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="end"
+                    android:background="@android:color/transparent"
                     android:text="알러지/원산지 보러가기"
-                    android:textSize="8sp"
-                    android:textColor="#333"/>
+                    android:textColor="#333"
+                    android:textSize="8sp" />
                 <TextView
                     android:id="@+id/foodCategory2"
                     android:layout_width="match_parent"
@@ -233,7 +235,7 @@
         <LinearLayout
             android:id="@+id/food3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:background="@drawable/border_background"
@@ -250,14 +252,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <TextView
+                <Button
                     android:id="@+id/foodAllergy3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="end"
+                    android:background="@android:color/transparent"
                     android:text="알러지/원산지 보러가기"
-                    android:textSize="8sp"
-                    android:textColor="#333"/>
+                    android:textColor="#333"
+                    android:textSize="8sp" />
                 <TextView
                     android:id="@+id/foodCategory3"
                     android:layout_width="match_parent"

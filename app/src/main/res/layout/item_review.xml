@@ -66,19 +66,19 @@
                             android:id="@+id/review_star1"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/star" />
+                            android:src="@drawable/star_100" />
 
                         <ImageView
                             android:id="@+id/review_star2"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/star" />
+                            android:src="@drawable/star_100" />
 
                         <ImageView
                             android:id="@+id/review_star3"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
-                            android:src="@drawable/star" />
+                            android:src="@drawable/star_100" />
                     </LinearLayout>
                 </LinearLayout>
 

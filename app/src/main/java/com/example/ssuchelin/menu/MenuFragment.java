@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -50,6 +51,8 @@ public class MenuFragment extends Fragment {
     private TextView monthYearText;
     private LinearLayout food1,food2,food3;
     private String selectedDate;
+    private String allergyInfo1,allergyInfo2,allergyInfo3;
+    private Button allergyButton1,allergyButton2,allergyButton3;
     private RecyclerView calendarRecyclerView;
     FragmentMenuBinding binding;
     @SuppressLint("MissingInflatedId")
@@ -79,6 +82,9 @@ public class MenuFragment extends Fragment {
         categoryText1=view.findViewById(R.id.foodCategory1);
         categoryText2=view.findViewById(R.id.foodCategory2);
         categoryText3=view.findViewById(R.id.foodCategory3);
+        allergyButton1=view.findViewById(R.id.foodAllergy1);
+        allergyButton2=view.findViewById(R.id.foodAllergy2);
+        allergyButton3=view.findViewById(R.id.foodAllergy3);
 
 
         currentCalendar = Calendar.getInstance();
@@ -143,6 +149,23 @@ public class MenuFragment extends Fragment {
 
         });
 
+        allergyButton1.setOnClickListener(v->{
+
+            Bundle bundle = new Bundle();
+
+            bundle.putString("Allergy",allergyInfo1);
+
+            AllergyFragment allergyFragment = new AllergyFragment();
+            allergyFragment.setArguments(bundle);
+
+
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, allergyFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+        });
+
         food2.setOnClickListener(v->{
 
             String mainMenu = menuText2.getText().toString();
@@ -174,6 +197,17 @@ public class MenuFragment extends Fragment {
                     .addToBackStack(null) // 뒤로 가기 스택에 추가
                     .commit();
 
+        });
+
+        allergyButton2.setOnClickListener(v->{
+            Bundle bundle = new Bundle();
+            bundle.putString("Allergy",allergyInfo2);
+            AllergyFragment allergyFragment = new AllergyFragment();
+            allergyFragment.setArguments(bundle);
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, allergyFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         food3.setOnClickListener(v->{
@@ -212,6 +246,18 @@ public class MenuFragment extends Fragment {
                     .addToBackStack(null) // 뒤로 가기 스택에 추가
                     .commit();
 
+        });
+
+
+        allergyButton3.setOnClickListener(v->{
+            Bundle bundle = new Bundle();
+            bundle.putString("Allergy",allergyInfo3);
+            AllergyFragment allergyFragment = new AllergyFragment();
+            allergyFragment.setArguments(bundle);
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, allergyFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
 
@@ -299,16 +345,19 @@ public class MenuFragment extends Fragment {
                 categoryText1.setText(parseCategory(menus.get(0)));
                 menuText1.setText(parseMainMenu(menus.get(0)));
                 subMenuText1.setText(String.join(", ", parseSubMenu(menus.get(0)))); // 한글 이름만 서브 메뉴에 설정
-
+                allergyInfo1 = parseAllergyInfo(menus.get(0));
 
 
                 categoryText2.setText(parseCategory(menus.get(1)));
                 menuText2.setText(parseMainMenu(menus.get(1)));
                 subMenuText2.setText(String.join(", ", parseSubMenu(menus.get(1))));
+                allergyInfo2 = parseAllergyInfo(menus.get(1));
+
 
                 categoryText3.setText(parseCategory(menus.get(2)));
                 menuText3.setText(parseMainMenu(menus.get(2)));
                 subMenuText3.setText(String.join(", ", parseSubMenu(menus.get(2))));
+                allergyInfo3 = parseAllergyInfo(menus.get(2));
 
                 // 이미지 로드
                 String baseUrl = "https://soongguri.com/menu/menu_file/";

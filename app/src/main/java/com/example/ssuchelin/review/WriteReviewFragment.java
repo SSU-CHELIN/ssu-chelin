@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -155,6 +154,7 @@ public class WriteReviewFragment extends Fragment {
 
         submitButton.setOnClickListener(view1 -> {
             String review = reviewEditText.getText().toString();
+            //submitButton.setEnabled(false); // 중복 클릭 방지
 
             if (isEditMode) {
                 // 수정 모드에서 업데이트
@@ -191,9 +191,9 @@ public class WriteReviewFragment extends Fragment {
 
     // 별 UI 업데이트
     private void updateStarButtons() {
-        starButton1.setImageResource(starCount >= 1 ? R.drawable.star : R.drawable.star_off);
-        starButton2.setImageResource(starCount >= 2 ? R.drawable.star : R.drawable.star_off);
-        starButton3.setImageResource(starCount >= 3 ? R.drawable.star : R.drawable.star_off);
+        starButton1.setImageResource(starCount >= 1 ? R.drawable.star_100 : R.drawable.star_0);
+        starButton2.setImageResource(starCount >= 2 ? R.drawable.star_100 : R.drawable.star_0);
+        starButton3.setImageResource(starCount >= 3 ? R.drawable.star_100 : R.drawable.star_0);
     }
 
     // 리뷰 저장
@@ -211,6 +211,9 @@ public class WriteReviewFragment extends Fragment {
                 userReview.put("starCount", starCount);
                 userReview.put("score", score);
 
+                // /// 수정 부분: 리뷰 작성 시간 저장
+                long currentTime = System.currentTimeMillis();
+                userReview.put("time", currentTime);
 
                 // 메인 메뉴와 서브 메뉴 추가
                 userReview.put("Mainmenu", binding.foodMainMenu.getText().toString());
@@ -259,6 +262,10 @@ public class WriteReviewFragment extends Fragment {
         updatedData.put("userReview", updatedReview);
         updatedData.put("starCount", starCount);
         updatedData.put("score", score);
+
+        // /// 수정 부분: 리뷰 수정 시에도 시간 업데이트
+        long currentTime = System.currentTimeMillis();
+        updatedData.put("time", currentTime);
 
         // 메인 메뉴와 서브 메뉴 업데이트 추가
         updatedData.put("Mainmenu", binding.foodMainMenu.getText().toString());

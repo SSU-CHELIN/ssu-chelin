@@ -57,32 +57,23 @@
                         android:id="@+id/review_star1"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/star" />
+                        android:src="@drawable/star_100" />
 
                     <ImageView
                         android:id="@+id/review_star2"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/star" />
+                        android:src="@drawable/star_100" />
 
                     <ImageView
                         android:id="@+id/review_star3"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/star" />
+                        android:src="@drawable/star_100" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 수정 버튼 -->
-            <TextView
-                android:id="@+id/edit_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="수정"
-                android:textColor="#FF5722"
-                android:padding="8dp"
-                android:textSize="12sp"
-                android:clickable="true" />
+
         </LinearLayout>
 
         <!-- 간/맵기/알레르기 정보 (한 줄로 표시) -->

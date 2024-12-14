@@ -1,6 +1,8 @@
 package com.example.ssuchelin.user;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager; /// 수정 부분: SharedPreferences import
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase; /// 수정 부분: Firebase import 추가
 
 public class ChangeContactFragment extends Fragment {
 
@@ -22,7 +26,8 @@ public class ChangeContactFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_change_contact, container, false);
 
@@ -60,10 +65,26 @@ public class ChangeContactFragment extends Fragment {
     private void saveContact() {
         String contact = newContact.getText().toString().trim(); // 입력된 연락처를 가져와 앞뒤 공백 제거
         if (!contact.isEmpty()) {
-            // Firebase 데이터베이스에 저장하는 코드 (주석처리)
-            // DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("user_id");
-            // userRef.child("contact").setValue(contact);
-            Toast.makeText(requireContext(), "연락처가 변경되었습니다.", Toast.LENGTH_SHORT).show(); // 성공 메시지 표시
+            // /// 수정 부분: SharedPreferences에서 studentId 가져와 Firebase에 telephone 저장
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
+
+            // Firebase Database에 연락처 저장
+            // 경로: User/{studentId}/userinfo/telephone
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("userinfo");
+            userRef.child("telephone").setValue(contact).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(requireContext(), "연락처가 변경되었습니다.", Toast.LENGTH_SHORT).show();
+                    // /// 수정 부분: 전 화면(ProfileViewFragment)으로 이동
+                    ProfileViewFragment fragment = new ProfileViewFragment();
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    Toast.makeText(requireContext(), "연락처 변경 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             Toast.makeText(requireContext(), "연락처를 입력하세요.", Toast.LENGTH_SHORT).show(); // 연락처 입력 요청 메시지 표시
         }

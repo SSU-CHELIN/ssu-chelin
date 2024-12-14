@@ -52,9 +52,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.reviewPreferences.setText("간 정도 : " + review.getSaltPreference() + " / 맵기 정도 : " + review.getSpicyPreference() + " / 알레르기 : " + review.getAllergies());
 
         // 별점 표시
-        holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
-        holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
-        holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+        holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star_100 : R.drawable.star_0);
+        holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star_100 : R.drawable.star_0);
+        holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star_100 : R.drawable.star_0);
 
         // 좋아요 상태
         holder.likeCountText.setText(String.valueOf(review.getLikeCount()));
@@ -204,27 +204,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             });
         });
 
-        // 수정 버튼
-        holder.editbtn.setOnClickListener(v -> {
-            Toast.makeText(holder.itemView.getContext(), "수정 클릭됨: " + review.getUserReview(), Toast.LENGTH_SHORT).show();
 
-            FragmentActivity activity = (FragmentActivity) holder.itemView.getContext();
-            FragmentManager fragmentManager = activity.getSupportFragmentManager();
-
-            WriteReviewFragment writeReviewFragment = new WriteReviewFragment();
-
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("editMode", true);
-            bundle.putString("reviewText", review.getUserReview());
-            bundle.putInt("reviewId", position);
-            bundle.putFloat("starCount", review.getStarCount());
-            writeReviewFragment.setArguments(bundle);
-
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, writeReviewFragment)
-                    .addToBackStack(null)
-                    .commit();
-        });
     }
 
     @Override
@@ -235,7 +215,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     public static class ReviewViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView, reviewTextView, reviewPreferences;
         ImageView star1, star2, star3;
-        TextView editbtn;
+
 
         ImageView likeIcon;
         TextView likeCountText;
@@ -251,7 +231,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             star1 = itemView.findViewById(R.id.review_star1);
             star2 = itemView.findViewById(R.id.review_star2);
             star3 = itemView.findViewById(R.id.review_star3);
-            editbtn = itemView.findViewById(R.id.edit_button);
 
             likeIcon = itemView.findViewById(R.id.like_icon);
             likeCountText = itemView.findViewById(R.id.like_count_text);
