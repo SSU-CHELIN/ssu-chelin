@@ -2,14 +2,12 @@ package com.example.ssuchelin;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.menu.MenuFragment;
 import com.example.ssuchelin.ranking.RankingFragment;
 import com.example.ssuchelin.review.OverviewReviewsFragment;
-import com.example.ssuchelin.review.ReviewFragment;
 import com.example.ssuchelin.user.ProfileViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 

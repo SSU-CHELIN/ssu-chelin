@@ -34,81 +34,32 @@ public class ProfileViewFragment extends Fragment {
 
     private DatabaseReference database;
     private TextView studentIdTextView, usernameTextView;
-    private TextView changeInitialSettings, changeFirstSettings, checkReviews, termsOfService, privacyPolicy, contactUs, logout;
-    private String studentId;
+    private View profileLoadingLayout, profileContentLayout;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_view, container, false);
 
-        view.findViewById(R.id.change_initial_settings).setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new InitialSettingFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
+        // 로딩 및 콘텐츠 레이아웃 초기화
+        profileLoadingLayout = view.findViewById(R.id.profile_loading_layout);
+        profileContentLayout = view.findViewById(R.id.profile_content_layout);
 
-        view.findViewById(R.id.change_first_settings).setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new FirstSettingFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
-
-        view.findViewById(R.id.check_reviews).setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new CheckReviewsFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
-
-        view.findViewById(R.id.contact_us).setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new FeedbackFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
-
-        view.findViewById(R.id.terms_of_service).setOnClickListener(v -> {
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new WriteReviewFragment());
-            transaction.addToBackStack(null);
-            transaction.commit();
-        });
-
-        privacyPolicy = view.findViewById(R.id.privacy_policy);
-        logout = view.findViewById(R.id.logout);
-
-        // Retrieve the sb tudent ID from SharedPreferences
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
-
-        // SharedPreferences에서 student ID 가져오기
         studentIdTextView = view.findViewById(R.id.student_id);
         usernameTextView = view.findViewById(R.id.username);
 
+        // SharedPreferences에서 student ID 가져오기
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
+
         studentIdTextView.setText(studentId);
+
+        // 데이터 로드
+        showLoading(true);
         fetchUsernameFromDatabase(studentId);
-
-        logout.setOnClickListener(v->{
-
-            new AlertDialog.Builder(requireContext())
-                    .setMessage("로그아웃 하시겠습니까?")
-                    .setPositiveButton("확인", (dialog, which) -> {
-                        logout();
-                        // 확인 버튼 클릭 시 동작
-                    })
-                    .setNegativeButton("취소", (dialog, which) -> {
-                        // 취소 버튼 클릭 시 동작
-                        dialog.dismiss();
-                    })
-                    .show();
-
-        });
 
         return view;
     }
-
 
     private void fetchUsernameFromDatabase(String studentId) {
         database = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("userinfo");
@@ -124,41 +75,22 @@ public class ProfileViewFragment extends Fragment {
                         usernameTextView.setText("Unknown User");
                     }
                 } else {
-                    Toast.makeText(getActivity(), "User data not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "사용자 데이터를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
                     usernameTextView.setText("Unknown User");
                 }
+                showLoading(false); // 로딩 완료
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                Toast.makeText(getActivity(), "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "데이터베이스 오류: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                showLoading(false); // 로딩 완료
             }
         });
     }
 
-    private void switchFragment(Fragment fragment) {
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+    private void showLoading(boolean isLoading) {
+        profileLoadingLayout.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        profileContentLayout.setVisibility(isLoading ? View.GONE : View.VISIBLE);
     }
-
-
-    private void logout() {
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putBoolean("isLoggedIn", false); // 로그아웃 상태로 저장
-        editor.apply();
-
-        Toast.makeText(getActivity(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // 현재 스택을 정리하고 새로운 액티비티 시작
-        startActivity(intent);
-    }
-
-
-
 }
