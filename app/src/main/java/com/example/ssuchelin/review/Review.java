@@ -8,17 +8,20 @@ public class Review {
     private int spicyPreference;
     private String allergies;
 
-    private boolean liked;        // 좋아요 여부
-    private int likeCount;        // 좋아요 수
+    private boolean liked;
+    private int likeCount;
 
-    private boolean disliked;     // 싫어요 여부
-    private int dislikeCount;     // 싫어요 수
+    private boolean disliked;
+    private int dislikeCount;
 
-    private String mainMenu;      // 메인 메뉴
-    private String subMenu;       // 서브 메뉴
+    private String mainMenu;
+    private String subMenu;
 
-    // /// 수정 부분: reviewTime 필드 추가
     private String reviewTime;
+
+    // likeDifference, timeMillis 추가
+    private int likeDifference;
+    private long timeMillis;
 
     public Review(String username, String userReview, float starCount, int saltPreference, int spicyPreference, String allergies,
                   boolean liked, int likeCount, boolean disliked, int dislikeCount) {
@@ -34,14 +37,12 @@ public class Review {
         this.dislikeCount = dislikeCount;
     }
 
-    //메인 메뉴, 서브 메뉴, 리뷰 내용, 별점만 포함한 생성자
     public Review(String mainMenu, String subMenu, String userReview, float starCount) {
         this.mainMenu = mainMenu;
         this.subMenu = subMenu;
         this.userReview = userReview;
         this.starCount = starCount;
 
-        // 나머지 필드는 기본값으로 설정
         this.username = "";
         this.saltPreference = 0;
         this.spicyPreference = 0;
@@ -56,6 +57,18 @@ public class Review {
         // Firebase 매핑 위해 기본 생성자 필요
     }
 
+    @Override
+    public String toString() {
+        return "Review{" +
+                "mainMenu='" + mainMenu + '\'' +
+                ", subMenu='" + subMenu + '\'' +
+                ", userReview='" + userReview + '\'' +
+                ", starCount=" + starCount +
+                ", likeDifference=" + likeDifference +
+                '}';
+    }
+
+    // Getter/Setter ...
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
@@ -92,7 +105,12 @@ public class Review {
     public String getSubMenu() { return subMenu; }
     public void setSubMenu(String subMenu) { this.subMenu = subMenu; }
 
-    // /// 수정 부분: reviewTime getter/setter 추가
     public String getReviewTime() { return reviewTime; }
     public void setReviewTime(String reviewTime) { this.reviewTime = reviewTime; }
+
+    public int getLikeDifference() { return likeDifference; }
+    public void setLikeDifference(int likeDifference) { this.likeDifference = likeDifference; }
+
+    public long getTimeMillis() { return timeMillis; }
+    public void setTimeMillis(long timeMillis) { this.timeMillis = timeMillis; }
 }

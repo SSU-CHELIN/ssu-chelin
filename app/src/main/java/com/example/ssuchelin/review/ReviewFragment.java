@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.Button; // 추가: 추천순/최신순 버튼 제어
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,14 +25,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class ReviewFragment extends Fragment {
     private FragmentReviewBinding binding;
     private List<Review> reviewList = new ArrayList<>();
     private ReviewAdapter reviewAdapter;
-    private DatabaseReference mDatabaseRef;
     private String type;
+
+    private Button recommendBtn, latestBtn; // 추천순, 최신순 버튼
+    private String currentMainMenu; // 현재 메뉴 이름 저장
+    private String typeN;
 
     @Nullable
     @Override
@@ -48,22 +55,23 @@ public class ReviewFragment extends Fragment {
             binding.foodSubMenu.setText(subMenu);
             binding.foodMainMenu.setText(mainMenu);
             binding.foodImage.setImageBitmap(bundle.getParcelable("imageBitmap"));
+            currentMainMenu = mainMenu;
         }
 
-        // /// 수정 부분: type 변수 가져오기
         type = getArguments().getString("type");
+        if ("ddook".equals(type)) typeN = "뚝배기 코너";
+        if ("dub".equals(type)) typeN = "덮밥 코너";
+        if ("yang".equals(type)) typeN = "양식 코너";
 
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         reviewAdapter = new ReviewAdapter(reviewList, new ArrayList<>(), "Unknown ID");
         binding.reviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         binding.reviewRecyclerView.setAdapter(reviewAdapter);
-
-
 
         // Toolbar 설정
         Toolbar toolbar = view.findViewById(R.id.toolbar);
@@ -82,15 +90,39 @@ public class ReviewFragment extends Fragment {
             }
         });
 
-        String typeN = null;
-        if (type == "ddook") typeN = "뚝배기 코너";
-        if (type == "dub") typeN = "덮밥 코너";
-        if (type == "yang") typeN = "양식 코너";
+        // 추천순, 최신순 버튼 참조
+        recommendBtn = view.findViewById(R.id.recommend);
+        latestBtn = view.findViewById(R.id.latest);
 
-        String selectedMainMenu = binding.foodMainMenu.getText().toString();
+        recommendBtn.setOnClickListener(v->{
+            // 추천순 정렬: likeDifference 내림차순
+            // tie 시 무작위? tie면 정렬상 같으면 정렬 순서 안정적이므로 그냥 내림차순이면 tie이면 순서는 구현체에 따라 결정됨
+            // 요구사항: tie시 무작위 허용 -> 굳이 무작위 섞지 않아도 됨.
+            // 추천순 정렬
+            Collections.sort(reviewList, (r1, r2) -> {
+                int diff = r2.getLikeDifference() - r1.getLikeDifference();
+                return diff == 0 ? 0 : diff; // tie 처리
+            });
 
-        // /// 수정 부분: whoWriteReview에서 userId 목록 가져와 해당 유저 리뷰 로드 및 평균 계산
-        fetchReviewsFromCategory(typeN, selectedMainMenu);
+            Log.d("ReviewFragment", "Sorted by recommendation: " + reviewList.toString());
+            reviewAdapter.updateReviews(reviewList);
+        });
+
+        latestBtn.setOnClickListener(v -> {
+            if (reviewList == null || reviewList.isEmpty()) {
+                Log.e("ReviewFragment", "No reviews to sort by latest!");
+                return;
+            }
+
+            // 최신순 정렬
+            Collections.sort(reviewList, (r1, r2) -> Long.compare(r2.getTimeMillis(), r1.getTimeMillis()));
+
+            Log.d("ReviewFragment", "Sorted by latest: " + reviewList.toString());
+            reviewAdapter.updateReviews(reviewList);
+        });
+
+        // whoWriteReview에서 userId 목록 읽고 리뷰 로드
+        fetchReviewsFromCategory(typeN, currentMainMenu);
 
         binding.writeReview.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
@@ -110,7 +142,6 @@ public class ReviewFragment extends Fragment {
         });
     }
 
-    // /// 수정 부분: Category에서 whoWriteReview 읽고 해당 userId의 리뷰 로드
     private void fetchReviewsFromCategory(String typeN, String mainMenu) {
         if (typeN == null || typeN.isEmpty()) {
             Log.e("ReviewFragment", "typeN is null or empty");
@@ -155,7 +186,6 @@ public class ReviewFragment extends Fragment {
         final float[] totalStar = {0};
         final float[] reviewCount = {0};
 
-        // /// 수정 부분: doneOneUser 메서드를 Runnable로 정의
         Runnable doneOneUser = () -> {
             remaining[0]--;
             if (remaining[0] == 0) {
@@ -166,18 +196,15 @@ public class ReviewFragment extends Fragment {
                 }
                 String formattedAvg = String.format("%.1f", avg);
                 binding.scoreNum.setText(formattedAvg);
-                // /// 수정 부분: avg에 따라 별 이미지 변경
                 updateStarImages(avg);
             }
         };
 
         for (String userId : userIds) {
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
-
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot userSnapshot) {
-                    // userinfo 데이터 가져오기
                     DataSnapshot userInfoSnapshot = userSnapshot.child("userinfo");
                     if (!userInfoSnapshot.exists()) {
                         Log.d("ReviewFragment", "userinfo 데이터가 없음: " + userSnapshot.getKey());
@@ -190,7 +217,6 @@ public class ReviewFragment extends Fragment {
 
                     int saltPreference = 0;
                     int spicyPreference = 0;
-
                     try {
                         Long saltPrefValue = userInfoSnapshot.child("saltPreference").getValue(Long.class);
                         Long spicyPrefValue = userInfoSnapshot.child("spicyPreference").getValue(Long.class);
@@ -221,18 +247,39 @@ public class ReviewFragment extends Fragment {
                             Integer starCount = reviewSnap.child("starCount").getValue(Integer.class);
                             if (starCount == null) starCount = 0;
 
+                            // likeDifference, timeMillis 추가로 가져오기
+                            Integer likeDifference = reviewSnap.child("likeDifference").getValue(Integer.class);
+                            if (likeDifference == null) likeDifference = 0;
+
+                            Long timeVal = reviewSnap.child("time").getValue(Long.class);
+                            long timeMillis = timeVal != null ? timeVal : 0;
+
+                            Boolean liked = reviewSnap.child("liked").getValue(Boolean.class);
+                            if (liked == null) liked = false;
+                            Boolean disliked = reviewSnap.child("disliked").getValue(Boolean.class);
+                            if (disliked == null) disliked = false;
+                            Integer likeCount = reviewSnap.child("likeCount").getValue(Integer.class);
+                            if (likeCount == null) likeCount = 0;
+                            Integer dislikeCount = reviewSnap.child("dislikeCount").getValue(Integer.class);
+                            if (dislikeCount == null) dislikeCount = 0;
+
                             Review review = new Review(mainMenu, subMenu, userReview != null ? userReview : "", starCount);
                             review.setUsername(username);
                             review.setSaltPreference(saltPreference);
                             review.setSpicyPreference(spicyPreference);
                             review.setAllergies(allergies);
+                            review.setLikeDifference(likeDifference);
+                            review.setTimeMillis(timeMillis);
+                            review.setLiked(liked);
+                            review.setDisliked(disliked);
+                            review.setLikeCount(likeCount);
+                            review.setDislikeCount(dislikeCount);
 
                             reviewList.add(review);
                             totalStar[0] += starCount;
                             reviewCount[0]++;
                         }
                     }
-
                     doneOneUser.run();
                 }
 
@@ -244,14 +291,7 @@ public class ReviewFragment extends Fragment {
         }
     }
 
-    // /// 수정 부분: avg 값(0~3)을 이용해 starButton1, starButton2, starButton3의 이미지를 변경
     private void updateStarImages(float avg) {
-        // 각 별은 1점(=100%)에 해당
-        // 별의 portion 계산: portion = avg - i (i=0,1,2)
-        // portion <=0 => star_0
-        // portion >=1 => star_100
-        // 그 사이 => 근접한 12.5% 단위 이미지 선택
-
         float portionStar1 = avg - 0;
         float portionStar2 = avg - 1;
         float portionStar3 = avg - 2;
@@ -261,10 +301,6 @@ public class ReviewFragment extends Fragment {
         binding.starButton3.setImageResource(getStarResourceForPortion(portionStar3));
     }
 
-    // /// 수정 부분: portion(0~1 사이 값)에 따라 알맞은 star_x 이미지 반환
-    // portion <0 => 0%
-    // portion >1 => 100%
-    // 그 사이이면 0,12.5%,25%,37.5%,50%,62.5%,75%,87.5%,100% 중 가장 가까운 값 선택
     private int getStarResourceForPortion(float portion) {
         if (portion <= 0) {
             return R.drawable.star_0;
@@ -272,8 +308,6 @@ public class ReviewFragment extends Fragment {
             return R.drawable.star_100;
         } else {
             float percent = portion * 100;
-            // 가능한 값: 0,12.5,25,37.5,50,62.5,75,87.5,100
-            // percent와 가장 가까운 값 찾기
             float[] thresholds = {0,12.5f,25f,37.5f,50f,62.5f,75f,87.5f,100f};
             int[] drawables = {
                     R.drawable.star_0,

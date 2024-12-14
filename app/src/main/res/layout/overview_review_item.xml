@@ -76,14 +76,37 @@
 
         </LinearLayout>
 
-        <!-- 간/맵기/알레르기 정보 (한 줄로 표시) -->
-        <TextView
-            android:id="@+id/review_preferences"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="간 정도 : 3 / 맵기 정도 : 3 / 알레르기 : X"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+        <!-- 간 정도 -->
+        <TextView
+            android:id="@+id/salt_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="간 정도: 3"
+            android:textSize="12sp" />
+
+        <!-- 맵기 정도 -->
+        <TextView
+            android:id="@+id/spicy_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="맵기 정도: 3"
             android:textSize="12sp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginStart="16dp"/>
+
+        <!-- 알레르기 정보 -->
+        <TextView
+            android:id="@+id/allergy_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알레르기: X"
+            android:textSize="12sp"
+            android:layout_marginStart="16dp"/>
+        </LinearLayout>
 
         <!-- 리뷰 내용 -->
         <TextView
