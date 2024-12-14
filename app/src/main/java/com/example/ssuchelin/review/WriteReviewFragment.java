@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -191,9 +190,9 @@ public class WriteReviewFragment extends Fragment {
 
     // 별 UI 업데이트
     private void updateStarButtons() {
-        starButton1.setImageResource(starCount >= 1 ? R.drawable.star : R.drawable.star_off);
-        starButton2.setImageResource(starCount >= 2 ? R.drawable.star : R.drawable.star_off);
-        starButton3.setImageResource(starCount >= 3 ? R.drawable.star : R.drawable.star_off);
+        starButton1.setImageResource(starCount >= 1 ? R.drawable.star_100 : R.drawable.star_0);
+        starButton2.setImageResource(starCount >= 2 ? R.drawable.star_100 : R.drawable.star_0);
+        starButton3.setImageResource(starCount >= 3 ? R.drawable.star_100 : R.drawable.star_0);
     }
 
     // 리뷰 저장

@@ -287,9 +287,9 @@ public class SubCategoryFragment extends Fragment {
             holder.reviewTextView.setText(review.getUserReview());
 
             // 별점에 따라 별 UI 업데이트
-            holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star : R.drawable.star_off);
-            holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star : R.drawable.star_off);
-            holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star : R.drawable.star_off);
+            holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star_100 : R.drawable.star_0);
+            holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star_100 : R.drawable.star_0);
+            holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star_100 : R.drawable.star_0);
 
             // 수정 버튼 클릭 시 예시
             holder.editbtn.setOnClickListener(v -> {

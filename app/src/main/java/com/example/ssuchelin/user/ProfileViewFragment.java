@@ -50,7 +50,6 @@ public class ProfileViewFragment extends Fragment {
         changeInitialSettings = view.findViewById(R.id.change_initial_settings);
         changeFirstSettings = view.findViewById(R.id.change_first_settings);
         checkReviews = view.findViewById(R.id.check_reviews);
-        termsOfService = view.findViewById(R.id.terms_of_service);
         privacyPolicy = view.findViewById(R.id.privacy_policy);
         contactUs = view.findViewById(R.id.contact_us);
         logout = view.findViewById(R.id.logout);
@@ -119,10 +118,6 @@ public class ProfileViewFragment extends Fragment {
 
         contactUs.setOnClickListener(v -> {
             switchFragment(new FeedbackFragment());
-        });
-
-        termsOfService.setOnClickListener(v -> {
-            switchFragment(new WriteReviewFragment());
         });
 
         logout.setOnClickListener(v -> {

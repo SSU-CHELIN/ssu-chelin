@@ -151,7 +151,7 @@
                     android:background="@null"
                     android:contentDescription="별점 1점"
                     android:scaleType="centerInside"
-                    android:src="@drawable/star_off" />
+                    android:src="@drawable/star_0" />
 
                 <ImageButton
                     android:id="@+id/starButton2"
@@ -161,7 +161,7 @@
                     android:background="@null"
                     android:contentDescription="별점 2점"
                     android:scaleType="centerInside"
-                    android:src="@drawable/star_off" />
+                    android:src="@drawable/star_0" />
 
                 <ImageButton
                     android:id="@+id/starButton3"
@@ -171,14 +171,16 @@
                     android:background="@null"
                     android:contentDescription="별점 3점"
                     android:scaleType="centerInside"
-                    android:src="@drawable/star_off" />
+                    android:src="@drawable/star_0" />
+
 
                 <TextView
-                    android:id="@+id/score"
+                    android:id="@+id/scoreNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="score"
-                    android:paddingLeft="10dp"/>
+                    android:textSize="25dp"
+                    android:paddingLeft="30dp" />
+
 
 
             </LinearLayout>

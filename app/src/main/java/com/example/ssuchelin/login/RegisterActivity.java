@@ -1,3 +1,5 @@
+
+
 package com.example.ssuchelin.login;
 
 import android.content.Intent;
@@ -12,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.ssuchelin.MainActivity;
 import com.example.ssuchelin.user.PersonalActivity;
@@ -41,7 +42,6 @@ public class RegisterActivity extends AppCompatActivity {
         mBtnRegister = findViewById(R.id.btn_register);
         usaintAuthService = new UsaintAuthService();
 
-
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,50 +53,65 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-
-                // Firebase에서 이미 등록된 학번인지 확인
                 mDatabaseRef.child(studentId).child("UserAccount").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            saveStudentIdToPreferences(studentId);
-                            // 학번이 이미 존재하는 경우 MainActivity로 이동
-                            Toast.makeText(RegisterActivity.this, "이미 등록된 사용자입니다.", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                            intent.putExtra("open_fragment", "MenuFragment"); // 어떤 프래그먼트를 열지 전달
-                            saveLoginState();
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            // 새로운 사용자일 경우 인증 및 회원가입 진행
+                            // 기존 사용자: U-SAINT 재인증 진행
                             usaintAuthService.authenticate(studentId, password, new UsaintAuthService.AuthCallback() {
                                 @Override
                                 public void onAuthSuccess(String token) {
-                                    UserAccount account = new UserAccount();
-                                    account.setIdToken(token);
-                                    account.setRealStudentId(studentId);
-
-                                    // 새로운 사용자의 학번을 SharedPreferences에 저장
-                                    saveStudentIdToPreferences(studentId);
-
-                                    mDatabaseRef.child(studentId).child("UserAccount").setValue(account)
-                                            .addOnCompleteListener(task -> {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(RegisterActivity.this, "U-SAINT 로그인 성공", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(RegisterActivity.this, PersonalActivity.class);
-                                                    intent.putExtra("studentId", studentId);
-                                                    saveLoginState();
-                                                    startActivity(intent);
-                                                    finish();
-                                                } else {
-                                                    Toast.makeText(RegisterActivity.this, "데이터베이스 저장 실패", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(RegisterActivity.this, "U-SAINT 재인증 성공", Toast.LENGTH_SHORT).show();
+                                        saveStudentIdToPreferences(studentId);
+                                        saveLoginState();
+                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                        intent.putExtra("open_fragment", "MenuFragment");
+                                        startActivity(intent);
+                                        finish();
+                                    });
                                 }
 
                                 @Override
                                 public void onAuthFailure(String message) {
-                                    Toast.makeText(RegisterActivity.this, "U-SAINT 인증 실패: " + message, Toast.LENGTH_SHORT).show();
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(RegisterActivity.this, "U-SAINT 인증 실패: " + message, Toast.LENGTH_SHORT).show();
+                                    });
+                                }
+                            });
+                        } else {
+                            // 신규 사용자: U-SAINT 인증 후 DB 저장
+                            usaintAuthService.authenticate(studentId, password, new UsaintAuthService.AuthCallback() {
+                                @Override
+                                public void onAuthSuccess(String token) {
+                                    runOnUiThread(() -> {
+                                        UserAccount account = new UserAccount();
+                                        account.setIdToken(token);
+                                        account.setRealStudentId(studentId);
+
+                                        saveStudentIdToPreferences(studentId);
+
+                                        mDatabaseRef.child(studentId).child("UserAccount").setValue(account)
+                                                .addOnCompleteListener(task -> {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(RegisterActivity.this, "U-SAINT 로그인 성공", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(RegisterActivity.this, PersonalActivity.class);
+                                                        intent.putExtra("studentId", studentId);
+                                                        saveLoginState();
+                                                        startActivity(intent);
+                                                        finish();
+                                                    } else {
+                                                        Toast.makeText(RegisterActivity.this, "데이터베이스 저장 실패", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    });
+                                }
+
+                                @Override
+                                public void onAuthFailure(String message) {
+                                    runOnUiThread(() -> {
+                                        Toast.makeText(RegisterActivity.this, "U-SAINT 인증 실패: " + message, Toast.LENGTH_SHORT).show();
+                                    });
                                 }
                             });
                         }
@@ -104,12 +119,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(RegisterActivity.this, "데이터베이스 오류: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> {
+                            Toast.makeText(RegisterActivity.this, "데이터베이스 오류: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
                     }
                 });
             }
         });
-
     }
 
     public void switchFragment(Fragment fragment) {
@@ -132,5 +148,4 @@ public class RegisterActivity extends AppCompatActivity {
         editor.putBoolean("isLoggedIn", true); // 로그인 상태 저장
         editor.apply();
     }
-
 }

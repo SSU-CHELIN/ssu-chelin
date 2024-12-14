@@ -99,19 +99,19 @@
                     android:id="@+id/star1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/star" />
+                    android:src="@drawable/star_100" />
 
                 <ImageView
                     android:id="@+id/star2"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/star" />
+                    android:src="@drawable/star_100" />
 
                 <ImageView
                     android:id="@+id/star3"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/star" />
+                    android:src="@drawable/star_100" />
             </LinearLayout>
 
             <!-- 구분선 -->
@@ -150,15 +150,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="내 리뷰 확인하기"
-                    android:padding="14dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true" />
-
-                <TextView
-                    android:id="@+id/terms_of_service"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="!!!임시 리뷰작성!!!"
                     android:padding="14dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true" />

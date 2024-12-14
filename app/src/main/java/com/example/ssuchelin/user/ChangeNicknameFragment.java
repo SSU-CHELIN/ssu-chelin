@@ -1,6 +1,8 @@
 package com.example.ssuchelin.user;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager; /// 수정 부분: SharedPreferences 사용을 위한 import
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase; /// 수정 부분: Firebase import 추가
 
 public class ChangeNicknameFragment extends Fragment {
 
@@ -60,10 +64,25 @@ public class ChangeNicknameFragment extends Fragment {
     private void saveNickname() {
         String nickname = newNickname.getText().toString().trim(); // 입력된 닉네임을 가져와 앞뒤 공백 제거
         if (!nickname.isEmpty()) {
-            // Firebase 데이터베이스에 저장하는 코드 (주석처리)
-            // DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child("user_id");
-            // userRef.child("nickname").setValue(nickname);
-            Toast.makeText(requireContext(), "닉네임이 변경되었습니다.", Toast.LENGTH_SHORT).show(); // 성공 메시지 표시
+            // /// 수정 부분: SharedPreferences에서 studentId를 가져와 Firebase에 저장
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
+
+            // Firebase Database에 닉네임 저장
+            // 경로: User/{studentId}/userinfo/nickname
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("userinfo");
+            userRef.child("nickname").setValue(nickname).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(requireContext(), "닉네임이 변경되었습니다.", Toast.LENGTH_SHORT).show(); // 성공 메시지 표시
+                    ProfileViewFragment fragment = new ProfileViewFragment();
+                    requireActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    Toast.makeText(requireContext(), "닉네임 변경 실패: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             Toast.makeText(requireContext(), "닉네임을 입력하세요.", Toast.LENGTH_SHORT).show(); // 닉네임 입력 요청 메시지 표시
         }
