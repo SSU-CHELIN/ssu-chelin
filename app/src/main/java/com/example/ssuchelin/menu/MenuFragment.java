@@ -118,6 +118,7 @@ public class MenuFragment extends Fragment {
                         // 변환된 String을 TextView에 설정
                         monthYearText.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date));
                         selectedDate=formattedDate;
+                        updateButtonStates(selectedDate);
 
                         try {
                             // String -> Date 변환
@@ -153,6 +154,8 @@ public class MenuFragment extends Fragment {
                 } else {
                     Log.e("CalendarDialog", "Selected date is null");
                 }
+                updateButtonStates(selectedDate);
+
             });
             calendarDialog.show(getParentFragmentManager(), "CalendarDialog");
         });
@@ -218,6 +221,8 @@ public class MenuFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    updateButtonStates(selectedDate);
+
                 } else {
                     Log.e("CalendarDialog", "Selected date is null");
                 }
@@ -236,6 +241,8 @@ public class MenuFragment extends Fragment {
             new FetchMenuTask().execute(selectedDate);
         }
 
+
+        updateButtonStates(selectedDate);
 
 
 
@@ -390,6 +397,43 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
+    private boolean isWeekend(String dateString) {
+        try {
+            // String -> Date 변환
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+            Date date = sdf.parse(dateString);  // 예외가 발생할 수 있음
+
+            // Calendar 객체 생성 및 요일 확인
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;  // 예외 발생 시 평일로 간주
+        }
+    }
+
+
+    private void updateButtonStates(String selectedDate) {
+        if (isWeekend(selectedDate)) {
+            food1.setEnabled(false);
+            food2.setEnabled(false);
+            food3.setEnabled(false);
+            allergyButton1.setEnabled(false);
+            allergyButton2.setEnabled(false);
+            allergyButton3.setEnabled(false);
+            Toast.makeText(requireContext(), "주말에는 선택할 수 없습니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            food1.setEnabled(true);
+            food2.setEnabled(true);
+            food3.setEnabled(true);
+            allergyButton1.setEnabled(true);
+            allergyButton2.setEnabled(true);
+            allergyButton3.setEnabled(true);
+        }
+    }
 
     // RecyclerView에 해당 월의 날짜 갱신
     private void updateCalendar(RecyclerView recyclerView) {
@@ -508,6 +552,12 @@ public class MenuFragment extends Fragment {
             return "Category 없음";
         }
 
+
+
+        private boolean isWeekend(Calendar calendar) {
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            return (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
+        }
 
         private String parseMainMenu(String data) {
             // Main Menu는 '★' 이후, '-' 앞까지 (숫자 포함)
