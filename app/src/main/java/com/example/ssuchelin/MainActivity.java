@@ -1,17 +1,19 @@
 package com.example.ssuchelin;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.ssuchelin.menu.MenuFragment;
 import com.example.ssuchelin.ranking.RankingFragment;
+import com.example.ssuchelin.review.EditReviewDialogFragment;
 import com.example.ssuchelin.review.OverviewReviewsFragment;
 import com.example.ssuchelin.user.ProfileViewFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EditReviewDialogFragment.OnReviewUpdatedListener {
 
         @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+
+
     }
 
     public void switchFragment(Fragment fragment) {
@@ -60,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
 
+    }
+
+    @Override
+    public void onReviewUpdated(String updatedReviewText) {
+        // 수정된 리뷰에 대한 처리 로직
+        Toast.makeText(this, "Updated Review: " + updatedReviewText, Toast.LENGTH_SHORT).show();
     }
 
 

@@ -424,7 +424,7 @@ public class MenuFragment extends Fragment {
             allergyButton1.setEnabled(false);
             allergyButton2.setEnabled(false);
             allergyButton3.setEnabled(false);
-            Toast.makeText(requireContext(), "주말에는 선택할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "주말에는 운영하지 않습니다.", Toast.LENGTH_SHORT).show();
         } else {
             food1.setEnabled(true);
             food2.setEnabled(true);

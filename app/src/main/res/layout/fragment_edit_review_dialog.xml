@@ -1,14 +1,91 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".review.EditReviewDialogFragment">
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_background"
+    android:orientation="vertical"
+    android:padding="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Header Title -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="16dp"
+        android:text="리뷰 수정"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-</FrameLayout>
+
+
+    <!-- Star Rating Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/starButton1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
+            android:background="@null"
+            android:contentDescription="별점 1점"
+            android:scaleType="centerInside"
+            android:src="@drawable/star_0" />
+
+        <ImageButton
+            android:id="@+id/starButton2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
+            android:background="@null"
+            android:contentDescription="별점 2점"
+            android:scaleType="centerInside"
+            android:src="@drawable/star_0" />
+
+        <ImageButton
+            android:id="@+id/starButton3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="4dp"
+            android:background="@null"
+            android:contentDescription="별점 3점"
+            android:scaleType="centerInside"
+            android:src="@drawable/star_0" />
+    </LinearLayout>
+
+    <!-- Review Text Area -->
+    <EditText
+        android:id="@+id/review_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/border_background"
+        android:gravity="top"
+        android:hint="수정할 리뷰를 작성해 주세요"
+        android:inputType="textMultiLine"
+        android:maxLength="300"
+        android:padding="16dp" />
+
+    <!-- Character Counter -->
+    <TextView
+        android:id="@+id/character_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:paddingTop="4dp"
+        android:text="0 / 300" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="16dp"
+        android:text="작성하기"
+        android:textColor="@android:color/white" />
+</LinearLayout>

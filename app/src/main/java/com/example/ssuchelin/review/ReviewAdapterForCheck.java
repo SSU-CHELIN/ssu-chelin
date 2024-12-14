@@ -1,6 +1,7 @@
 package com.example.ssuchelin.review;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ssuchelin.R;
 import com.google.firebase.database.DatabaseReference;
@@ -62,12 +66,13 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         // Edit 버튼 클릭 시 EditReviewActivity로 이동
         holder.editbtn.setOnClickListener(v -> {
             String reviewKey = reviewKeys.get(position);
-            Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
-            intent.putExtra("review_id", reviewKey);
-            intent.putExtra("student_id", userId);
-            intent.putExtra("username", review.getUsername());
-            // 여기서 Mainmenu나 Submenu 같은 추가 정보가 필요하다면 intent.putExtra("mainMenu", review.getMainMenu()) 등을 추가할 수 있음.
-            holder.itemView.getContext().startActivity(intent);
+
+            // DialogFragment 호출
+            EditReviewDialogFragment dialogFragment = EditReviewDialogFragment.newInstance(reviewKey, userId);
+
+            // FragmentManager를 통해 다이얼로그 띄우기
+            FragmentManager fragmentManager = ((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager();
+            dialogFragment.show(fragmentManager, "EditReviewDialog");
         });
 
         holder.deletebtn.setOnClickListener(v->{
