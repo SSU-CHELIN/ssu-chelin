@@ -63,8 +63,6 @@ public class WriteReviewFragment extends Fragment {
             String category = bundle.getString("category");
             Bitmap bitmap = bundle.getParcelable("imageBitmap");
 
-
-
             binding.foodCategory.setText(category);
             binding.foodSubMenu.setText(subMenu);
             binding.foodMainMenu.setText(mainMenu);
@@ -213,6 +211,9 @@ public class WriteReviewFragment extends Fragment {
                 userReview.put("starCount", starCount);
                 userReview.put("score", score);
 
+                // /// 수정 부분: 리뷰 작성 시간 저장
+                long currentTime = System.currentTimeMillis();
+                userReview.put("time", currentTime);
 
                 // 메인 메뉴와 서브 메뉴 추가
                 userReview.put("Mainmenu", binding.foodMainMenu.getText().toString());
@@ -261,6 +262,10 @@ public class WriteReviewFragment extends Fragment {
         updatedData.put("userReview", updatedReview);
         updatedData.put("starCount", starCount);
         updatedData.put("score", score);
+
+        // /// 수정 부분: 리뷰 수정 시에도 시간 업데이트
+        long currentTime = System.currentTimeMillis();
+        updatedData.put("time", currentTime);
 
         // 메인 메뉴와 서브 메뉴 업데이트 추가
         updatedData.put("Mainmenu", binding.foodMainMenu.getText().toString());

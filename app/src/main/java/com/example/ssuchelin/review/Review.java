@@ -17,6 +17,8 @@ public class Review {
     private String mainMenu;      // 메인 메뉴
     private String subMenu;       // 서브 메뉴
 
+    // /// 수정 부분: reviewTime 필드 추가
+    private String reviewTime;
 
     public Review(String username, String userReview, float starCount, int saltPreference, int spicyPreference, String allergies,
                   boolean liked, int likeCount, boolean disliked, int dislikeCount) {
@@ -89,4 +91,8 @@ public class Review {
 
     public String getSubMenu() { return subMenu; }
     public void setSubMenu(String subMenu) { this.subMenu = subMenu; }
+
+    // /// 수정 부분: reviewTime getter/setter 추가
+    public String getReviewTime() { return reviewTime; }
+    public void setReviewTime(String reviewTime) { this.reviewTime = reviewTime; }
 }
