@@ -275,7 +275,7 @@ public class SubCategoryFragment extends Fragment {
         @NonNull
         @Override
         public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.overview_review_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nav2, parent, false);
             return new ReviewViewHolder(view);
         }
 
@@ -291,10 +291,6 @@ public class SubCategoryFragment extends Fragment {
             holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star_100 : R.drawable.star_0);
             holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star_100 : R.drawable.star_0);
 
-            // 수정 버튼 클릭 시 예시
-            holder.editbtn.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "수정 기능 예시: " + review.getUserReview(), Toast.LENGTH_SHORT).show();
-            });
         }
 
         @Override
@@ -310,7 +306,6 @@ public class SubCategoryFragment extends Fragment {
         class ReviewViewHolder extends RecyclerView.ViewHolder {
             TextView usernameTextView, reviewTextView;
             ImageView star1, star2, star3; // ImageView로 변경
-            TextView editbtn;
 
             public ReviewViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -319,7 +314,6 @@ public class SubCategoryFragment extends Fragment {
                 star1 = itemView.findViewById(R.id.review_star1);
                 star2 = itemView.findViewById(R.id.review_star2);
                 star3 = itemView.findViewById(R.id.review_star3);
-                editbtn = itemView.findViewById(R.id.edit_button);
             }
         }
     }
