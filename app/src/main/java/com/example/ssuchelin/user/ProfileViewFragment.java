@@ -1,7 +1,5 @@
 package com.example.ssuchelin.user;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,10 +17,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.ssuchelin.review.CheckReviewsFragment;
 import com.example.ssuchelin.R;
-import com.example.ssuchelin.review.FeedbackFragment;
 import com.example.ssuchelin.login.LoginActivity;
+import com.example.ssuchelin.review.CheckReviewsFragment;
+import com.example.ssuchelin.review.FeedbackFragment;
 import com.example.ssuchelin.review.WriteReviewFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +32,7 @@ public class ProfileViewFragment extends Fragment {
 
     private DatabaseReference database;
     private TextView studentIdTextView, usernameTextView;
+    private TextView changeInitialSettings, changeFirstSettings, checkReviews, termsOfService, privacyPolicy, contactUs, logout;
     private View profileLoadingLayout, profileContentLayout;
 
     @Nullable
@@ -45,8 +44,16 @@ public class ProfileViewFragment extends Fragment {
         profileLoadingLayout = view.findViewById(R.id.profile_loading_layout);
         profileContentLayout = view.findViewById(R.id.profile_content_layout);
 
+        // View 초기화
         studentIdTextView = view.findViewById(R.id.student_id);
         usernameTextView = view.findViewById(R.id.username);
+        changeInitialSettings = view.findViewById(R.id.change_initial_settings);
+        changeFirstSettings = view.findViewById(R.id.change_first_settings);
+        checkReviews = view.findViewById(R.id.check_reviews);
+        termsOfService = view.findViewById(R.id.terms_of_service);
+        privacyPolicy = view.findViewById(R.id.privacy_policy);
+        contactUs = view.findViewById(R.id.contact_us);
+        logout = view.findViewById(R.id.logout);
 
         // SharedPreferences에서 student ID 가져오기
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
@@ -57,6 +64,9 @@ public class ProfileViewFragment extends Fragment {
         // 데이터 로드
         showLoading(true);
         fetchUsernameFromDatabase(studentId);
+
+        // 버튼 리스너 설정
+        setButtonListeners();
 
         return view;
     }
@@ -92,5 +102,55 @@ public class ProfileViewFragment extends Fragment {
     private void showLoading(boolean isLoading) {
         profileLoadingLayout.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         profileContentLayout.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+    }
+
+    private void setButtonListeners() {
+        changeInitialSettings.setOnClickListener(v -> {
+            switchFragment(new InitialSettingFragment());
+        });
+
+        changeFirstSettings.setOnClickListener(v -> {
+            switchFragment(new FirstSettingFragment());
+        });
+
+        checkReviews.setOnClickListener(v -> {
+            switchFragment(new CheckReviewsFragment());
+        });
+
+        contactUs.setOnClickListener(v -> {
+            switchFragment(new FeedbackFragment());
+        });
+
+        termsOfService.setOnClickListener(v -> {
+            switchFragment(new WriteReviewFragment());
+        });
+
+        logout.setOnClickListener(v -> {
+            new AlertDialog.Builder(requireContext())
+                    .setMessage("로그아웃 하시겠습니까?")
+                    .setPositiveButton("확인", (dialog, which) -> logout())
+                    .setNegativeButton("취소", (dialog, which) -> dialog.dismiss())
+                    .show();
+        });
+    }
+
+    private void switchFragment(Fragment fragment) {
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void logout() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("LoginPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("isLoggedIn", false); // 로그아웃 상태로 저장
+        editor.apply();
+
+        Toast.makeText(getActivity(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // 현재 스택을 정리하고 새로운 액티비티 시작
+        startActivity(intent);
     }
 }
