@@ -73,15 +73,6 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/foodAllergy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:text="알러지/원산지 보러가기"
-                        android:textColor="#333"
-                        android:textSize="8sp" />
-
-                    <TextView
                         android:id="@+id/foodCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

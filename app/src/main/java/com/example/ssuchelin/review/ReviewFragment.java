@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -60,6 +62,25 @@ public class ReviewFragment extends Fragment {
         reviewAdapter = new ReviewAdapter(reviewList, new ArrayList<>(), "Unknown ID");
         binding.reviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         binding.reviewRecyclerView.setAdapter(reviewAdapter);
+
+
+
+        // Toolbar 설정
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+            }
+        }
+
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!requireActivity().getSupportFragmentManager().isStateSaved()) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
 
         String typeN = null;
         if (type == "ddook") typeN = "뚝배기 코너";
