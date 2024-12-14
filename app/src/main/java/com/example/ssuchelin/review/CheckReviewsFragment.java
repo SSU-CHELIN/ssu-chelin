@@ -23,15 +23,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat; /// 수정 부분: 시간 포맷 import
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone; /// 수정 부분: 한국 시간대 설정 위한 import
 
 public class CheckReviewsFragment extends Fragment {
 
     private DatabaseReference databaseReference;
     private DatabaseReference userInfoReference;
     private RecyclerView reviewsRecyclerView;
-    private ReviewAdapter reviewAdapter;
+    private ReviewAdapterForCheck reviewAdapter; /// 수정 부분: ReviewAdapterForCheck 사용
     private List<Review> reviewsList = new ArrayList<>();
     private String username;
     private String saltPreference;
@@ -40,7 +44,8 @@ public class CheckReviewsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_check_reviews, container, false);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
@@ -135,6 +140,21 @@ public class CheckReviewsFragment extends Fragment {
                     if (disliked == null) disliked = false;
                     if (dislikeCount == null) dislikeCount = 0;
 
+                    // /// 수정 부분: time 가져오기 및 한국 시간대 적용
+                    Long timeValue = reviewSnapshot.child("time").getValue(Long.class);
+                    long timeMillis = timeValue != null ? timeValue : 0;
+                    String formattedTime = "알 수 없음";
+                    if (timeMillis > 0) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+                        sdf.setTimeZone(TimeZone.getTimeZone("Asia/Seoul"));
+                        Date date = new Date(timeMillis);
+                        formattedTime = sdf.format(date);
+                    }
+
+                    // /// 수정 부분: Mainmenu 가져오기
+                    String mainMenu = reviewSnapshot.child("Mainmenu").getValue(String.class);
+                    if (mainMenu == null) mainMenu = "알 수 없음";
+
                     Review review = new Review(
                             username,
                             myReview,
@@ -147,12 +167,15 @@ public class CheckReviewsFragment extends Fragment {
                             disliked,
                             dislikeCount
                     );
+                    review.setReviewTime(formattedTime);
+                    review.setMainMenu(mainMenu);
 
                     reviewKeys.add(reviewSnapshot.getKey());
                     reviewsList.add(review);
                 }
 
-                reviewAdapter = new ReviewAdapter(reviewsList, reviewKeys, studentId);
+                // /// 수정 부분: ReviewAdapterForCheck 사용
+                ReviewAdapterForCheck reviewAdapter = new ReviewAdapterForCheck(reviewsList, reviewKeys, studentId);
                 reviewsRecyclerView.setAdapter(reviewAdapter);
             }
 
