@@ -57,8 +57,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
         holder.spicyLevelTextView.setText("맵기 정도: " + review.getSpicyPreference());
         holder.allergyInfoTextView.setText("알레르기: " + review.getAllergies());
-        String formattedTime = review.getFormattedTime(); // 사람이 읽을 수 있는 시간으로 변환
-        holder.reviewDateTextView.setText("작성한 시간 : " + formattedTime);
+        holder.reviewDateTextView.setText("작성한 시간 : " + review.getReviewTime());
         holder.reviewMenuTextView.setText(review.getMainMenu());
 
         // 좋아요/싫어요 상태 표시

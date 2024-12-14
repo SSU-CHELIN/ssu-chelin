@@ -487,7 +487,7 @@ public class MenuFragment extends Fragment {
                 // 메뉴 데이터 크롤링
                 Document document = Jsoup.connect(menuUrl)
                         .data("sdt", date)
-                        .data("jun", String.valueOf(junValue)) // jun 값 추가
+                        .data("jun"+1, String.valueOf(junValue)) // jun 값 추가
                         .post();
 
                 Elements menuElements = document.select("td[style*=text-align:left]");
