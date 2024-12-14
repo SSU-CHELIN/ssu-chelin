@@ -69,8 +69,11 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         // /// 수정 부분: 수정 버튼 클릭 시 EditReviewActivity로 이동
         holder.editbtn.setOnClickListener(v -> {
             String reviewKey = reviewKeys.get(position);
+
             Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
-            intent.putExtra("review_id", reviewKey); // review_id로 리뷰 키 전달
+            intent.putExtra("review_id", reviewKey); // 리뷰 ID 전달
+            intent.putExtra("student_id", userId); // 사용자 ID 전달
+            intent.putExtra("username", review.getUsername()); // 사용자 이름 전달
             holder.itemView.getContext().startActivity(intent);
         });
 
