@@ -1,7 +1,9 @@
 package com.example.ssuchelin.review;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +71,9 @@ public class ReviewFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        reviewAdapter = new ReviewAdapter(reviewList, new ArrayList<>(), "Unknown ID");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String studentId = sharedPreferences.getString("realStudentId", "Unknown ID");
+        reviewAdapter = new ReviewAdapter(reviewList,new ArrayList<>(), studentId);
         binding.reviewRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         binding.reviewRecyclerView.setAdapter(reviewAdapter);
 
@@ -181,51 +185,58 @@ public class ReviewFragment extends Fragment {
     }
 
     private void fetchReviewsAndCalculateAverage(List<String> userIds, String mainMenu) {
+        // 초기화
         reviewList.clear();
         final int[] remaining = {userIds.size()};
         final float[] totalStar = {0};
         final float[] reviewCount = {0};
 
-        Runnable doneOneUser = () -> {
-            remaining[0]--;
+        // 모든 Firebase 요청 완료 시 실행
+        Runnable doneAllUsers = () -> {
             if (remaining[0] == 0) {
                 reviewAdapter.notifyDataSetChanged();
+
+                // 평균 별점 계산
                 float avg = 0;
                 if (reviewCount[0] > 0) {
                     avg = totalStar[0] / reviewCount[0];
                 }
                 String formattedAvg = String.format("%.1f", avg);
                 binding.scoreNum.setText(formattedAvg);
+
+                // 별점 이미지 업데이트
                 updateStarImages(avg);
             }
         };
 
         for (String userId : userIds) {
+            if (userId == null || userId.isEmpty()) {
+                Log.e("fetchReviews", "Invalid userId encountered.");
+                remaining[0]--;
+                doneAllUsers.run();
+                continue;
+            }
+
             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                     DataSnapshot userInfoSnapshot = userSnapshot.child("userinfo");
                     if (!userInfoSnapshot.exists()) {
-                        Log.d("ReviewFragment", "userinfo 데이터가 없음: " + userSnapshot.getKey());
-                        doneOneUser.run();
+                        Log.d("fetchReviews", "User info not found for userId: " + userId);
+                        remaining[0]--;
+                        doneAllUsers.run();
                         return;
                     }
 
+                    // 유저 정보 읽기
                     String username = userInfoSnapshot.child("userName").getValue(String.class);
                     if (username == null) username = "Unknown User";
 
-                    int saltPreference = 0;
-                    int spicyPreference = 0;
-                    try {
-                        Long saltPrefValue = userInfoSnapshot.child("saltPreference").getValue(Long.class);
-                        Long spicyPrefValue = userInfoSnapshot.child("spicyPreference").getValue(Long.class);
-                        saltPreference = saltPrefValue != null ? saltPrefValue.intValue() : 0;
-                        spicyPreference = spicyPrefValue != null ? spicyPrefValue.intValue() : 0;
-                    } catch (Exception e) {
-                        Log.e("ReviewFragment", "Error parsing preferences: " + e.getMessage());
-                    }
+                    int saltPreference = parseInt(userInfoSnapshot.child("saltPreference").getValue(String.class), 0);
+                    int spicyPreference = parseInt(userInfoSnapshot.child("spicyPreference").getValue(String.class), 0);
 
+                    // 알레르기 정보 읽기
                     List<String> allergyList = new ArrayList<>();
                     DataSnapshot allergiesSnapshot = userInfoSnapshot.child("allergies");
                     if (allergiesSnapshot.exists()) {
@@ -238,58 +249,101 @@ public class ReviewFragment extends Fragment {
                     }
                     String allergies = allergyList.isEmpty() ? "None" : String.join(", ", allergyList);
 
+                    // 리뷰 데이터 읽기
                     DataSnapshot reviewDataSnapshot = userSnapshot.child("myReviewData");
                     for (DataSnapshot reviewSnap : reviewDataSnapshot.getChildren()) {
                         String reviewMainMenu = reviewSnap.child("Mainmenu").getValue(String.class);
-                        if (mainMenu.equals(reviewMainMenu)) {
-                            String subMenu = reviewSnap.child("Submenu").getValue(String.class);
-                            String userReview = reviewSnap.child("userReview").getValue(String.class);
-                            Integer starCount = reviewSnap.child("starCount").getValue(Integer.class);
-                            if (starCount == null) starCount = 0;
-
-                            // likeDifference, timeMillis 추가로 가져오기
-                            Integer likeDifference = reviewSnap.child("likeDifference").getValue(Integer.class);
-                            if (likeDifference == null) likeDifference = 0;
-
-                            Long timeVal = reviewSnap.child("time").getValue(Long.class);
-                            long timeMillis = timeVal != null ? timeVal : 0;
-
-                            Boolean liked = reviewSnap.child("liked").getValue(Boolean.class);
-                            if (liked == null) liked = false;
-                            Boolean disliked = reviewSnap.child("disliked").getValue(Boolean.class);
-                            if (disliked == null) disliked = false;
-                            Integer likeCount = reviewSnap.child("likeCount").getValue(Integer.class);
-                            if (likeCount == null) likeCount = 0;
-                            Integer dislikeCount = reviewSnap.child("dislikeCount").getValue(Integer.class);
-                            if (dislikeCount == null) dislikeCount = 0;
-
-                            Review review = new Review(mainMenu, subMenu, userReview != null ? userReview : "", starCount);
-                            review.setUsername(username);
-                            review.setSaltPreference(saltPreference);
-                            review.setSpicyPreference(spicyPreference);
-                            review.setAllergies(allergies);
-                            review.setLikeDifference(likeDifference);
-                            review.setTimeMillis(timeMillis);
-                            review.setLiked(liked);
-                            review.setDisliked(disliked);
-                            review.setLikeCount(likeCount);
-                            review.setDislikeCount(dislikeCount);
-
-                            reviewList.add(review);
-                            totalStar[0] += starCount;
-                            reviewCount[0]++;
+                        if (!mainMenu.equals(reviewMainMenu)) {
+                            continue;
                         }
+
+                        String subMenu = reviewSnap.child("Submenu").getValue(String.class);
+                        String userReview = reviewSnap.child("userReview").getValue(String.class);
+                        int starCount = parseInt(reviewSnap.child("starCount").getValue(Integer.class), 0);
+
+                        // 추가 정보 읽기
+                        int likeDifference = parseInt(reviewSnap.child("likeDifference").getValue(Integer.class), 0);
+                        long timeMillis = parseLong(reviewSnap.child("time").getValue(Long.class), 0L);
+
+                        boolean liked = parseBoolean(reviewSnap.child("liked").getValue(Boolean.class), false);
+                        boolean disliked = parseBoolean(reviewSnap.child("disliked").getValue(Boolean.class), false);
+                        int likeCount = parseInt(reviewSnap.child("likeCount").getValue(Integer.class), 0);
+                        int dislikeCount = parseInt(reviewSnap.child("dislikeCount").getValue(Integer.class), 0);
+
+                        // 리뷰 객체 생성
+                        Review review = new Review(mainMenu, subMenu, userReview != null ? userReview : "", starCount);
+                        review.setUsername(username);
+                        review.setSaltPreference(saltPreference);
+                        review.setSpicyPreference(spicyPreference);
+                        review.setAllergies(allergies);
+                        review.setLikeDifference(likeDifference);
+                        review.setTimeMillis(timeMillis);
+                        review.setLiked(liked);
+                        review.setDisliked(disliked);
+                        review.setLikeCount(likeCount);
+                        review.setDislikeCount(dislikeCount);
+
+                        reviewList.add(review);
+                        totalStar[0] += starCount;
+                        reviewCount[0]++;
                     }
-                    doneOneUser.run();
+
+                    remaining[0]--;
+                    doneAllUsers.run();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    doneOneUser.run();
+                    Log.e("fetchReviews", "Error fetching data for userId: " + userId + ", " + error.getMessage());
+                    remaining[0]--;
+                    doneAllUsers.run();
                 }
             });
         }
     }
+
+    private int parseInt(Object value, int defaultValue) {
+        try {
+            if (value instanceof Integer) {
+                return (Integer) value;
+            }
+            if (value instanceof String) {
+                return Integer.parseInt((String) value);
+            }
+        } catch (Exception e) {
+            Log.e("parseInt", "Failed to parse int: " + value, e);
+        }
+        return defaultValue;
+    }
+
+    private long parseLong(Object value, long defaultValue) {
+        try {
+            if (value instanceof Long) {
+                return (Long) value;
+            }
+            if (value instanceof String) {
+                return Long.parseLong((String) value);
+            }
+        } catch (Exception e) {
+            Log.e("parseLong", "Failed to parse long: " + value, e);
+        }
+        return defaultValue;
+    }
+
+    private boolean parseBoolean(Object value, boolean defaultValue) {
+        try {
+            if (value instanceof Boolean) {
+                return (Boolean) value;
+            }
+            if (value instanceof String) {
+                return Boolean.parseBoolean((String) value);
+            }
+        } catch (Exception e) {
+            Log.e("parseBoolean", "Failed to parse boolean: " + value, e);
+        }
+        return defaultValue;
+    }
+
 
     private void updateStarImages(float avg) {
         float portionStar1 = avg - 0;

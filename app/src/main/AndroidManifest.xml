@@ -28,9 +28,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
-
-
         <activity
             android:name=".review.EditReviewActivity"
             android:exported="false" />
@@ -39,7 +36,8 @@
             android:exported="false" />
         <activity
             android:name=".login.UsaintAuthService"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".login.RegisterActivity"
             android:exported="false" />

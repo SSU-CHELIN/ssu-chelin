@@ -1,10 +1,13 @@
 package com.example.ssuchelin.review;
 
+import android.content.Intent; /// 수정 부분: Intent 사용을 위해 import
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,165 +19,79 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-    private List<Review> reviewsList; // updateReviews를 위해 final 제거
-    private final String studentId;
-    private final DatabaseReference databaseReference;
-    private List<String> reviewKeyList= new ArrayList<>(); // 필요하다면 나중에 reviewKey추가 가능
+    private List<Review> reviewsList;
+    private List<String> reviewKeys;
+    private String userId;
+    private DatabaseReference databaseReference;
 
-    public ReviewAdapter(List<Review> reviewsList, List<String> reviewKeyList, String studentId) {
+    public ReviewAdapter(List<Review> reviewsList, List<String> reviewKeys, String userId) {
         this.reviewsList = reviewsList;
-        this.reviewKeyList = reviewKeyList;
-        this.studentId = studentId;
-        this.databaseReference = FirebaseDatabase.getInstance().getReference("User").child(studentId).child("myReviewData");
+        this.reviewKeys = reviewKeys;
+        this.userId = userId;
+        this.databaseReference = FirebaseDatabase.getInstance().getReference("User").child(userId).child("myReviewData");
     }
 
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.overview_review_item, parent, false);
+        // item_review.xml 사용
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review, parent, false);
         return new ReviewViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         Review review = reviewsList.get(position);
-
         holder.usernameTextView.setText(review.getUsername());
         holder.reviewTextView.setText(review.getUserReview());
 
-        // 간 정도, 맵기 정도, 알레르기 정보 설정 (allergy_info대신 개별 textView사용)
-        holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
-        holder.spicyLevelTextView.setText("맵기 정도: " + review.getSpicyPreference());
-        holder.allergyInfoTextView.setText("알레르기: " + review.getAllergies());
-
-        // 별점 표시
+        // 별점 설정
         holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star_100 : R.drawable.star_0);
         holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star_100 : R.drawable.star_0);
         holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star_100 : R.drawable.star_0);
 
-        // 좋아요/싫어요 상태
+        holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
+        holder.spicyLevelTextView.setText("맵기 정도: " + review.getSpicyPreference());
+        holder.allergyInfoTextView.setText("알레르기: " + review.getAllergies());
+
+        holder.reviewDateTextView.setText("작성한 시간 : " + review.getReviewTime());
+        holder.reviewMenuTextView.setText(review.getMainMenu());
+
+        // 좋아요/싫어요 상태 표시
         holder.likeCountText.setText(String.valueOf(review.getLikeCount()));
-        holder.likeIcon.setImageResource(review.isLiked() ? R.drawable.ic_like_on : R.drawable.ic_like_off);
         holder.dislikeCountText.setText(String.valueOf(review.getDislikeCount()));
+        holder.likeIcon.setImageResource(review.isLiked() ? R.drawable.ic_like_on : R.drawable.ic_like_off);
         holder.dislikeIcon.setImageResource(review.isDisliked() ? R.drawable.ic_dislike_on : R.drawable.ic_dislike_off);
 
-        // reviewKey없이 좋아요 기능 동작 어렵다면 reviewKeyList 관리 필요
-        String reviewKey = (reviewKeyList.size() > position) ? reviewKeyList.get(position) : "unknownReviewKey";
+//        // /// 수정 부분: 수정 버튼 클릭 시 EditReviewActivity로 이동
+//        holder.editbtn.setOnClickListener(v -> {
+//            String reviewKey = reviewKeys.get(position);
+//
+//            Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
+//            intent.putExtra("review_id", reviewKey); // 리뷰 ID 전달
+//            intent.putExtra("student_id", userId); // 사용자 ID 전달
+//            intent.putExtra("username", review.getUsername()); // 사용자 이름 전달
+//            holder.itemView.getContext().startActivity(intent);
+//        });
+//        holder.deletebtn.setOnClickListener(v->{
+//            String reviewKey = reviewKeys.get(position);
+//            databaseReference.child(reviewKey).removeValue();
+//            reviewsList.remove(position);
+//            notifyItemRemoved(position);
+//        });
 
         // 좋아요 버튼 클릭
         holder.likeIcon.setOnClickListener(v -> {
-            toggleLikeDislike(position,true);
-            boolean currentLiked = review.isLiked();
-            boolean currentDisliked = review.isDisliked();
-            int currentLikeCount = review.getLikeCount();
-            int currentDislikeCount = review.getDislikeCount();
-
-            int oldDifference = currentLikeCount - currentDislikeCount;
-
-            if (!currentLiked) {
-                if (currentDisliked) {
-                    currentDisliked = false;
-                    currentDislikeCount = Math.max(0, currentDislikeCount - 1);
-                }
-                currentLiked = true;
-                currentLikeCount += 1;
-            } else {
-                currentLiked = false;
-                currentLikeCount = Math.max(0, currentLikeCount - 1);
-            }
-
-            int newDifference = currentLikeCount - currentDislikeCount;
-
-            review.setLiked(currentLiked);
-            review.setLikeCount(currentLikeCount);
-            review.setDisliked(currentDisliked);
-            review.setDislikeCount(currentDislikeCount);
-
-            holder.likeIcon.setImageResource(currentLiked ? R.drawable.ic_like_on : R.drawable.ic_like_off);
-            holder.likeCountText.setText(String.valueOf(currentLikeCount));
-            holder.dislikeIcon.setImageResource(currentDisliked ? R.drawable.ic_dislike_on : R.drawable.ic_dislike_off);
-            holder.dislikeCountText.setText(String.valueOf(currentDislikeCount));
-
-            int likeDifference = currentLikeCount - currentDislikeCount;
-
-            databaseReference.child(reviewKey).child("liked").setValue(currentLiked);
-            databaseReference.child(reviewKey).child("likeCount").setValue(currentLikeCount);
-            databaseReference.child(reviewKey).child("disliked").setValue(currentDisliked);
-            databaseReference.child(reviewKey).child("dislikeCount").setValue(currentDislikeCount);
-            databaseReference.child(reviewKey).child("likeDifference").setValue(likeDifference);
-
-            int differenceChange = newDifference - oldDifference;
-
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(studentId);
-            userRef.child("totalLike").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Integer currentTotalLike = task.getResult().getValue(Integer.class);
-                    if (currentTotalLike == null) currentTotalLike = 0;
-                    int newTotalLike = currentTotalLike + differenceChange;
-                    userRef.child("totalLike").setValue(newTotalLike);
-                }
-            });
+            toggleLikeDislike(position, true);
         });
 
         // 싫어요 버튼 클릭
         holder.dislikeIcon.setOnClickListener(v -> {
-            toggleLikeDislike(position,false);
-            boolean currentLiked = review.isLiked();
-            boolean currentDisliked = review.isDisliked();
-            int currentLikeCount = review.getLikeCount();
-            int currentDislikeCount = review.getDislikeCount();
-
-            int oldDifference = currentLikeCount - currentDislikeCount;
-
-            if (!currentDisliked) {
-                if (currentLiked) {
-                    currentLiked = false;
-                    currentLikeCount = Math.max(0, currentLikeCount - 1);
-                }
-
-                currentDisliked = true;
-                currentDislikeCount += 1;
-            } else {
-                currentDisliked = false;
-                currentDislikeCount = Math.max(0, currentDislikeCount - 1);
-            }
-
-            int newDifference = currentLikeCount - currentDislikeCount;
-
-            review.setLiked(currentLiked);
-            review.setLikeCount(currentLikeCount);
-            review.setDisliked(currentDisliked);
-            review.setDislikeCount(currentDislikeCount);
-
-            holder.likeIcon.setImageResource(currentLiked ? R.drawable.ic_like_on : R.drawable.ic_like_off);
-            holder.likeCountText.setText(String.valueOf(currentLikeCount));
-            holder.dislikeIcon.setImageResource(currentDisliked ? R.drawable.ic_dislike_on : R.drawable.ic_dislike_off);
-            holder.dislikeCountText.setText(String.valueOf(currentDislikeCount));
-
-            int likeDifference = newDifference;
-
-            databaseReference.child(reviewKey).child("liked").setValue(currentLiked);
-            databaseReference.child(reviewKey).child("likeCount").setValue(currentLikeCount);
-            databaseReference.child(reviewKey).child("disliked").setValue(currentDisliked);
-            databaseReference.child(reviewKey).child("dislikeCount").setValue(currentDislikeCount);
-            databaseReference.child(reviewKey).child("likeDifference").setValue(likeDifference);
-
-            int differenceChange = newDifference - oldDifference;
-
-            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(studentId);
-            userRef.child("totalLike").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Integer currentTotalLike = task.getResult().getValue(Integer.class);
-                    if (currentTotalLike == null) currentTotalLike = 0;
-                    int newTotalLike = currentTotalLike + differenceChange;
-                    userRef.child("totalLike").setValue(newTotalLike);
-                }
-            });
+            toggleLikeDislike(position, false);
         });
     }
 
@@ -184,16 +101,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     public void updateReviews(List<Review> newReviews) {
-        this.reviewsList.clear();
-        this.reviewsList.addAll(newReviews);
+        reviewsList = newReviews;
         notifyDataSetChanged();
     }
 
-    public static class ReviewViewHolder extends RecyclerView.ViewHolder {
-        TextView usernameTextView, reviewTextView;
-        // 개별적으로 salt_level, spicy_level, allergy_info 사용
-        TextView saltLevelTextView, spicyLevelTextView, allergyInfoTextView;
+    class ReviewViewHolder extends RecyclerView.ViewHolder {
+        TextView usernameTextView, reviewTextView, saltLevelTextView, spicyLevelTextView, allergyInfoTextView;
         ImageView star1, star2, star3;
+        TextView editbtn, reviewDateTextView, reviewMenuTextView, deletebtn;
         ImageView likeIcon;
         TextView likeCountText;
         ImageView dislikeIcon;
@@ -209,58 +124,60 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             star1 = itemView.findViewById(R.id.review_star1);
             star2 = itemView.findViewById(R.id.review_star2);
             star3 = itemView.findViewById(R.id.review_star3);
+            editbtn = itemView.findViewById(R.id.edit_button);
+            deletebtn = itemView.findViewById(R.id.delete_button);
+            reviewDateTextView = itemView.findViewById(R.id.review_date);
+            reviewMenuTextView = itemView.findViewById(R.id.review_menu);
 
             likeIcon = itemView.findViewById(R.id.like_icon);
             likeCountText = itemView.findViewById(R.id.like_count_text);
-
             dislikeIcon = itemView.findViewById(R.id.dislike_icon);
             dislikeCountText = itemView.findViewById(R.id.dislike_count_text);
         }
     }
+
     private void toggleLikeDislike(int position, boolean isLikeAction) {
-        if (position >= reviewKeyList.size() || position < 0) {
-            // 예외 처리 로그 출력 또는 무시
-            System.out.println("Invalid position: " + position + ", reviewKeyList size: " + reviewKeyList.size());
+        // 리뷰 키 및 데이터 확인
+        if (reviewKeys == null || position >= reviewKeys.size() || reviewsList == null || position >= reviewsList.size()) {
+            Log.e("ReviewAdapter", "Invalid position or null data");
             return;
         }
+
+        String reviewKey = reviewKeys.get(position);
         Review review = reviewsList.get(position);
 
-        String reviewKey = reviewKeyList.get(position);
+        if (reviewKey == null || review == null) {
+            Log.e("ReviewAdapter", "reviewKey or review is null");
+            return;
+        }
+
+        // 기존 상태 확인
         boolean currentlyLiked = review.isLiked();
         boolean currentlyDisliked = review.isDisliked();
         int likeCount = review.getLikeCount();
         int dislikeCount = review.getDislikeCount();
 
-        // 변경 전 차이 계산 (oldDifference)
+        // 상태 변경
         int oldDifference = likeCount - dislikeCount;
-
         if (isLikeAction) {
-            // 좋아요 버튼 클릭
             if (currentlyLiked) {
-                // 이미 좋아요 상태 -> 좋아요 해제
                 review.setLiked(false);
                 review.setLikeCount(likeCount - 1);
             } else {
-                // 좋아요 아닌 상태
                 review.setLiked(true);
                 review.setLikeCount(likeCount + 1);
-                // 싫어요 상태였다면 해제
                 if (currentlyDisliked) {
                     review.setDisliked(false);
                     review.setDislikeCount(dislikeCount - 1);
                 }
             }
         } else {
-            // 싫어요 버튼 클릭
             if (currentlyDisliked) {
-                // 이미 싫어요 상태 -> 싫어요 해제
                 review.setDisliked(false);
                 review.setDislikeCount(dislikeCount - 1);
             } else {
-                // 싫어요 아닌 상태
                 review.setDisliked(true);
                 review.setDislikeCount(dislikeCount + 1);
-                // 좋아요 상태였다면 해제
                 if (currentlyLiked) {
                     review.setLiked(false);
                     review.setLikeCount(likeCount - 1);
@@ -268,12 +185,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             }
         }
 
-        notifyItemChanged(position);
-
+        // 데이터 업데이트
         int newLikeCount = review.getLikeCount();
         int newDislikeCount = review.getDislikeCount();
         int newDifference = newLikeCount - newDislikeCount;
-        int differenceChange = newDifference - oldDifference;
+
+        reviewsList.set(position, review); // 리스트 업데이트
+        notifyItemChanged(position);      // UI 업데이트
 
         // Firebase 업데이트
         DatabaseReference reviewRef = databaseReference.child(reviewKey);
@@ -283,19 +201,21 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         reviewRef.child("dislikeCount").setValue(newDislikeCount);
         reviewRef.child("likeDifference").setValue(newDifference);
 
-        // totalLike 업데이트
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(studentId);
+        // 사용자 총 좋아요 수 업데이트
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
         userRef.child("totalLike").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Integer currentTotalLike = snapshot.getValue(Integer.class);
                 if (currentTotalLike == null) currentTotalLike = 0;
-                int newTotalLike = currentTotalLike + differenceChange;
-                userRef.child("totalLike").setValue(newTotalLike);
+                userRef.child("totalLike").setValue(currentTotalLike + (newDifference - oldDifference));
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("ReviewAdapter", "Failed to update totalLike: " + error.getMessage());
+            }
         });
     }
+
 }

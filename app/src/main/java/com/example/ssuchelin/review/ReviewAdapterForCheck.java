@@ -162,6 +162,15 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
                     review.setDisliked(false);
                     review.setDislikeCount(dislikeCount - 1);
                 }
+            }{
+                // 좋아요 아닌 상태
+                review.setLiked(true);
+                review.setLikeCount(likeCount + 1);
+                // 싫어요 상태였다면 해제
+                if (currentlyDisliked) {
+                    review.setDisliked(false);
+                    review.setDislikeCount(dislikeCount - 1);
+                }
             }
         } else {
             // 싫어요 버튼 클릭
