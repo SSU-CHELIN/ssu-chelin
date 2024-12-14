@@ -1,22 +1,17 @@
 package com.example.ssuchelin.review;
 
-import android.content.Intent; /// 수정 부분: Intent 사용을 위해 import
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.ssuchelin.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -48,7 +43,6 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         holder.usernameTextView.setText(review.getUsername());
         holder.reviewTextView.setText(review.getUserReview());
 
-        // 별점 설정
         holder.star1.setImageResource(review.getStarCount() >= 1 ? R.drawable.star_100 : R.drawable.star_0);
         holder.star2.setImageResource(review.getStarCount() >= 2 ? R.drawable.star_100 : R.drawable.star_0);
         holder.star3.setImageResource(review.getStarCount() >= 3 ? R.drawable.star_100 : R.drawable.star_0);
@@ -60,35 +54,34 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         holder.reviewDateTextView.setText("작성한 시간 : " + review.getReviewTime());
         holder.reviewMenuTextView.setText(review.getMainMenu());
 
-        // 좋아요/싫어요 상태 표시
         holder.likeCountText.setText(String.valueOf(review.getLikeCount()));
         holder.dislikeCountText.setText(String.valueOf(review.getDislikeCount()));
         holder.likeIcon.setImageResource(review.isLiked() ? R.drawable.ic_like_on : R.drawable.ic_like_off);
         holder.dislikeIcon.setImageResource(review.isDisliked() ? R.drawable.ic_dislike_on : R.drawable.ic_dislike_off);
 
-        // /// 수정 부분: 수정 버튼 클릭 시 EditReviewActivity로 이동
+        // Edit 버튼 클릭 시 EditReviewActivity로 이동
         holder.editbtn.setOnClickListener(v -> {
             String reviewKey = reviewKeys.get(position);
-
             Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
-            intent.putExtra("review_id", reviewKey); // 리뷰 ID 전달
-            intent.putExtra("student_id", userId); // 사용자 ID 전달
-            intent.putExtra("username", review.getUsername()); // 사용자 이름 전달
+            intent.putExtra("review_id", reviewKey);
+            intent.putExtra("student_id", userId);
+            intent.putExtra("username", review.getUsername());
+            // 여기서 Mainmenu나 Submenu 같은 추가 정보가 필요하다면 intent.putExtra("mainMenu", review.getMainMenu()) 등을 추가할 수 있음.
             holder.itemView.getContext().startActivity(intent);
         });
+
         holder.deletebtn.setOnClickListener(v->{
             String reviewKey = reviewKeys.get(position);
             databaseReference.child(reviewKey).removeValue();
             reviewsList.remove(position);
+            reviewKeys.remove(position);
             notifyItemRemoved(position);
         });
 
-        // 좋아요 버튼 클릭
         holder.likeIcon.setOnClickListener(v -> {
             toggleLikeDislike(position, true);
         });
 
-        // 싫어요 버튼 클릭
         holder.dislikeIcon.setOnClickListener(v -> {
             toggleLikeDislike(position, false);
         });
@@ -144,20 +137,15 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         int likeCount = review.getLikeCount();
         int dislikeCount = review.getDislikeCount();
 
-        // 변경 전 차이 계산 (oldDifference)
         int oldDifference = likeCount - dislikeCount;
 
         if (isLikeAction) {
-            // 좋아요 버튼 클릭
             if (currentlyLiked) {
-                // 이미 좋아요 상태 -> 좋아요 해제
                 review.setLiked(false);
                 review.setLikeCount(likeCount - 1);
             } else {
-                // 좋아요 아닌 상태
                 review.setLiked(true);
                 review.setLikeCount(likeCount + 1);
-                // 싫어요 상태였다면 해제
                 if (currentlyDisliked) {
                     review.setDisliked(false);
                     review.setDislikeCount(dislikeCount - 1);
@@ -173,16 +161,12 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
                 }
             }
         } else {
-            // 싫어요 버튼 클릭
             if (currentlyDisliked) {
-                // 이미 싫어요 상태 -> 싫어요 해제
                 review.setDisliked(false);
                 review.setDislikeCount(dislikeCount - 1);
             } else {
-                // 싫어요 아닌 상태
                 review.setDisliked(true);
                 review.setDislikeCount(dislikeCount + 1);
-                // 좋아요 상태였다면 해제
                 if (currentlyLiked) {
                     review.setLiked(false);
                     review.setLikeCount(likeCount - 1);
@@ -197,7 +181,6 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         int newDifference = newLikeCount - newDislikeCount;
         int differenceChange = newDifference - oldDifference;
 
-        // Firebase 업데이트
         DatabaseReference reviewRef = databaseReference.child(reviewKey);
         reviewRef.child("liked").setValue(review.isLiked());
         reviewRef.child("likeCount").setValue(newLikeCount);
@@ -205,19 +188,14 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         reviewRef.child("dislikeCount").setValue(newDislikeCount);
         reviewRef.child("likeDifference").setValue(newDifference);
 
-        // totalLike 업데이트
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
-        userRef.child("totalLike").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Integer currentTotalLike = snapshot.getValue(Integer.class);
+        userRef.child("totalLike").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Integer currentTotalLike = task.getResult().getValue(Integer.class);
                 if (currentTotalLike == null) currentTotalLike = 0;
                 int newTotalLike = currentTotalLike + differenceChange;
                 userRef.child("totalLike").setValue(newTotalLike);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }
