@@ -39,7 +39,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // item_review.xml 사용
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.overview_review_item, parent, false);
         return new ReviewViewHolder(view);
     }
 
@@ -57,8 +57,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.saltLevelTextView.setText("간 정도: " + review.getSaltPreference());
         holder.spicyLevelTextView.setText("맵기 정도: " + review.getSpicyPreference());
         holder.allergyInfoTextView.setText("알레르기: " + review.getAllergies());
-
-        holder.reviewDateTextView.setText("작성한 시간 : " + review.getReviewTime());
+        String formattedTime = review.getFormattedTime(); // 사람이 읽을 수 있는 시간으로 변환
+        holder.reviewDateTextView.setText("작성한 시간 : " + formattedTime);
         holder.reviewMenuTextView.setText(review.getMainMenu());
 
         // 좋아요/싫어요 상태 표시
@@ -100,15 +100,22 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         return reviewsList.size();
     }
 
-    public void updateReviews(List<Review> newReviews) {
-        reviewsList = newReviews;
+    public void updateReviews(List<Review> newReviews, List<String> newReviewKeys) {
+        if (newReviews == null || newReviewKeys == null || newReviews.size() != newReviewKeys.size()) {
+            Log.e("ReviewAdapter", "Data mismatch: reviews and keys sizes do not match");
+            return;
+        }
+
+        this.reviewsList = newReviews;
+        this.reviewKeys = newReviewKeys;
         notifyDataSetChanged();
     }
+
 
     class ReviewViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView, reviewTextView, saltLevelTextView, spicyLevelTextView, allergyInfoTextView;
         ImageView star1, star2, star3;
-        TextView editbtn, reviewDateTextView, reviewMenuTextView, deletebtn;
+        TextView reviewDateTextView, reviewMenuTextView;
         ImageView likeIcon;
         TextView likeCountText;
         ImageView dislikeIcon;
@@ -124,8 +131,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             star1 = itemView.findViewById(R.id.review_star1);
             star2 = itemView.findViewById(R.id.review_star2);
             star3 = itemView.findViewById(R.id.review_star3);
-            editbtn = itemView.findViewById(R.id.edit_button);
-            deletebtn = itemView.findViewById(R.id.delete_button);
+//            editbtn = itemView.findViewById(R.id.edit_button);
+//            deletebtn = itemView.findViewById(R.id.delete_button);
             reviewDateTextView = itemView.findViewById(R.id.review_date);
             reviewMenuTextView = itemView.findViewById(R.id.review_menu);
 
@@ -137,6 +144,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     }
 
     private void toggleLikeDislike(int position, boolean isLikeAction) {
+        Log.d("ReviewAdapter", "Position: " + position);
+        Log.d("ReviewAdapter", "reviewsList size: " + (reviewsList != null ? reviewsList.size() : "null"));
+        Log.d("ReviewAdapter", "reviewKeys size: " + (reviewKeys != null ? reviewKeys.size() : "null"));
+
         // 리뷰 키 및 데이터 확인
         if (reviewKeys == null || position >= reviewKeys.size() || reviewsList == null || position >= reviewsList.size()) {
             Log.e("ReviewAdapter", "Invalid position or null data");

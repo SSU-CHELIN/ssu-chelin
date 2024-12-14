@@ -111,6 +111,28 @@ public class Review {
         this.likeDifference = 0;
     }
 
+    // 간단한 생성자 (메인 메뉴, 서브 메뉴, 리뷰, 별점, 시간, 좋아요 차이 중심)
+    public Review(String mainMenu, String subMenu, String userReview, float starCount, long timeMillis, int likeDifference) {
+        this.mainMenu = mainMenu;
+        this.subMenu = subMenu;
+        this.userReview = userReview;
+        this.starCount = starCount;
+        this.timeMillis = timeMillis;
+        this.likeDifference = likeDifference;
+
+        // 나머지 필드 기본값으로 초기화
+        this.username = "";
+        this.saltPreference = 0;
+        this.spicyPreference = 0;
+        this.allergies = "";
+        this.liked = false;
+        this.likeCount = 0;
+        this.disliked = false;
+        this.dislikeCount = 0;
+        this.reviewTime = "";
+    }
+
+
     // ---- 유틸리티 메서드 ----
 
     // 작성 시간을 사람이 읽기 쉬운 형식으로 변환
