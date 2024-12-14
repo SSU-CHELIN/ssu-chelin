@@ -1,7 +1,7 @@
 package com.example.ssuchelin.review;
 
 import android.content.Intent;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.ssuchelin.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -66,13 +66,12 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         // Edit 버튼 클릭 시 EditReviewActivity로 이동
         holder.editbtn.setOnClickListener(v -> {
             String reviewKey = reviewKeys.get(position);
-
-            // DialogFragment 호출
-            EditReviewDialogFragment dialogFragment = EditReviewDialogFragment.newInstance(reviewKey, userId);
-
-            // FragmentManager를 통해 다이얼로그 띄우기
-            FragmentManager fragmentManager = ((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager();
-            dialogFragment.show(fragmentManager, "EditReviewDialog");
+            Intent intent = new Intent(holder.itemView.getContext(), EditReviewActivity.class);
+            intent.putExtra("review_id", reviewKey);
+            intent.putExtra("student_id", userId);
+            intent.putExtra("username", review.getUsername());
+            // 여기서 Mainmenu나 Submenu 같은 추가 정보가 필요하다면 intent.putExtra("mainMenu", review.getMainMenu()) 등을 추가할 수 있음.
+            holder.itemView.getContext().startActivity(intent);
         });
 
         holder.deletebtn.setOnClickListener(v->{
@@ -134,16 +133,32 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
     }
 
     private void toggleLikeDislike(int position, boolean isLikeAction) {
-        Review review = reviewsList.get(position);
-        String reviewKey = reviewKeys.get(position);
+        Log.d("ReviewAdapter", "Position: " + position);
+        Log.d("ReviewAdapter", "reviewsList size: " + (reviewsList != null ? reviewsList.size() : "null"));
+        Log.d("ReviewAdapter", "reviewKeys size: " + (reviewKeys != null ? reviewKeys.size() : "null"));
 
+        // 리뷰 키 및 데이터 확인
+        if (reviewKeys == null || position >= reviewKeys.size() || reviewsList == null || position >= reviewsList.size()) {
+            Log.e("ReviewAdapter", "Invalid position or null data");
+            return;
+        }
+
+        String reviewKey = reviewKeys.get(position);
+        Review review = reviewsList.get(position);
+
+        if (reviewKey == null || review == null) {
+            Log.e("ReviewAdapter", "reviewKey or review is null");
+            return;
+        }
+
+        // 기존 상태 확인
         boolean currentlyLiked = review.isLiked();
         boolean currentlyDisliked = review.isDisliked();
         int likeCount = review.getLikeCount();
         int dislikeCount = review.getDislikeCount();
 
+        // 상태 변경
         int oldDifference = likeCount - dislikeCount;
-
         if (isLikeAction) {
             if (currentlyLiked) {
                 review.setLiked(false);
@@ -170,13 +185,15 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
             }
         }
 
-        notifyItemChanged(position);
-
+        // 데이터 업데이트
         int newLikeCount = review.getLikeCount();
         int newDislikeCount = review.getDislikeCount();
         int newDifference = newLikeCount - newDislikeCount;
-        int differenceChange = newDifference - oldDifference;
 
+        reviewsList.set(position, review); // 리스트 업데이트
+        notifyItemChanged(position);      // UI 업데이트
+
+        // Firebase 업데이트
         DatabaseReference reviewRef = databaseReference.child(reviewKey);
         reviewRef.child("liked").setValue(review.isLiked());
         reviewRef.child("likeCount").setValue(newLikeCount);
@@ -184,13 +201,19 @@ public class ReviewAdapterForCheck extends RecyclerView.Adapter<ReviewAdapterFor
         reviewRef.child("dislikeCount").setValue(newDislikeCount);
         reviewRef.child("likeDifference").setValue(newDifference);
 
+        // 사용자 총 좋아요 수 업데이트
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User").child(userId);
-        userRef.child("totalLike").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Integer currentTotalLike = task.getResult().getValue(Integer.class);
+        userRef.child("totalLike").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer currentTotalLike = snapshot.getValue(Integer.class);
                 if (currentTotalLike == null) currentTotalLike = 0;
-                int newTotalLike = currentTotalLike + differenceChange;
-                userRef.child("totalLike").setValue(newTotalLike);
+                userRef.child("totalLike").setValue(currentTotalLike + (newDifference - oldDifference));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("ReviewAdapter", "Failed to update totalLike: " + error.getMessage());
             }
         });
     }

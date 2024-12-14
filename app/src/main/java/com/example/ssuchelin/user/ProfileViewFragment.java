@@ -64,7 +64,6 @@ public class ProfileViewFragment extends Fragment {
         changeInitialSettings = view.findViewById(R.id.change_initial_settings);
         changeFirstSettings = view.findViewById(R.id.change_first_settings);
         checkReviews = view.findViewById(R.id.check_reviews);
-        privacyPolicy = view.findViewById(R.id.privacy_policy);
         contactUs = view.findViewById(R.id.contact_us);
         logout = view.findViewById(R.id.logout);
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 배경색 -->
+    <item android:drawable="@android:color/holo_blue_light" />
+
+    <!-- 가운데 텍스트 또는 아이콘 -->
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_banner_image" />
+    </item>
+</layer-list>
