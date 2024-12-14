@@ -23,15 +23,13 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/prevButton"
+            <ImageView
+                android:id="@+id/menuCalendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/calendar"/>
+            <Button
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_back_arrow"
-                android:text="Prev" />
-
-            <TextView
                 android:id="@+id/monthYearText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,21 +38,15 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/nextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_next_arrow"
-                android:text="Next" />
+
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/calendarRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:scrollbars="horizontal" />
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/calendarRecyclerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:scrollbars="horizontal" />-->
 
         <ImageView
             android:layout_width="wrap_content"

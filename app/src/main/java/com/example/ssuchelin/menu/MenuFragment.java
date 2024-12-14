@@ -1,6 +1,7 @@
 package com.example.ssuchelin.menu;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -29,12 +30,16 @@ import com.example.ssuchelin.R;
 import com.example.ssuchelin.databinding.FragmentMenuBinding;
 import com.example.ssuchelin.review.ReviewFragment;
 import com.example.ssuchelin.review.WriteReviewFragment;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,17 +48,19 @@ import java.util.List;
 import java.util.Locale;
 
 public class MenuFragment extends Fragment {
-    private ImageView imageView1, imageView2, imageView3;
+    private ImageView imageView1, imageView2, imageView3,calendar;
     private TextView menuText1, menuText2, menuText3,subMenuText1,subMenuText2,subMenuText3;
     private TextView categoryText1,categoryText2,categoryText3;
     private Calendar currentCalendar;
     private CalendarAdapter calendarAdapter;
-    private TextView monthYearText;
+    private Button monthYearText;
     private LinearLayout food1,food2,food3;
     private String selectedDate;
     private String allergyInfo1,allergyInfo2,allergyInfo3;
     private Button allergyButton1,allergyButton2,allergyButton3;
     private RecyclerView calendarRecyclerView;
+    private CalendarView calendarView;
+
     FragmentMenuBinding binding;
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -63,10 +70,8 @@ public class MenuFragment extends Fragment {
         binding = FragmentMenuBinding.inflate(inflater, container, false);
 
 
-        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+//        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearText);
-        ImageButton nextButton = view.findViewById(R.id.nextButton);
-        ImageButton prevButton = view.findViewById(R.id.prevButton);
         food1 = view.findViewById(R.id.food1);
         food2 = view.findViewById(R.id.food2);
         food3 = view.findViewById(R.id.food3);
@@ -85,33 +90,152 @@ public class MenuFragment extends Fragment {
         allergyButton1=view.findViewById(R.id.foodAllergy1);
         allergyButton2=view.findViewById(R.id.foodAllergy2);
         allergyButton3=view.findViewById(R.id.foodAllergy3);
+        calendar = view.findViewById(R.id.menuCalendar);
 
+        selectedDate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
 
         currentCalendar = Calendar.getInstance();
         selectedDate = getFormattedDate(currentCalendar); // "YYYYMMDD" 형식
-        // RecyclerView 초기화
-        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        calendarAdapter = new CalendarAdapter(getDaysOfMonth(currentCalendar), clickedDate -> {
-            selectedDate = clickedDate;
-            new FetchMenuTask().execute((selectedDate));
+        monthYearText.setText(getMonthYearFromCalendar(currentCalendar));
+
+        int dayOfWeek = currentCalendar.get(Calendar.DAY_OF_WEEK);
+
+        calendar.setOnClickListener(v->{
+            // 클릭 시 알파 값 변경 (반투명 효과)
+            v.setAlpha(0.5f);
+
+            // 0.5초 후에 알파 값 원상복귀
+            v.postDelayed(() -> v.setAlpha(1f), 500);
+
+            CalendarDialogFragment calendarDialog = new CalendarDialogFragment();
+            calendarDialog.setOnDateSelectedListener(date -> {
+                if (date != null) {
+                    try {
+                        // Date -> String 변환
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+                        String formattedDate = sdf.format(date); // Date를 원하는 형식의 String으로 변환
+
+                        // 변환된 String을 TextView에 설정
+                        monthYearText.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date));
+                        selectedDate=formattedDate;
+
+                        try {
+                            // String -> Date 변환
+                            Date dateObj = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(selectedDate);
+
+                            // Calendar 객체 생성하여 요일 확인
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(dateObj);
+
+                            int dayOfWeek2 = calendar.get(Calendar.DAY_OF_WEEK);
+
+                            // 1: 일요일, 7: 토요일
+                            if (dayOfWeek2 == Calendar.SUNDAY || dayOfWeek2 == Calendar.SATURDAY) {
+                                menuText1.setText("휴무일입니다.");
+                                menuText2.setText("휴무일입니다.");
+                                menuText3.setText("휴무일입니다.");
+                                subMenuText1.setText("휴무일입니다.");
+                                subMenuText2.setText("휴무일입니다.");
+                                subMenuText3.setText("휴무일입니다.");
+                            } else {
+                                // 평일일 경우 처리할 로직
+                                // AsyncTask 호출
+                                new FetchMenuTask().execute(formattedDate);
+                                Log.d("WeekendCheck", "It's a weekday!");
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.e("CalendarDialog", "Selected date is null");
+                }
+            });
+            calendarDialog.show(getParentFragmentManager(), "CalendarDialog");
         });
-        calendarRecyclerView.setAdapter(calendarAdapter);
 
-        new FetchMenuTask().execute((selectedDate));
+        if (dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.SATURDAY){
+            menuText1.setText("휴무일입니다.");
+            menuText2.setText("휴무일입니다.");
+            menuText3.setText("휴무일입니다.");
+            subMenuText1.setText("휴무일입니다.");
+            subMenuText2.setText("휴무일입니다.");
+            subMenuText3.setText("휴무일입니다.");
+        }else{
+            new FetchMenuTask().execute(selectedDate);
+        }
 
-        updateMonthYearText();
+        monthYearText.setOnClickListener(v->{
+            // 클릭 시 알파 값 변경 (반투명 효과)
+            v.setAlpha(0.5f);
 
-        // Next 버튼
-        nextButton.setOnClickListener(v -> {
-            currentCalendar.add(Calendar.MONTH, 1);
-            updateCalendar(calendarRecyclerView);
+            // 0.5초 후에 알파 값 원상복귀
+            v.postDelayed(() -> v.setAlpha(1f), 500);
+
+            CalendarDialogFragment calendarDialog = new CalendarDialogFragment();
+            calendarDialog.setOnDateSelectedListener(date -> {
+                if (date != null) {
+                    try {
+                        // Date -> String 변환
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+                        String formattedDate = sdf.format(date); // Date를 원하는 형식의 String으로 변환
+
+                        // 변환된 String을 TextView에 설정
+                        monthYearText.setText(new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(date));
+                        selectedDate=formattedDate;
+
+                        try {
+                            // String -> Date 변환
+                            Date dateObj = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(selectedDate);
+
+                            // Calendar 객체 생성하여 요일 확인
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(dateObj);
+
+                            int dayOfWeek2 = calendar.get(Calendar.DAY_OF_WEEK);
+
+                            // 1: 일요일, 7: 토요일
+                            if (dayOfWeek2 == Calendar.SUNDAY || dayOfWeek2 == Calendar.SATURDAY) {
+                                menuText1.setText("휴무일입니다.");
+                                menuText2.setText("휴무일입니다.");
+                                menuText3.setText("휴무일입니다.");
+                                subMenuText1.setText("휴무일입니다.");
+                                subMenuText2.setText("휴무일입니다.");
+                                subMenuText3.setText("휴무일입니다.");
+                            } else {
+                                // 평일일 경우 처리할 로직
+                                // AsyncTask 호출
+                                new FetchMenuTask().execute(formattedDate);
+                                Log.d("WeekendCheck", "It's a weekday!");
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.e("CalendarDialog", "Selected date is null");
+                }
+            });
+            calendarDialog.show(getParentFragmentManager(), "CalendarDialog");
         });
 
-        // Prev 버튼
-        prevButton.setOnClickListener(v -> {
-            currentCalendar.add(Calendar.MONTH, -1);
-            updateCalendar(calendarRecyclerView);
-        });
+        if (dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.SATURDAY){
+            menuText1.setText("휴무일입니다.");
+            menuText2.setText("휴무일입니다.");
+            menuText3.setText("휴무일입니다.");
+            subMenuText1.setText("휴무일입니다.");
+            subMenuText2.setText("휴무일입니다.");
+            subMenuText3.setText("휴무일입니다.");
+        }else{
+            new FetchMenuTask().execute(selectedDate);
+        }
+
 
 
 
@@ -292,7 +416,7 @@ public class MenuFragment extends Fragment {
 
     // 월과 연도를 "MMMM YYYY" 형식으로 반환
     private String getMonthYearFromCalendar(Calendar calendar) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         return formatter.format(calendar.getTime());
     }
 
@@ -300,6 +424,7 @@ public class MenuFragment extends Fragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM", Locale.getDefault());
         monthYearText.setText(sdf.format(currentCalendar.getTime()));
     }
+
 
 
 

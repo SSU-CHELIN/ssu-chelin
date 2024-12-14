@@ -16,16 +16,6 @@
         tools:targetApi="34">
 
         <activity
-            android:name=".review.SearchResultsActivity"
-            android:exported="true"
-            android:launchMode="singleTop"/>
-        <activity
-            android:name=".review.ReviewActivity"
-            android:exported="false" />
-        <activity
-            android:name=".review.WriteReviewActivity"
-            android:exported="false" />
-        <activity
             android:name=".login.LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -34,34 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".review.OverviewReviewsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".review.SubCategoryActivity"
-            android:exported="true" />
 
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-        <activity
-            android:name=".review.FeedbackActivity"
-            android:exported="false" />
-        <activity
-            android:name=".review.CheckReviewsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".user.FirstSettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".user.ChangeProfilePictureActivity"
-            android:exported="false" />
-        <activity
-            android:name=".user.ChangeContactActivity"
-            android:exported="false" />
-        <activity
-            android:name=".user.ChangeNicknameActivity"
-            android:exported="false" />
+
 
 
         <activity
