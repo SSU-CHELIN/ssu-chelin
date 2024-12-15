@@ -51,12 +51,12 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.ViewHold
         holder.rankName.setText(user.getName());
         holder.rankScore.setText(String.valueOf(user.getTotalLike()));
 
-        holder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(context, UserProfileActivity.class);
-            // user.getStudentId()를 user_id로 전달
-            intent.putExtra("user_id", user.getStudentId());
-            context.startActivity(intent);
-        });
+//        holder.itemView.setOnClickListener(view -> {
+//            Intent intent = new Intent(context, UserProfileActivity.class);
+//            // user.getStudentId()를 user_id로 전달
+//            intent.putExtra("user_id", user.getStudentId());
+//            context.startActivity(intent);
+//        });
     }
 
     @Override

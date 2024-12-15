@@ -83,7 +83,6 @@ public class FeedbackFragment extends Fragment {
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("User").child(studentId);
 
-        // 카운터 값을 가져와서 feedback1, feedback2 순으로 저장
         mDatabaseRef.child("Feedback").child("cnt").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -91,24 +90,28 @@ public class FeedbackFragment extends Fragment {
                         ? snapshot.getValue(Long.class)
                         : 0;
 
-                // 새로운 feedback 키 생성 (feedback1, feedback2 ...)
                 String feedbackKey = "feedback" + (currentCount + 1);
 
-                // 데이터를 저장할 해시맵 생성
                 Map<String, Object> feedbackData = new HashMap<>();
                 feedbackData.put(feedbackKey, feedbackText);
 
-                // 데이터를 Firebase에 저장
                 mDatabaseRef.child("Feedback").updateChildren(feedbackData)
                         .addOnSuccessListener(aVoid -> {
-                            // 카운터 값 업데이트
                             mDatabaseRef.child("Feedback").child("cnt").setValue(currentCount + 1)
-                                    .addOnSuccessListener(aVoid1 -> Toast.makeText(getActivity(), "피드백이 저장되었습니다.", Toast.LENGTH_SHORT).show())
+                                    .addOnSuccessListener(aVoid1 -> {
+                                        Toast.makeText(getActivity(), "피드백이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+                                        // 백스택 확인 후 종료
+                                        if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                                            requireActivity().getSupportFragmentManager().popBackStack();
+                                        } else {
+                                            // 백스택이 비어 있으면 액티비티 종료
+                                            requireActivity().finish();
+                                        }
+                                    })
                                     .addOnFailureListener(e -> Toast.makeText(getActivity(), "카운터 업데이트 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                         })
                         .addOnFailureListener(e -> Toast.makeText(getActivity(), "피드백 저장 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-
-                requireActivity().onBackPressed();
             }
 
             @Override
@@ -117,4 +120,5 @@ public class FeedbackFragment extends Fragment {
             }
         });
     }
+
 }

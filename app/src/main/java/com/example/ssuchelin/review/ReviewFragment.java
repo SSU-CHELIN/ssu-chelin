@@ -227,6 +227,7 @@ public class ReviewFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // `userinfo` 데이터 로드
+                String username =  snapshot.child("userName").getValue(String.class);
                 int saltPreference = parseInt(snapshot.child("saltPreference").getValue(String.class), 0);
                 int spicyPreference = parseInt(snapshot.child("spicyPreference").getValue(String.class), 0);
 
@@ -238,6 +239,7 @@ public class ReviewFragment extends Fragment {
                 String allergies = allergyList.isEmpty() ? "없음" : String.join(", ", allergyList);
 
                 // 리뷰 객체에 추가
+                review.setUsername(username);
                 review.setSaltPreference(saltPreference);
                 review.setSpicyPreference(spicyPreference);
                 review.setAllergies(allergies);

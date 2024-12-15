@@ -11,15 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="-90dp"
-        android:src="@drawable/main_view" />
+        android:src="@drawable/main_view"
+        android:layout_alignParentTop="true" />
 
-    <!-- 로그인 버튼 -->
     <ImageButton
         android:id="@+id/login"
         android:layout_width="182dp"
         android:layout_height="56dp"
-        android:layout_marginTop="600dp"
-        android:layout_marginLeft="115dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="200dp"
         android:src="@drawable/login_button"
         android:background="@android:color/transparent" />
 </RelativeLayout>

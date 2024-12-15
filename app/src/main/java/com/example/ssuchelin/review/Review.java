@@ -25,7 +25,7 @@ public class Review {
     private long timeMillis; // UNIX 시간 (리뷰 작성 시간)
 
     private int likeDifference; // 좋아요와 싫어요 차이
-
+    private String authorId; // 리뷰 작성자의 사용자 ID
     // ---- 생성자 ----
 
     // 전체 필드를 초기화하는 생성자
@@ -203,6 +203,14 @@ public class Review {
 
     public int getLikeDifference() { return likeDifference; }
     public void setLikeDifference(int likeDifference) { this.likeDifference = likeDifference; }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
 
     @Override
     public String toString() {
